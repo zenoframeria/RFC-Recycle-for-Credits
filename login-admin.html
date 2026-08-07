@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ขยะแลกแต้ม — เข้าสู่ระบบแอดมิน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body data-role="admin">
+<div class="app-shell">
+
+  <div class="login-decor">
+    <div class="tape tape--stripe" style="width:120px;height:22px;background:var(--sb-yellow-soft);transform:rotate(-8deg);left:-20px;top:28px;"></div>
+    <div class="tape tape--dots" style="width:70px;height:16px;background:var(--accent);transform:rotate(14deg);right:-10px;top:48px;opacity:0.85;"></div>
+    <div class="stamp" style="--stamp-color:var(--accent);position:absolute;right:18px;top:90px;transform:rotate(-6deg);">ADMIN</div>
+    <div class="stamp" style="--stamp-color:var(--sb-green);position:absolute;left:18px;top:110px;transform:rotate(4deg);">EST 2024</div>
+  </div>
+
+  <div class="login-content">
+
+    <div class="logo-block">
+      <div class="logo-wrap">
+        <div class="logo-glow"></div>
+        <div class="logo-ring"></div>
+        <div class="logo-body">
+          <svg width="56" height="56" viewBox="0 0 40 40">
+            <line x1="20" y1="6" x2="20" y2="34" stroke="var(--sb-yellow)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="6" y1="11" x2="34" y2="11" stroke="var(--sb-yellow)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3 14l3 6c0 1.5 1.5 2.5 3 2.5s3-1 3-2.5l3-6z" fill="none" stroke="var(--sb-yellow)" stroke-width="1.2"/>
+            <path d="M25 14l3 6c0 1.5 1.5 2.5 3 2.5s3-1 3-2.5l3-6z" fill="none" stroke="var(--sb-yellow)" stroke-width="1.2"/>
+            <path d="M14 34h12M16 36h8" stroke="var(--sb-yellow)" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="20" cy="5" r="1.5" fill="var(--sb-yellow)"/>
+          </svg>
+        </div>
+        <div class="tape tape--stripe" style="width:36px;height:12px;background:var(--sb-yellow-soft);transform:rotate(-18deg);left:-6px;top:-4px;"></div>
+      </div>
+
+      <div class="tagline-script">welcome back ★</div>
+      <div class="login-title">Admin Console</div>
+      <div class="login-subtitle">เข้าสู่ระบบควบคุม · จัดการภารกิจขยะ</div>
+
+      <div class="chip">
+        <span class="dot"></span>
+        ADMIN ACCESS
+      </div>
+    </div>
+
+    <div class="card" id="login-card">
+      <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--accent);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
+      <div class="tape tape--dots" style="width:42px;height:14px;background:var(--sb-yellow-soft);transform:rotate(12deg);right:-8px;top:-6px;"></div>
+
+      <div class="card-heading">
+        <span class="line"></span>
+        <span class="label">◆ MISSION ACCESS ◆</span>
+        <span class="line"></span>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <div class="field-label">
+            <span class="name">Admin ID</span>
+            <span class="sub">· รหัสผู้ดูแล</span>
+          </div>
+          <div class="field-box">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="text" id="field-id" placeholder="admin-001" autocomplete="username" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="name">Password</span>
+            <span class="sub">· รหัสผ่าน</span>
+          </div>
+          <div class="field-box">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zM12 14v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="password" id="field-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="toggle-btn" id="toggle-password" aria-label="Show password">
+              <svg width="16" height="16" viewBox="0 0 24 24"><path id="eye-path" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="check-row">
+          <label class="check-label">
+            <span class="check-box">
+              <svg width="10" height="10" viewBox="0 0 24 24"><path d="M5 12l5 5 9-12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            จดจำฉัน
+          </label>
+          <span class="secure-tag"><span class="dot"></span>SECURE</span>
+        </div>
+
+        <div class="login-error" id="login-error" hidden>รหัสผู้ดูแลหรือรหัสผ่านไม่ถูกต้อง</div>
+
+        <button type="submit" class="btn-primary" style="margin-top:18px;">
+          <div class="glow"></div>
+          <div class="body">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M14 4c4 0 6 2 6 6 0 2-1 4-3 5l-3 1-3-3 1-3c1-2 3-3 5-3M9 15l-2 5 5-2M5 13l6-6" fill="none" stroke="var(--sb-yellow)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="label">ENTER CONSOLE</span>
+          </div>
+        </button>
+
+        <div class="admin-warning">
+          <svg width="16" height="16" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M12 8v5M12 16v.5M3 20h18L12 4z" fill="none" stroke="var(--sb-red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          สำหรับเจ้าหน้าที่ที่ได้รับสิทธิ์เท่านั้น · บันทึกการเข้าใช้ทุกครั้ง
+        </div>
+      </form>
+    </div>
+
+    <div class="switch-role">
+      ไม่ใช่แอดมิน? <a href="login-student.html">login as student</a>
+    </div>
+
+    <div class="login-spacer"></div>
+
+    <div class="footer-note">made with <span class="heart">♥</span> · ขยะแลกแต้ม v1.0</div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

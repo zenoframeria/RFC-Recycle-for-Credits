@@ -1,0 +1,80 @@
+/* ขยะแลกแต้ม — shared design tokens (colors, fonts, base page styles) */
+
+:root {
+  /* colors (from the Claude Design "SB" palette) */
+  --sb-cream: #F5EFE0;
+  --sb-cream2: #EDE3CC;
+  --sb-paper: #FBF7EC;
+  --sb-blue: #1E3A8A;
+  --sb-blue-deep: #0F2461;
+  --sb-blue-soft: #A9C4E8;
+  --sb-blue-mist: #D9E5F3;
+  --sb-yellow: #F2C84B;
+  --sb-yellow-soft: #F8E29A;
+  --sb-ink: #1A1F33;
+  --sb-ink-dim: #5A5F76;
+  --sb-red: #C0463A;
+  --sb-green: #6E8B5A;
+  --sb-tape: #E8DDB8;
+
+  /* fonts */
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-script: 'Caveat', 'Kalam', cursive;
+  --font-body: 'Nunito', 'Quicksand', system-ui, sans-serif;
+  --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
+  --font-thai-serif: 'Bai Jamjuree', 'Sarabun', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* role accent: blue by default, red on the admin login */
+  --accent: var(--sb-blue);
+  --bg-tint2: var(--sb-blue-mist);
+}
+
+body[data-role="admin"] {
+  --accent: var(--sb-red);
+  --bg-tint2: #E8C4BF;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%, #E8DDC2 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, var(--bg-tint2) 0%, transparent 50%),
+    #EFE7D2;
+  font-family: var(--font-body);
+  color: var(--sb-ink);
+}
+
+@keyframes sbglow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.06); }
+}
+
+.app-shell {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 80% -10%, var(--accent) 12%, transparent 55%),
+    radial-gradient(ellipse at -10% 110%, var(--sb-yellow) 12%, transparent 50%),
+    linear-gradient(180deg, var(--sb-paper) 0%, var(--sb-cream) 100%);
+  background-blend-mode: normal;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.14);
+  overflow: hidden;
+}
+
+/* faint grid texture over the paper background */
+.app-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(26,31,51,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,31,51,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
