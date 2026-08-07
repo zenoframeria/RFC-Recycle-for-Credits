@@ -33,7 +33,15 @@ function renderProgressRing({ value, target, nextRankIn, level }) {
   const filled = pct * circ;
 
   const fillCircle = document.getElementById('ring-fill');
-  fillCircle.setAttribute('stroke-dasharray', `${filled} ${circ}`);
+  // start fully empty, then transition the dashoffset so the ring visibly fills on load
+  fillCircle.style.transition = 'none';
+  fillCircle.setAttribute('stroke-dasharray', `${circ} ${circ}`);
+  fillCircle.setAttribute('stroke-dashoffset', circ);
+  fillCircle.getBoundingClientRect(); // force layout so the empty state registers first
+  requestAnimationFrame(() => {
+    fillCircle.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1)';
+    fillCircle.setAttribute('stroke-dashoffset', circ - filled);
+  });
 
   const ticks = document.getElementById('ring-ticks');
   for (let i = 0; i < 20; i++) {
@@ -97,6 +105,13 @@ function renderEnergyBar({ total, target, helpers }) {
   document.getElementById('energy-helpers').textContent = `${helpers} คนช่วยกัน`;
 }
 
+const TAB_TOAST_MESSAGES = {
+  map: '🗺️ แผนที่ — coming soon · เร็ว ๆ นี้',
+  scan: '📸 สแกน — coming soon · เร็ว ๆ นี้',
+  rank: '🏆 อันดับ — coming soon · เร็ว ๆ นี้',
+  me: '🙋 โปรไฟล์ — coming soon · เร็ว ๆ นี้',
+};
+
 function wireNav() {
   document.querySelectorAll('.nav-item[data-tab]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -104,12 +119,12 @@ function wireNav() {
       if (tab === 'home') return;
       document.querySelectorAll('.nav-item[data-tab]').forEach((b) => b.classList.remove('active'));
       if (tab !== 'scan') btn.classList.add('active');
-      showToast('coming soon · เร็ว ๆ นี้');
+      showToast(TAB_TOAST_MESSAGES[tab] || 'coming soon · เร็ว ๆ นี้');
     });
   });
 
   document.getElementById('scan-btn').addEventListener('click', () => {
-    showToast('coming soon · เร็ว ๆ นี้');
+    showToast(TAB_TOAST_MESSAGES.scan);
   });
 }
 

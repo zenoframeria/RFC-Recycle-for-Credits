@@ -7,7 +7,7 @@
 }
 
 /* ── header ────────────────────────────────────────────────── */
-.dash-header { padding: 12px 18px 0; position: relative; }
+.dash-header { padding: 30px 18px 0; position: relative; }
 
 .meta-line {
   display: flex;
@@ -91,6 +91,8 @@
 .launch-btn {
   width: 100%; border: none; background: transparent; cursor: pointer; padding: 0; position: relative;
 }
+.launch-btn .launch-body { transition: transform 0.15s ease, filter 0.15s ease; }
+.launch-btn:active .launch-body { transform: scale(0.97); filter: brightness(0.9); }
 .launch-glow {
   position: absolute; inset: -4px; border-radius: 24px;
   background: radial-gradient(ellipse at 50% 60%, rgba(242,200,75,0.33) 0%, transparent 70%);
@@ -237,7 +239,9 @@
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   background: transparent; border: none; cursor: pointer; padding: 4px 2px; min-width: 44px;
   color: rgba(26,31,51,0.55);
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
+.nav-item:active { transform: scale(0.88); opacity: 0.7; }
 .nav-item .label { font-family: var(--font-display); font-style: italic; font-size: 11px; font-weight: 500; }
 .nav-item.active { color: var(--accent); }
 .nav-item.active .label { font-weight: 700; }
