@@ -20,16 +20,4 @@ const FAKE_DASHBOARD = {
     { label: 'สตรีค', value: '12', unit: 'วัน' },
     { label: 'CO₂', value: '7.3', unit: 'kg' },
   ],
-  classLeaderboard: {
-    myRank: 3,
-    totalRooms: 24,
-    myClass: 'ม.6/1',
-    squadName: 'Phoenix Squad',
-    rows: [
-      { rank: 1, name: 'ม.6/2', pts: 42180, mine: false },
-      { rank: 2, name: 'ม.5/1', pts: 38920, mine: false },
-      { rank: 3, name: 'ม.6/1', pts: 36470, mine: true },
-    ],
-  },
-  schoolEnergy: { total: 245680, target: 360000, helpers: 342 },
 };

@@ -63,6 +63,46 @@
   margin-top: 6px;
 }
 
+/* ── login / signup tab switcher ──────────────────────────── */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: var(--sb-cream2);
+  border: 1px solid rgba(26,31,51,0.1);
+}
+.auth-tab {
+  flex: 1;
+  padding: 8px 6px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-thai);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(26,31,51,0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  transition: background 0.15s, color 0.15s;
+}
+.auth-tab .tab-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+.auth-tab.active {
+  background: var(--sb-paper);
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(20,30,60,0.1);
+}
+
 /* ── admin-only warning banner ────────────────────────────── */
 .admin-warning {
   margin-top: 14px;
