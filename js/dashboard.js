@@ -6,19 +6,16 @@ const STAT_ICONS = [
   { d: 'M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l8-8', tint: 'var(--accent)' },
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  if (!currentUser || currentUser.role !== 'student') {
-    window.location.href = 'login-student.html';
-    return;
-  }
+document.addEventListener('DOMContentLoaded', async () => {
+  const currentUser = await requireStudentSession();
+  if (!currentUser) return;
 
   renderHeader(currentUser);
   renderProgressRing(FAKE_DASHBOARD.points);
   renderStats(FAKE_DASHBOARD.stats);
-  renderLeaderboard(FAKE_DASHBOARD.classLeaderboard);
-  renderEnergyBar(FAKE_DASHBOARD.schoolEnergy);
-  wireNav();
+  wireScanFab();
+  wireNotifications();
+  wireReportModal();
 });
 
 function renderHeader(user) {
@@ -77,62 +74,79 @@ function renderStats(stats) {
   }).join('');
 }
 
-function renderLeaderboard({ myRank, totalRooms, myClass, squadName, rows }) {
-  document.getElementById('war-rank-num').innerHTML = `<span class="hash">#</span>${myRank}`;
-  document.getElementById('war-of').textContent = `OF ${totalRooms} ROOMS`;
-  document.getElementById('war-class-name').textContent = myClass;
-  document.getElementById('war-squad').textContent = `· ${squadName} ·`;
+const FAKE_NOTIFICATIONS = [
+  { text: 'submission ของคุณ (พลาสติก PET) ได้รับการอนุมัติแล้ว ✅', time: '10 นาทีที่แล้ว' },
+  { text: 'แต้มของคุณเพิ่มขึ้น +150 pts จากการรีไซเคิลกระป๋องอลูมิเนียม', time: '2 ชั่วโมงที่แล้ว' },
+  { text: 'รอบเก็บขยะประจำเดือนนี้จะเปิดรับวันจันทร์หน้า อย่าลืมมาชั่งน้ำหนัก!', time: 'เมื่อวาน' },
+  { text: 'คุณขยับขึ้นอันดับในห้องของคุณ 🎉', time: '2 วันที่แล้ว' },
+];
 
-  const myRow = rows.find((r) => r.mine);
-  document.getElementById('war-pts').innerHTML = `${(myRow.pts).toLocaleString()} <span>pts</span>`;
+function wireNotifications() {
+  const btn = document.getElementById('notif-btn');
+  const panel = document.getElementById('notif-panel');
+  const list = document.getElementById('notif-list');
 
-  const board = document.getElementById('war-board');
-  board.innerHTML = rows.map((r) => `
-    <div class="war-row${r.mine ? ' mine' : ''}" data-rank="${r.rank}">
-      <div class="rank">#${r.rank}</div>
-      <div class="name">${r.name}${r.mine ? '<span class="you-tag">YOU</span>' : ''}</div>
-      <div class="pts">${(r.pts / 1000).toFixed(1)}k</div>
-    </div>
-  `).join('');
-}
+  list.innerHTML = FAKE_NOTIFICATIONS.length
+    ? FAKE_NOTIFICATIONS.map((n) => `
+        <div class="notif-item">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="text">${n.text}</div>
+            <div class="time">${n.time}</div>
+          </div>
+        </div>
+      `).join('')
+    : '<div class="notif-empty">ยังไม่มีการแจ้งเตือน</div>';
 
-function renderEnergyBar({ total, target, helpers }) {
-  const pct = Math.min(total / target, 1);
-  document.getElementById('energy-pct-num').textContent = Math.round(pct * 100);
-  document.getElementById('energy-fill').style.width = `${pct * 100}%`;
-  document.getElementById('energy-total').textContent = `${(total / 1000).toFixed(1)}K`;
-  document.getElementById('energy-target').textContent = `/ ${(target / 1000).toFixed(0)}K pts`;
-  document.getElementById('energy-helpers').textContent = `${helpers} คนช่วยกัน`;
-}
+  function closePanel() {
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
 
-const TAB_TOAST_MESSAGES = {
-  map: '🗺️ แผนที่ — coming soon · เร็ว ๆ นี้',
-  scan: '📸 สแกน — coming soon · เร็ว ๆ นี้',
-  rank: '🏆 อันดับ — coming soon · เร็ว ๆ นี้',
-  me: '🙋 โปรไฟล์ — coming soon · เร็ว ๆ นี้',
-};
-
-function wireNav() {
-  document.querySelectorAll('.nav-item[data-tab]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tab = btn.dataset.tab;
-      if (tab === 'home') return;
-      document.querySelectorAll('.nav-item[data-tab]').forEach((b) => b.classList.remove('active'));
-      if (tab !== 'scan') btn.classList.add('active');
-      showToast(TAB_TOAST_MESSAGES[tab] || 'coming soon · เร็ว ๆ นี้');
-    });
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !panel.classList.contains('open');
+    panel.classList.toggle('open', willOpen);
+    btn.setAttribute('aria-expanded', String(willOpen));
   });
 
-  document.getElementById('scan-btn').addEventListener('click', () => {
-    showToast(TAB_TOAST_MESSAGES.scan);
+  document.addEventListener('click', (e) => {
+    if (!panel.classList.contains('open')) return;
+    if (panel.contains(e.target) || btn.contains(e.target)) return;
+    closePanel();
   });
 }
 
-let toastTimer = null;
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+function wireReportModal() {
+  const fab = document.getElementById('report-fab');
+  const overlay = document.getElementById('report-modal');
+  const closeBtn = document.getElementById('report-close');
+  const submitBtn = document.getElementById('report-submit');
+  const textarea = document.getElementById('report-text');
+
+  function openModal() {
+    overlay.classList.add('open');
+    textarea.focus();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+
+  fab.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const message = textarea.value.trim();
+    if (!message) {
+      textarea.focus();
+      return;
+    }
+    console.log('report submitted:', message);
+    textarea.value = '';
+    closeModal();
+    showToast('ส่งแล้ว ✅');
+  });
 }
