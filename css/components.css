@@ -173,6 +173,31 @@
   letter-spacing: 0.04em;
   text-shadow: 0 0 10px rgba(242,200,75,0.35);
 }
+.btn-primary:disabled { cursor: default; opacity: 0.55; }
+.btn-primary:disabled .glow { display: none; }
+
+/* secondary/outline button (e.g. attach-photo) */
+.btn-secondary {
+  width: 100%;
+  border: 1.5px dashed var(--accent);
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: var(--sb-cream2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+.btn-secondary:active { transform: scale(0.97); }
+.btn-secondary:disabled { opacity: 0.6; cursor: default; }
+.btn-secondary .label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent);
+}
 
 /* checkbox pill */
 .check-row {

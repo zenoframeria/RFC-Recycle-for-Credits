@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderLimited();
   refreshButtons();
   wireRedeemClicks();
-  wireScanFab();
 });
 
 function itemStatus(item) {

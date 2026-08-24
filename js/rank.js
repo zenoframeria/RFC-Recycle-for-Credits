@@ -23,8 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderPodium(FAKE_LEADERBOARD.slice(0, 3));
   renderList(FAKE_LEADERBOARD.slice(3));
-
-  wireScanFab();
 });
 
 function renderPodium(top3) {

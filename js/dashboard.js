@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderHeader(currentUser);
   renderProgressRing(FAKE_DASHBOARD.points);
   renderStats(FAKE_DASHBOARD.stats);
-  wireScanFab();
   wireNotifications();
   wireReportModal();
 });

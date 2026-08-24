@@ -117,7 +117,7 @@
 - **ทุกเช้า (ในสัปดาห์ที่เปิดรอบ):** ไปแปะสติกเกอร์ใหม่ที่ถังทั้ง 2 จุด (เปลี่ยนทุกวัน กันเอารูปเก่ามาส่งซ้ำ) — ใช้เวลาไม่กี่นาที ไม่ต้องยืนเฝ้า
 - **ปลายรอบ:** ชั่งยอดสะสมในถังจริง (หรือ delta จากรอบก่อน) เทียบกับยอดที่เด็กเคลมรวมช่วงเดียวกัน — ถ้าต่างกันผิดปกติค่อยไปสืบละเอียด
 
-**หน้าต่างเวลาเปิดรับ:** 10:00–17:00 ทุกวันในสัปดาห์ที่เปิดรอบ — **ต้องเช็คฝั่ง Supabase (server-side, เช่น Postgres function เช็ค `now()`) ไม่ใช่เช็คจาก JavaScript ฝั่ง client** เพราะเด็กปรับเวลาเครื่องตัวเองหลอกระบบได้ถ้าเช็คฝั่ง client — และต้องแปลงเป็น timezone Asia/Bangkok (UTC+7) ให้ถูก เพราะ Supabase เก็บเวลาเป็น UTC โดยดีฟอลต์
+**หน้าต่างเวลาเปิดรับ — เลื่อนออกจาก Phase 4 รอบนี้ (ตัดสินใจแล้ว ไม่ใช่ลืม):** แผนเดิมคือ 10:00–17:00 ทุกวันในสัปดาห์ที่เปิดรอบ เช็คฝั่ง server (Postgres function เช็ค `now()`, timezone Asia/Bangkok UTC+7) แต่ **รอบนี้ยังไม่ทำ** — เหตุผล: ฟีเจอร์นี้ผูกกับข้อมูลรอบเปิดรับ (`collection_rounds`) ที่ยังไม่มี (พักไว้ก่อน) และอยากเทสให้ flow หลัก (ถ่ายรูป/กรอกน้ำหนัก/อัปโหลด/insert) เสถียรก่อนค่อยเพิ่มการกั้นเวลาทับเข้าไป ตอนนี้จึงเปิดรับ submission ได้ทุกวันทุกเวลา — เป็นความตั้งใจของ Phase 4 รอบนี้ ไม่ใช่ช่องโหว่ที่พลาดไป จะกลับมาทำพร้อมกับ `collection_rounds` และ banner บอกรอบเปิดรับใน Phase 4 รอบถัดไป
 
 **สิ่งที่ถูกแทนที่ (เลิกใช้แล้ว ไม่ต้องสร้าง):** ระบบนับชิ้น, ระบบกะไซซ์ถุงเล็ก/กลาง/ใหญ่, โค้ดประจำวันแบบพิมพ์ในแอป+OCR auto-check, กฎ "1 submission/หมวด/วัน" (ยังไม่ได้ยืนยันว่าจำเป็นอยู่มั้ยภายใต้โมเดลใหม่ที่มีตาชั่ง+บัตรยืนยันตัวตนแล้ว)
 
@@ -135,10 +135,16 @@
 
 **ตารางที่มีอยู่แล้ว (Phase 1-2):** `student_roster`, `admin_roster`, `profiles`, `waste_categories`, `submissions`
 
-**ต้องแก้เพิ่ม (ยังไม่ได้ทำ):**
-- `submissions` — เพิ่ม field `weight_kg` (numeric), เปลี่ยน `points_awarded` จากกรอกมือ → คำนวณอัตโนมัติจาก `weight_kg × waste_categories.point_value` เป็นค่าที่ระบบเสนอให้ตอนแอดมินกด approve (**ไม่ใช่ auto-approve** — สถานะยังเป็น `pending` รอแอดมินตรวจก่อนเสมอ เหมือนที่ออกแบบไว้ตั้งแต่ Phase 1-2)
-- `waste_categories` — ปรับให้เหลือ 4 แถวตามข้อ 5 (กระดาษ/PET/อลูมิเนียม/แก้ว), `point_value` ต้องแก้ผ่าน admin UI ได้ (ราคาตลาดเปลี่ยนทุกเดือน)
-- ฟังก์ชันเช็คเวลาฝั่ง server (10:00-17:00 Asia/Bangkok) สำหรับ gate การ submit
+**ต้องแก้เพิ่ม (โค้ด Phase 4 เขียนเสร็จแล้ว แต่ SQL นี้ยังต้องรันเองใน Supabase Dashboard — Claude Code ไม่มีสิทธิ์รัน DDL โดยตรง):**
+```sql
+alter table public.submissions add column weight_kg numeric;
+grant select on public.waste_categories to authenticated;
+create policy "authenticated can read waste categories"
+  on public.waste_categories for select to authenticated using (true);
+```
+- `submissions` — เพิ่ม field `weight_kg` (numeric) ✅ SQL พร้อมรันด้านบน. `points_awarded` ยังไม่แตะ (คงเป็น null จนกว่าแอดมินจะ approve ใน Phase 5) — ฝั่งนักเรียนเห็นแค่ "แต้มที่คาด" เป็น preview เท่านั้น
+- `waste_categories` — มี 4 แถวอยู่แล้ว, การแก้ `point_value` ผ่าน admin UI ยังเป็น Phase 5
+- ฟังก์ชันเช็คเวลาฝั่ง server (10:00-17:00 Asia/Bangkok) — **ยังไม่ทำ ตามที่ตัดสินใจเลื่อนออกไปแล้วด้านบน**
 
 **หมายเหตุ:** ไฟล์นี้เป็นแผนระดับสูง ส่วน `CLAUDE.md` ในโปรเจกต์จริงยังเป็น source of truth ที่ Claude Code อ่าน ต้องอัปเดต `CLAUDE.md` ให้ตรงกับที่นี่ก่อนส่ง prompt งานจริงรอบต่อไป
 
@@ -149,7 +155,7 @@
 1. ~~Supabase setup + schema~~ ✅ เสร็จ
 2. ~~Auth wiring~~ ✅ เสร็จ
 3. **Tab bar + header widgets — เสร็จทั้ง 3 รอบ** ✅ Round 3a (nav restyle 4 แท็บ + กระดิ่งแจ้งเตือน + ปุ่มแจ้งปัญหา), Round 3b (nav กลับมาเป็น 5 แท็บพร้อม FAB + Me, routing Home/Shop/Rank/Me ไปหน้าจริง, แก้บั๊ก session) — ทดสอบคลิกจริงในเบราว์เซอร์ผ่านครบทั้ง 2 รอบแล้ว, และ Round 3c (เอาดีไซน์ export มาต่อจริงใน Shop/Rank แทน placeholder เปล่า — แต้ม Shop เป็นข้อมูลจริง แคตตาล็อก/redeem และ Rank Top 10 ยังเป็น mock รอ Phase 5/6)
-4. **Scan & Launch flow — เปลี่ยนไปมากจากแผนเดิม** ไม่ใช่แค่ถ่ายรูป+เลือกประเภทแล้ว ต้องมี: ช่องกรอกน้ำหนัก, validation รูปต้องมี 3 อย่าง (ตาชั่ง/สติกเกอร์/บัตร), เช็คหน้าต่างเวลา, คำนวณแต้มที่จะเสนอ (ไม่ auto-approve — เข้า `pending` รอแอดมินเหมือนเดิม) — **ต้องร่างแผนใหม่ทั้งหมดตอนถึง phase นี้**
+4. **Scan & Launch flow — โค้ดเสร็จแล้ว บน branch `phase4-scan` (ยังไม่ merge เข้า `main`), ยังไม่ได้เทสจริงแบบ end-to-end** — `scan.html` + `js/scan.js` ใหม่: เลือกหมวด (ดึงจาก DB จริง ไม่ hardcode), กรอกน้ำหนัก, checklist รูป 3 อย่าง (ตาชั่ง/สติกเกอร์/บัตร — เตือนด้วยข้อความเฉยๆ ไม่มีการตรวจรูปอัตโนมัติ), บีบอัดรูปฝั่ง client จริง (resize ≤800px, quality 0.7 ผ่าน canvas ก่อนอัปโหลด), อัปโหลดเข้า bucket `submissions` ที่ path `{user_id}/{submission_id}.jpg`, insert แถวใหม่ด้วย `status: 'pending'` เสมอ (**ไม่ auto-approve**), แสดง "แต้มที่คาด" เป็น preview, และมีปุ่ม "ส่งอีกหมวด" ให้ส่งหลายหมวดต่อกันได้โดยไม่ต้องกลับ Home. ปุ่ม Scan ในทุกหน้า (bottom nav FAB + ปุ่ม Launch Pad บน dashboard) เปลี่ยนเป็นลิงก์จริงไป `scan.html` แล้ว (เดิม toast "coming soon") — ระหว่างทางเจอบั๊กเดิม `id="scan-btn"` ซ้ำกัน 2 จุดบน `dashboard.html` ด้วย เลยแก้ไปพร้อมกัน. **สิ่งที่ตั้งใจตัดออกตามสเปก:** เช็คหน้าต่างเวลา (10:00-17:00), banner บอกรอบเปิดรับ, ตาราง `collection_rounds`, การตรวจรูปด้วย AI, หน้า admin approve/reject (Phase 5), และไม่อัปเดต `points_total` ตอน submit. **ก่อนใช้จริง:** ต้องรัน SQL migration ด้านบนก่อน (ยังไม่ได้รัน) แล้วเปิด preview URL ของ branch `phase4-scan` บนมือถือจริงเพื่อเทสกล้อง — localhost ทดสอบกล้องไม่ได้อยู่แล้ว
 5. Admin console — ฟีด approve/reject submission ที่รอ (`pending`) ทุกรายการ (กลไกหลักเดิม ไม่ใช่แค่เคสพิเศษ) + audit view (เทียบยอดชั่งถังจริงกับยอดเคลม) + จัดการ `point_value` ต่อหมวด
 6. เก็บงาน dashboard — เปลี่ยนจาก mock ห้อง/room ranking เป็นข้อมูลจริงแบบเดี่ยว + Rank Top 10
 
