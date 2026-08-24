@@ -40,7 +40,12 @@
 - **Shop:** มีแคตตาล็อกของรางวัลจริงแล้ว — การ์ดแลกเกียรติบัตร (1,800 pts), กริดเครื่องเขียน 2 คอลัมน์ (6 ชิ้น 220–3,200 pts แลกได้ไม่จำกัด), และโซน "ของรางวัลจำกัดจำนวน" กรอบเส้นประแดง (3 ชิ้น — มี stock bar จริง 1 ชิ้น, ของหมด 1 ชิ้น, ยังไม่เปิดรอบ 1 ชิ้น) อยู่ใน `SHOP_ITEMS` array ที่ `shop.js`. **แต้มคงเหลือที่โชว์บนหัวหน้าเป็นข้อมูลจริง** (`currentUser.pointsTotal` จาก `profiles.points_total` เดียวกับที่ `me.html` ใช้อยู่แล้ว) — แต่ตัวแคตตาล็อกกับปุ่ม "แลกเลย" ยังเป็น mock ในหน้าเว็บอย่างเดียว เพราะยังไม่มีตาราง rewards/redemptions ใน Supabase (เป็นงาน Phase 5/6) กดแลกแล้วแต้ม/สถานะเปลี่ยนแค่ในหน้า รีเฟรชแล้วหายเหมือนเดิม ไม่ได้บันทึกจริง
 - **Rank:** มี Top 10 leaderboard จริงแล้ว (โพเดียม #1-3 + ลิสต์ #4-10 พร้อมไฮไลท์แถวของผู้ใช้ป้าย "— คุณ") แต่**ยังเป็นข้อมูล mock ทั้งหมด** (`FAKE_LEADERBOARD` ใน `rank.js` แบบเดียวกับ `FAKE_NOTIFICATIONS`/`FAKE_DASHBOARD`) เพราะ RLS ปัจจุบันของ `profiles` ให้นักเรียนอ่านได้แค่แถวตัวเอง ยังดึงอันดับข้ามคนจริงไม่ได้จนกว่าจะมี Phase 6 (อาจต้องมีฟังก์ชัน `security definer` แบบ `check_roster` คืนแค่ชื่อ+แต้ม Top N)
 
-**ยังไม่มีเลย:** Scan & Launch flow ตัวจริง, Admin console, ระบบ Report, ระบบแลกของรางวัลจริง (rewards/redemptions table), Rank แบบดึงข้อมูลจริง
+**Phase 4 — เสร็จแล้ว, merge เข้า main แล้ว, เทสจริงบนมือถือผ่านครบ:**
+- `scan.html`/`js/scan.js` ใหม่ — เลือกหมวด (ดึงจาก DB จริง), กรอกน้ำหนัก, checklist รูป 3 อย่าง, บีบอัดรูปฝั่ง client จริง, อัปโหลด+insert เข้า `submissions` (`status='pending'` เสมอ), preview แต้มที่คาด, ปุ่ม "ส่งอีกหมวด"
+- เทสจริงบนมือถือผ่านครบ: เลือกหมวดได้, คำนวณแต้มถูก (เช็ค rounding ด้วย), ถ่ายรูป+บีบอัดทำงานจริง (~1.9MB → ~190-238KB), ส่งจริงแล้วเช็ค DB/Storage ตรงครบทุก field, ทดปุ่ม "ส่งอีกหมวด" ส่ง 2 หมวดต่อกันจนจบสำเร็จ
+- **เจอบั๊กเล็กจากการเทส (ยังไม่แก้):** การปัดเศษแต้มทำต่อ submission ไม่ใช่ต่อยอดน้ำหนักรวม ทำให้แบ่งส่งชิ้นเล็กๆ หลายรอบได้แต้มเกินจริงเล็กน้อย (เช่น 0.03+0.03 กก. แยกส่ง ได้ 2 pts แต่ส่งรวม 0.06 กก. ทีเดียวได้แค่ 1 pts) — **ตัดสินใจแก้ด้วยการเพิ่ม "น้ำหนักขั้นต่ำต่อครั้ง"** (ยังไม่ทำ เป็นงานเล็กที่ทำแยกได้ ไม่ต้องรอ Phase 5) ส่วนทางเลือกที่ใหญ่กว่า (เอากฎ "1 submission/หมวด/วัน" กลับมา) **ตกลงเลื่อนไปตัดสินใจทีหลังหลังทุกเฟสเสร็จแล้ว** ไม่ใช่ตอนนี้
+
+**ยังไม่มีเลย:** Admin console, ระบบ Report, ระบบแลกของรางวัลจริง (rewards/redemptions table), Rank แบบดึงข้อมูลจริง
 
 ---
 
@@ -135,15 +140,25 @@
 
 **ตารางที่มีอยู่แล้ว (Phase 1-2):** `student_roster`, `admin_roster`, `profiles`, `waste_categories`, `submissions`
 
-**ต้องแก้เพิ่ม (โค้ด Phase 4 เขียนเสร็จแล้ว แต่ SQL นี้ยังต้องรันเองใน Supabase Dashboard — Claude Code ไม่มีสิทธิ์รัน DDL โดยตรง):**
+**Migration ที่ต้องรันเอง — รันไปแล้วทั้งคู่ ยืนยันด้วยการเทสจริง:**
+- `submissions.weight_kg` (numeric) — เพิ่มไปตั้งแต่ก่อนเริ่ม Phase 4 แล้ว ยืนยันด้วยการเทสจริง (เห็น `weight_kg = 1.3` เข้า DB ถูกต้อง)
+- Grant select บน `waste_categories` ให้ `authenticated` — ยืนยันด้วยการเทสจริงว่า category picker โหลดข้อมูลได้ครบ 4 แถว ถ้าอยากเช็คซ้ำให้ชัวร์ (เช่น ทำ Supabase project ใหม่ทีหลัง) ใช้ SQL แบบ idempotent นี้รันได้เรื่อยๆ ไม่พัง:
 ```sql
-alter table public.submissions add column weight_kg numeric;
 grant select on public.waste_categories to authenticated;
-create policy "authenticated can read waste categories"
-  on public.waste_categories for select to authenticated using (true);
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'waste_categories'
+      and policyname = 'authenticated can read waste categories'
+  ) then
+    create policy "authenticated can read waste categories"
+      on public.waste_categories for select to authenticated using (true);
+  end if;
+end $$;
 ```
-- `submissions` — เพิ่ม field `weight_kg` (numeric) ✅ SQL พร้อมรันด้านบน. `points_awarded` ยังไม่แตะ (คงเป็น null จนกว่าแอดมินจะ approve ใน Phase 5) — ฝั่งนักเรียนเห็นแค่ "แต้มที่คาด" เป็น preview เท่านั้น
-- `waste_categories` — มี 4 แถวอยู่แล้ว, การแก้ `point_value` ผ่าน admin UI ยังเป็น Phase 5
+- `submissions` — `weight_kg` พร้อมใช้งานจริงแล้ว. `points_awarded` ยังไม่แตะ (คงเป็น null จนกว่าแอดมินจะ approve ใน Phase 5) — ฝั่งนักเรียนเห็นแค่ "แต้มที่คาด" เป็น preview เท่านั้น
+- `waste_categories` — มี 4 แถวจริงแล้ว (ชื่อล่าสุดดู CLAUDE.md), การแก้ `point_value` ผ่าน admin UI ยังเป็น Phase 5
 - ฟังก์ชันเช็คเวลาฝั่ง server (10:00-17:00 Asia/Bangkok) — **ยังไม่ทำ ตามที่ตัดสินใจเลื่อนออกไปแล้วด้านบน**
 
 **หมายเหตุ:** ไฟล์นี้เป็นแผนระดับสูง ส่วน `CLAUDE.md` ในโปรเจกต์จริงยังเป็น source of truth ที่ Claude Code อ่าน ต้องอัปเดต `CLAUDE.md` ให้ตรงกับที่นี่ก่อนส่ง prompt งานจริงรอบต่อไป
@@ -155,7 +170,7 @@ create policy "authenticated can read waste categories"
 1. ~~Supabase setup + schema~~ ✅ เสร็จ
 2. ~~Auth wiring~~ ✅ เสร็จ
 3. **Tab bar + header widgets — เสร็จทั้ง 3 รอบ** ✅ Round 3a (nav restyle 4 แท็บ + กระดิ่งแจ้งเตือน + ปุ่มแจ้งปัญหา), Round 3b (nav กลับมาเป็น 5 แท็บพร้อม FAB + Me, routing Home/Shop/Rank/Me ไปหน้าจริง, แก้บั๊ก session) — ทดสอบคลิกจริงในเบราว์เซอร์ผ่านครบทั้ง 2 รอบแล้ว, และ Round 3c (เอาดีไซน์ export มาต่อจริงใน Shop/Rank แทน placeholder เปล่า — แต้ม Shop เป็นข้อมูลจริง แคตตาล็อก/redeem และ Rank Top 10 ยังเป็น mock รอ Phase 5/6)
-4. **Scan & Launch flow — โค้ดเสร็จแล้ว บน branch `phase4-scan` (ยังไม่ merge เข้า `main`), ยังไม่ได้เทสจริงแบบ end-to-end** — `scan.html` + `js/scan.js` ใหม่: เลือกหมวด (ดึงจาก DB จริง ไม่ hardcode), กรอกน้ำหนัก, checklist รูป 3 อย่าง (ตาชั่ง/สติกเกอร์/บัตร — เตือนด้วยข้อความเฉยๆ ไม่มีการตรวจรูปอัตโนมัติ), บีบอัดรูปฝั่ง client จริง (resize ≤800px, quality 0.7 ผ่าน canvas ก่อนอัปโหลด), อัปโหลดเข้า bucket `submissions` ที่ path `{user_id}/{submission_id}.jpg`, insert แถวใหม่ด้วย `status: 'pending'` เสมอ (**ไม่ auto-approve**), แสดง "แต้มที่คาด" เป็น preview, และมีปุ่ม "ส่งอีกหมวด" ให้ส่งหลายหมวดต่อกันได้โดยไม่ต้องกลับ Home. ปุ่ม Scan ในทุกหน้า (bottom nav FAB + ปุ่ม Launch Pad บน dashboard) เปลี่ยนเป็นลิงก์จริงไป `scan.html` แล้ว (เดิม toast "coming soon") — ระหว่างทางเจอบั๊กเดิม `id="scan-btn"` ซ้ำกัน 2 จุดบน `dashboard.html` ด้วย เลยแก้ไปพร้อมกัน. **สิ่งที่ตั้งใจตัดออกตามสเปก:** เช็คหน้าต่างเวลา (10:00-17:00), banner บอกรอบเปิดรับ, ตาราง `collection_rounds`, การตรวจรูปด้วย AI, หน้า admin approve/reject (Phase 5), และไม่อัปเดต `points_total` ตอน submit. **ก่อนใช้จริง:** ต้องรัน SQL migration ด้านบนก่อน (ยังไม่ได้รัน) แล้วเปิด preview URL ของ branch `phase4-scan` บนมือถือจริงเพื่อเทสกล้อง — localhost ทดสอบกล้องไม่ได้อยู่แล้ว
+4. ✅ **Scan & Launch flow — เสร็จแล้ว, merge เข้า `main` แล้ว, เทสจริงบนมือถือผ่านครบ** — `scan.html` + `js/scan.js` ใหม่: เลือกหมวด (ดึงจาก DB จริง ไม่ hardcode), กรอกน้ำหนัก, checklist รูป 3 อย่าง (ตาชั่ง/สติกเกอร์/บัตร — เตือนด้วยข้อความเฉยๆ ไม่มีการตรวจรูปอัตโนมัติ), บีบอัดรูปฝั่ง client จริง (resize ≤800px, quality 0.7 ผ่าน canvas ก่อนอัปโหลด — เทสจริงเห็นไฟล์ลดจาก ~1.9MB เหลือ ~190-238KB), อัปโหลดเข้า bucket `submissions` ที่ path `{user_id}/{submission_id}.jpg`, insert แถวใหม่ด้วย `status: 'pending'` เสมอ (**ไม่ auto-approve** — เทสยืนยันแล้วว่า `points_awarded`/`reviewed_by`/`reviewed_at` เป็น null จริง), แสดง "แต้มที่คาด" เป็น preview, และมีปุ่ม "ส่งอีกหมวด" ให้ส่งหลายหมวดต่อกันได้โดยไม่ต้องกลับ Home (**เทสจริงแล้ว ส่ง 2 หมวดต่อกันจนจบสำเร็จ**). ปุ่ม Scan ในทุกหน้า (bottom nav FAB + ปุ่ม Launch Pad บน dashboard) เปลี่ยนเป็นลิงก์จริงไป `scan.html` แล้ว (เดิม toast "coming soon") — ระหว่างทางเจอบั๊กเดิม `id="scan-btn"` ซ้ำกัน 2 จุดบน `dashboard.html` ด้วย เลยแก้ไปพร้อมกัน. **สิ่งที่ตั้งใจตัดออกตามสเปก:** เช็คหน้าต่างเวลา (10:00-17:00), banner บอกรอบเปิดรับ, ตาราง `collection_rounds`, การตรวจรูปด้วย AI, หน้า admin approve/reject (Phase 5), และไม่อัปเดต `points_total` ตอน submit. **เจอบั๊กเล็กจากการเทส (ยังไม่แก้):** ปัดเศษแต้มต่อ submission ทำให้แบ่งส่งชิ้นเล็กๆ ได้แต้มเกินจริงเล็กน้อย — ดูรายละเอียด+แผนแก้ในข้อ 2 ของ Current State ด้านบน
 5. Admin console — ฟีด approve/reject submission ที่รอ (`pending`) ทุกรายการ (กลไกหลักเดิม ไม่ใช่แค่เคสพิเศษ) + audit view (เทียบยอดชั่งถังจริงกับยอดเคลม) + จัดการ `point_value` ต่อหมวด
 6. เก็บงาน dashboard — เปลี่ยนจาก mock ห้อง/room ranking เป็นข้อมูลจริงแบบเดี่ยว + Rank Top 10
 

@@ -37,7 +37,7 @@ There is no build/dev/test command. Open the HTML files directly in a browser, o
 - New "coming soon" placeholder features should follow the existing pattern in `dashboard.js` (`showToast(...)`) rather than introducing a new notification mechanism.
 - Thai and English text are both used intentionally in the UI (English for section headings/game terms, Thai for descriptions/instructions) — preserve this bilingual pattern in new copy rather than translating everything to one language.
 
-## Backend plan (Supabase) — Phase 2 complete, Phase 3 complete, Phase 4 core flow built (pending manual migration + real-device test)
+## Backend plan (Supabase) — Phase 2 complete, Phase 3 complete, Phase 4 core flow DONE and merged to main, browser-verified on a real phone
 
 This project is moving from fake/local data (`data.js` + `localStorage`) to a real backend on **Supabase** (Postgres + Auth + Storage), region ap-southeast-1 (Singapore). This is a multi-phase migration — **work on one phase at a time only**, even if asked to plan ahead. Do not implement later phases early or guess ahead at schema/logic for features that haven't been scoped yet in this file.
 
@@ -52,7 +52,7 @@ This project is moving from fake/local data (`data.js` + `localStorage`) to a re
 1. ✅ **Supabase project setup + schema** — DONE.
 2. ✅ **Wire `auth.js` to real Supabase Auth** — DONE, both roles, tested. See "Admin roster" section below — the self-signup security gap that existed here has **already been fixed and tested**, not just planned.
 3. ✅ **Nav + header widgets — DONE**, both rounds. Round 3a (4-tab restyle, notification bell, report button) and Round 3b (Home/Shop/Rank/Me routed to real pages, session/localStorage bug fixed, 5-tab nav with the FAB and a "Me" tab restored) — see status notes further down. Scan button still shows "coming soon" — Scan & Launch is still Phase 4.
-4. ✅ **Scan & Launch flow — code-complete, see "Phase 4 — DONE" status notes further down.** Not just "photo + pick category" — weight input, 3-element photo checklist, client-side compression, upload, points suggestion, **no auto-approve**. Time-gating and the round-dates banner were deliberately left out of this pass (see "Time-gating and round banner — deferred" note below). **Not yet verified end-to-end**: needs the `submissions.weight_kg` migration run manually (see below) and a real-device test (camera capture only makes sense on a phone, not localhost) — testing on the `phase4-scan` branch's Vercel preview, not merged to main yet.
+4. ✅ **Scan & Launch flow — DONE, merged to `main`, verified end-to-end on a real phone.** Not just "photo + pick category" — weight input, 3-element photo checklist, client-side compression, upload, points suggestion, **no auto-approve**. Time-gating and the round-dates banner were deliberately left out of this pass (see "Time-gating and round banner — deferred" note below). **Real-device test results (see "Phase 4" status notes further down for the full checklist):** category picker loads live from `waste_categories`, weight input + suggested-points math confirmed correct including rounding behavior, photo capture + compression confirmed working (multiple real uploads, ~1.9MB → ~190-238KB), a real submission was created and confirmed landing correctly in `submissions` (`status='pending'`, `weight_kg`, `waste_category_id`, `photo_url` all correct, `points_awarded`/`reviewed_by`/`reviewed_at` all `NULL` as expected) with the photo confirmed present in the `submissions` Storage bucket, and the "ส่งอีกหมวด" multi-category resubmit flow was also tested end-to-end and works correctly.
 5. Admin console: the approve/reject feed for pending submissions (the actual review mechanism — every submission needs a human look), an audit view (compare physical bin weight at round-end to claimed totals), and a UI for admins to edit `waste_categories.point_value` (market prices change monthly).
 6. Replace `FAKE_DASHBOARD` in `data.js` with real Supabase queries: individual points/history (not room ranking), Top 10 leaderboard only (not full rankings — avoids discouraging students with low points).
 
@@ -79,6 +79,16 @@ This project is moving from fake/local data (`data.js` + `localStorage`) to a re
 | Aluminum cans | 50 | 500 |
 | Mixed glass bottles | 1 | 10 |
 
+**Actual `waste_categories` rows seeded in Supabase (names finalized, don't overwrite without reason):**
+| `name` | `point_value` |
+|---|---|
+| กระดาษรวม (ไม่แยกชนิด/สี — สมุด หนังสือ กระดาษทั่วไป) | 20 |
+| ขวดพลาสติกใส (PET) | 150 |
+| กระป๋องอลูมิเนียม (เช่น กระป๋องน้ำอัดลม ฝาขวด) | 500 |
+| ขวดแก้วรวม | 10 |
+
+The paper category's name is deliberately worded "รวม (ไม่แยกชนิด/สี)" — this project's original waste-price reference document lists paper as several separately-priced sub-types (A4, brown box paper, newsprint, etc.), which this app does **not** replicate; using generic wording here avoids implying the app prices paper the same way that document does. The frontend fetches `name` from the DB and displays it as-is — there is no hardcoded category name anywhere in app code, so this wording can be edited directly in Supabase without a code change if it needs revising.
+
 Formula: `points = weight_kg × waste_categories.point_value`. A student can submit multiple categories in one visit — each category is weighed and photographed separately, i.e. **one `submissions` row per category per weighing**, same as the existing one-row-per-category schema already supports. No schema change needed for the multi-category case itself.
 
 **Submission flow (Scan & Launch — the real spec for Phase 4):**
@@ -103,15 +113,20 @@ Formula: `points = weight_kg × waste_categories.point_value`. A student can sub
 - **Photo lifecycle rule (decided — must be implemented in Phase 5's admin approve/reject action, not in Phase 4):** when an admin approves a submission, delete the photo from Storage immediately as part of the same action (and clear/null `submissions.photo_url` after), then set `status='approved'` etc. When an admin rejects, **leave the photo in place** — don't auto-delete it, in case the student disputes the rejection. No further cleanup policy for old rejected photos is decided yet (e.g. bulk-delete at round end) — don't build that without being asked.
 - Rationale: with monthly rounds running indefinitely, keeping every photo forever would blow past the 1GB free-tier limit within a year even with compression; deleting on approval (the common case) keeps storage usage low essentially forever since only the pending/rejected backlog accumulates, not the full history.
 
-**Schema addition for Phase 4 — code assumes it exists, but you must run it by hand.** `submissions.weight_kg` (numeric) is not something this codebase can create itself (no Supabase CLI/migrations set up here — `js/supabase-client.js` only holds the anon publishable key, which can't run DDL). Run this once in the Supabase Dashboard → SQL Editor before testing `scan.html`:
-```sql
-alter table public.submissions add column weight_kg numeric;
-```
-Also grant students read access to `waste_categories` (the category picker/points-suggestion query needs it, and nothing queried this table before Phase 4, so RLS may not have `authenticated` SELECT yet):
+**Schema additions for Phase 4 — both done, confirmed working.** `submissions.weight_kg` (numeric) was added via manual migration (`alter table public.submissions add column weight_kg numeric;`) before Phase 4 build started, and is confirmed live — a real test submission landed with `weight_kg = 1.3` correctly. Student read access to `waste_categories` (needed for the category picker/points-suggestion query) is also confirmed working — the category picker successfully loaded all 4 rows during real-device testing. If you ever need to re-verify or re-apply the grant/policy safely (e.g. after a fresh Supabase project), this is idempotent and safe to run any number of times:
 ```sql
 grant select on public.waste_categories to authenticated;
-create policy "authenticated can read waste categories"
-  on public.waste_categories for select to authenticated using (true);
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'waste_categories'
+      and policyname = 'authenticated can read waste categories'
+  ) then
+    create policy "authenticated can read waste categories"
+      on public.waste_categories for select to authenticated using (true);
+  end if;
+end $$;
 ```
 
 **Actual schema (already created in Supabase, do not re-create — just build against it):**
@@ -165,7 +180,7 @@ A matching function `public.check_admin_roster(p_student_id text)` exists — sa
 - Both pages keep using `requireStudentSession()` and `wireScanFab()`/`showToast()` from the shared session-guard/nav-common files, unchanged. **`wireScanFab()` itself was removed in Phase 4** (see below) — this bullet is a historical record of Round 3c, not the current state.
 - New CSS added to `css/dashboard.css` only (`.balance-chip`, `.redeem-btn`, `.shop-cert`, `.stationery-grid`/`.stationery-item`, `.limited-section`/`.limited-item`, `.rank-podium`, `.rank-list`/`.rank-row`) — no new files, no changes to `components.css` or `tokens.css`.
 
-**Phase 4 — Scan & Launch — code-complete, built on branch `phase4-scan` (not merged to `main`), not yet browser-verified end-to-end:**
+**Phase 4 — Scan & Launch — DONE, merged to `main` from branch `phase4-scan`, browser-verified end-to-end on a real phone:**
 - New `scan.html` + `js/scan.js` — the full submission form: category picker (fetched live from `waste_categories`, not hardcoded, so admin-edited `point_value` in Phase 5 reflects automatically), a weight-in-kg number input, a static photo checklist (scale readout + today's dated sticker + student ID — text reminder only, **no image content validation**), a single photo capture/upload input, and a live "suggested points" preview (`weight × point_value`, clearly labeled as a preview, not the awarded amount). Confirm is disabled until category + weight > 0 + photo are all present.
 - **Client-side compression is real**, not just a display resize: `compressImage()` in `js/scan.js` draws the photo onto a `<canvas>` scaled to a max 800px width and re-encodes via `canvas.toBlob(..., 'image/jpeg', 0.7)` before it's ever uploaded — the UI shows the before/after KB size so this is visible, not just assumed.
 - **Upload + insert flow:** generates `submissionId` client-side with `crypto.randomUUID()`, uploads the compressed blob to the `submissions` bucket at `{user_id}/{submissionId}.jpg`, then inserts a `submissions` row with that same id, `user_id`, `waste_category_id`, `weight_kg`, `photo_url` (the storage path, not a public URL — bucket is private), and **`status: 'pending'` set explicitly, always** — no trigger, no auto-approve logic anywhere in this flow. If the insert fails after the photo already uploaded, the code deletes the orphaned photo from Storage before surfacing the error, so a failed submission doesn't leave a dangling file.
@@ -174,7 +189,8 @@ A matching function `public.check_admin_roster(p_student_id text)` exists — sa
 - **CSS-specificity bug caught before shipping:** the Scan FAB link is deliberately *not* given the `active` class on `scan.html`. `.nav-item.active` (specificity 0,2,0) would otherwise override `.nav-item--fab`'s icon color (0,1,0) regardless of source order, turning the FAB's `--sb-cream` icon into `--accent` blue — invisible against the FAB's blue gradient background.
 - New CSS added to `css/dashboard.css` (`.category-grid`/`.category-item`, `.photo-checklist`, `.photo-preview`, `.suggested-points-row`) and `css/components.css` (`.btn-secondary` for the "attach photo" button, `.btn-primary:disabled`) — no new colors/fonts, everything pulls from existing `tokens.css` values.
 - **Not done in this pass, matching the spec:** no time-of-day check, no round-dates banner, no `collection_rounds` table, no photo content/AI validation, no admin approve/reject UI (Phase 5), no `points_total` update at submission time.
-- **Testing status — honest, not claimed as done:** this was built and reasoned through carefully, but **not click-tested in a real browser against live Supabase**, because (a) `submissions.weight_kg` doesn't exist in the DB yet — see the migration SQL above — and (b) the photo-checklist flow is meant to be tested with a real phone camera on the Vercel preview deploy of the `phase4-scan` branch, not localhost. Before trusting this in production: run the migration SQL, open the `phase4-scan` preview URL on a phone while logged in as a real student, and walk the "Testing before calling this done" checklist (submit with a real photo → check the `submissions` row and the Storage file land correctly; confirm the uploaded file is meaningfully smaller than the original; submit 2 categories back-to-back without returning to Home; confirm session-guard bounces to login like the other pages).
+- **Testing status — done, confirmed on a real device.** Tested on a Vercel preview deploy of `phase4-scan` (shared via a Vercel Sharable Link to bypass Deployment Protection, opened on a real phone — camera capture doesn't work meaningfully on localhost). Confirmed: category picker loads live from `waste_categories`; weight input + live suggested-points math is correct (spot-checked against several hand-computed cases); photo capture + compression works on a real phone camera (multiple real uploads compressed from ~1.9MB down to ~190-238KB, clearly readable); a real submission was created and the resulting `submissions` row was checked directly in Supabase Table Editor (`status='pending'`, `weight_kg`/`waste_category_id`/`photo_url` all correct, `points_awarded`/`reviewed_by`/`reviewed_at` all `NULL`), and the uploaded photo was confirmed present in the `submissions` Storage bucket at the expected path; the "ส่งอีกหมวด" multi-category resubmit flow was also tested end-to-end (submit one category, then a second, without returning to Home) and works correctly. Merged to `main` and live in production.
+- **Known rounding edge case found during testing — not fixed yet, decided fix below.** `points = round(weight_kg × point_value)` rounds per-submission, not per cumulative weight. This means splitting one weighing into multiple small submissions can earn more points than submitting it as one weighing (e.g. two 0.03kg paper submissions each round `0.6 → 1` point for 2pts total, vs. one 0.06kg submission rounding `1.2 → 1` point) — a small but real incentive to over-split submissions, which works against the "total points awarded should equal real recyclable value" principle in the Product model section above. **Decided fix (not yet implemented):** enforce a minimum weight per submission (exact threshold not yet chosen) to make splitting impractical. This is a small, scoped addition — implement it as a follow-up to Phase 4, not blocking Phase 5. A second, more structural option (bringing back "1 submission per category per day", see Open questions below) was also discussed and deliberately deferred until all phases are built, since it's a bigger UX tradeoff that deserves a dedicated decision, not a quick fix alongside other work.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
