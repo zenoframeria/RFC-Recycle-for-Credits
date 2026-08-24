@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('me-classroom').textContent = currentUser.classroom || '-';
   document.getElementById('me-points').textContent = (currentUser.pointsTotal ?? 0).toLocaleString();
 
-  wireScanFab();
   wireLogout();
 });
 
