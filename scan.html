@@ -56,6 +56,7 @@
             <span style="font-family:var(--font-mono);font-size:11px;color:rgba(26,31,51,0.5);">kg</span>
           </div>
         </div>
+        <div class="field-error" id="weight-error" hidden></div>
       </div>
     </div>
 
@@ -74,7 +75,7 @@
         <div class="photo-note">ต้องเห็นทั้ง 3 อย่างในรูปเดียวกัน — แอดมินจะตรวจรูปนี้ก่อนอนุมัติ ไม่มีการตรวจสอบรูปอัตโนมัติ</div>
 
         <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
-        <button type="button" class="btn-secondary" id="photo-trigger">
+        <button type="button" class="btn-secondary" id="photo-trigger" disabled>
           <span class="label">แนบรูปถ่าย</span>
         </button>
 

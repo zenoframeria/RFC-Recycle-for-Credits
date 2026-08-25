@@ -11,6 +11,7 @@
 
 const MAX_PHOTO_WIDTH = 800;
 const PHOTO_QUALITY = 0.7;
+const MIN_WEIGHT_KG = 0.05;
 
 const scanState = {
   currentUser: null,
@@ -69,8 +70,29 @@ async function loadCategories() {
 function wireWeightInput() {
   document.getElementById('weight-input').addEventListener('input', () => {
     updateSuggestedPoints();
+    validateWeight();
     refreshConfirmState();
   });
+}
+
+// Enforces a flat minimum weight per submission across all categories, so
+// splitting one weighing into several tiny submissions can't out-earn
+// submitting it as one (points round per-submission, see CLAUDE.md).
+// Also gates the photo trigger so a student can't attach/upload a photo
+// for a submission that's about to be rejected anyway.
+function validateWeight() {
+  const weight = parseFloat(document.getElementById('weight-input').value);
+  const errorEl = document.getElementById('weight-error');
+  const trigger = document.getElementById('photo-trigger');
+  const belowMin = weight > 0 && weight < MIN_WEIGHT_KG;
+
+  errorEl.textContent = belowMin
+    ? `น้ำหนักต้องอย่างน้อย ${MIN_WEIGHT_KG} กก. (${Math.round(MIN_WEIGHT_KG * 1000)} กรัม) ต่อการส่งหนึ่งครั้ง`
+    : '';
+  errorEl.hidden = !belowMin;
+  trigger.disabled = !(weight >= MIN_WEIGHT_KG);
+
+  return weight >= MIN_WEIGHT_KG;
 }
 
 function updateSuggestedPoints() {
@@ -138,7 +160,7 @@ function wirePhotoInput() {
       scanState.photoBlob = null;
       showToast('แนบรูปไม่สำเร็จ ลองใหม่อีกครั้ง');
     } finally {
-      trigger.disabled = false;
+      validateWeight();
       triggerLabel.textContent = scanState.photoBlob ? 'เปลี่ยนรูป' : 'แนบรูปถ่าย';
       refreshConfirmState();
     }
@@ -148,7 +170,7 @@ function wirePhotoInput() {
 // ── confirm state ──────────────────────────────────────────────────
 function refreshConfirmState() {
   const weight = parseFloat(document.getElementById('weight-input').value);
-  const ready = scanState.selectedCategoryId && weight > 0 && scanState.photoBlob;
+  const ready = scanState.selectedCategoryId && weight >= MIN_WEIGHT_KG && scanState.photoBlob;
   document.getElementById('confirm-btn').disabled = !ready;
 }
 
@@ -157,7 +179,7 @@ function wireSubmit() {
   document.getElementById('confirm-btn').addEventListener('click', async () => {
     const weight = parseFloat(document.getElementById('weight-input').value);
     const cat = scanState.categories.find((c) => c.id === scanState.selectedCategoryId);
-    if (!cat || !weight || weight <= 0 || !scanState.photoBlob) return;
+    if (!cat || !weight || weight < MIN_WEIGHT_KG || !scanState.photoBlob) return;
 
     setSubmitLoading(true);
 
@@ -181,6 +203,7 @@ function wireSubmit() {
           weight_kg: weight,
           photo_url: photoPath,
           status: 'pending',
+          point_value_snapshot: cat.point_value,
         });
 
       if (insertError) {
@@ -234,6 +257,7 @@ function resetForm() {
   document.querySelectorAll('.category-item').forEach((el) => el.classList.remove('is-selected'));
 
   updateSuggestedPoints();
+  validateWeight();
   refreshConfirmState();
 
   document.getElementById('scan-form').hidden = false;
