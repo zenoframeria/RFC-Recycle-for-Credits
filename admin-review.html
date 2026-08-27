@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ขยะแลกแต้ม — Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-role="admin">
+<div class="app-shell">
+<div class="dash-scroll">
+
+  <div class="admin-header">
+    <div>
+      <div class="hello-script">mission control ★</div>
+      <div class="admin-name" id="admin-name">-</div>
+    </div>
+    <button class="icon-btn admin-logout-btn" id="logout-btn" aria-label="Log out" title="Log out">
+      <svg width="17" height="17" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="admin-tabs">
+    <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
+    <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
+  </div>
+
+  <div class="section admin-panel active" id="feed-panel">
+    <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+      <span class="title">Pending Submissions</span>
+      <span class="sub">· รอตรวจสอบ</span>
+    </div>
+    <div class="feed-list" id="feed-list">
+      <div class="coming-soon">กำลังโหลดรายการ...</div>
+    </div>
+  </div>
+
+  <div class="section admin-panel" id="price-panel">
+    <div class="card">
+      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="title">Category Prices</span>
+        <span class="sub">· แก้ไขราคาต่อกิโลกรัม</span>
+      </div>
+      <div class="price-list" id="price-list">
+        <div class="coming-soon">กำลังโหลดหมวดขยะ...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-footer">made with <span class="heart">♥</span> · ขยะแลกแต้ม admin</div>
+</div>
+
+<div class="modal-overlay" id="lightbox-overlay">
+  <div class="modal-card" style="max-width:400px;">
+    <button class="modal-close" id="lightbox-close">&times;</button>
+    <img class="lightbox-img" id="lightbox-img" alt="รูปเต็ม">
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/admin-session-guard.js"></script>
+<script src="js/nav-common.js"></script>
+<script src="js/admin-review.js"></script>
+</body>
+</html>
