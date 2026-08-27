@@ -44,11 +44,7 @@ function saveCurrentUser(role, profile) {
 }
 
 function goToRoleHome(role) {
-  if (role === 'student') {
-    window.location.href = 'dashboard.html';
-  } else {
-    showAdminComingSoon();
-  }
+  window.location.href = role === 'student' ? 'dashboard.html' : 'admin-review.html';
 }
 
 // ── password show/hide (login form only) ─────────────────────────────
@@ -233,18 +229,4 @@ function wireSignupForm(role) {
       setLoading(submitBtn, false);
     }
   });
-}
-
-function showAdminComingSoon() {
-  const card = document.getElementById('login-card');
-  card.innerHTML = `
-    <div class="card-heading">
-      <span class="line"></span>
-      <span class="label">◆ ENTER CONSOLE ◆</span>
-      <span class="line"></span>
-    </div>
-    <div class="coming-soon">
-      Admin console — coming soon<br>ระบบผู้ดูแลกำลังอยู่ระหว่างพัฒนา
-    </div>
-  `;
 }
