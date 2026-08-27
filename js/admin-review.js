@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireTabs();
   wireLogout();
   wireLightbox();
+  wireFeedActions();
 
   await loadFeed();
   await loadCategoriesForEditing();
@@ -142,6 +143,105 @@ function renderFeed() {
 function removeCardFromFeed(id) {
   adminState.feedRows = adminState.feedRows.filter((r) => r.id !== id);
   renderFeed();
+}
+
+// ── approve / reject (delegated — feed-list's innerHTML is replaced on
+//    every renderFeed(), so this listener is bound once, not per-card) ──
+function wireFeedActions() {
+  document.getElementById('feed-list').addEventListener('click', async (e) => {
+    const photo = e.target.closest('.feed-card-photo');
+    if (photo) { openLightbox(photo.dataset.lightbox); return; }
+
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+
+    const card = btn.closest('.feed-card');
+    const id = card.dataset.id;
+    const comment = card.querySelector('.feed-card-comment').value.trim();
+
+    if (btn.dataset.action === 'approve') {
+      await approveSubmission(id, card);
+    } else if (btn.dataset.action === 'reject') {
+      await rejectSubmission(id, comment, card);
+    }
+  });
+}
+
+function setCardBusy(card, busy) {
+  card.querySelectorAll('button[data-action]').forEach((b) => { b.disabled = busy; });
+}
+
+// The highest-risk action in this page: award points exactly once, even
+// under a double-click or two admins racing on the same row. All of that is
+// enforced server-side by public.approve_submission (SECURITY DEFINER,
+// row-locked, status-checked) — this function only calls the RPC and then
+// does the non-critical Storage cleanup.
+async function approveSubmission(id, card) {
+  setCardBusy(card, true);
+
+  const { data, error } = await supabaseClient.rpc('approve_submission', { p_submission_id: id });
+
+  if (error) {
+    showToast('อนุมัติไม่สำเร็จ ลองใหม่อีกครั้ง');
+    console.error('approve_submission RPC error', error);
+    setCardBusy(card, false);
+    return;
+  }
+
+  const result = Array.isArray(data) ? data[0] : data;
+
+  if (!result || !result.success) {
+    showToast(result?.message === 'already reviewed'
+      ? 'รายการนี้มีแอดมินคนอื่นตรวจไปแล้ว'
+      : 'ไม่สามารถอนุมัติได้ ลองรีเฟรชหน้านี้');
+    removeCardFromFeed(id);
+    return;
+  }
+
+  // Per CLAUDE.md's photo lifecycle rule: delete the photo on approve to
+  // save storage quota. A failed delete here is a minor cleanup issue, not
+  // a correctness one — the DB status/points changes above already
+  // succeeded and are the source of truth, so don't block on this.
+  const row = adminState.feedRows.find((r) => r.id === id);
+  if (row?.photo_url) {
+    const { error: delErr } = await supabaseClient.storage.from('submissions').remove([row.photo_url]);
+    if (delErr) console.error('non-fatal: failed to delete approved submission photo', row.photo_url, delErr);
+  }
+
+  showToast(`อนุมัติแล้ว +${result.points_awarded} pts`);
+  removeCardFromFeed(id);
+}
+
+async function rejectSubmission(id, comment, card) {
+  setCardBusy(card, true);
+
+  const { data, error } = await supabaseClient
+    .from('submissions')
+    .update({
+      status: 'rejected',
+      reviewed_by: adminState.currentUser.id,
+      reviewed_at: new Date().toISOString(),
+      comment: comment || null,
+    })
+    .eq('id', id)
+    .eq('status', 'pending')
+    .select();
+
+  if (error) {
+    showToast('ปฏิเสธไม่สำเร็จ ลองใหม่อีกครั้ง');
+    console.error('reject failed', error);
+    setCardBusy(card, false);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    showToast('รายการนี้มีแอดมินคนอื่นตรวจไปแล้ว');
+    removeCardFromFeed(id);
+    return;
+  }
+
+  showToast('ปฏิเสธแล้ว');
+  removeCardFromFeed(id);
 }
 
 // ── price editor (implemented in a later commit; placeholder here so the
