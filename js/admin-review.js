@@ -244,8 +244,57 @@ async function rejectSubmission(id, comment, card) {
   removeCardFromFeed(id);
 }
 
-// ── price editor (implemented in a later commit; placeholder here so the
-//    page doesn't error before that lands) ─────────────────────────────
+// ── price editor ──────────────────────────────────────────────────
 async function loadCategoriesForEditing() {
-  // implemented below
+  const list = document.getElementById('price-list');
+
+  const { data, error } = await supabaseClient
+    .from('waste_categories')
+    .select('id, name, point_value')
+    .order('id');
+
+  if (error || !data) {
+    list.innerHTML = '<div class="coming-soon">โหลดหมวดขยะไม่สำเร็จ</div>';
+    console.error('loadCategoriesForEditing failed', error);
+    return;
+  }
+
+  list.innerHTML = data.map((cat) => `
+    <div class="price-row" data-id="${cat.id}">
+      <span class="name">${cat.name}</span>
+      <input type="number" min="0" step="1" value="${cat.point_value}">
+      <button type="button" class="save-btn">Save</button>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.price-row').forEach((row) => {
+    row.querySelector('.save-btn').addEventListener('click', () => savePrice(row));
+  });
+}
+
+async function savePrice(row) {
+  const id = Number(row.dataset.id);
+  const input = row.querySelector('input');
+  const btn = row.querySelector('.save-btn');
+  const value = parseInt(input.value, 10);
+
+  if (!Number.isFinite(value) || value < 0) {
+    showToast('ราคาต้องเป็นตัวเลขไม่ติดลบ');
+    return;
+  }
+
+  btn.disabled = true;
+  const { error } = await supabaseClient
+    .from('waste_categories')
+    .update({ point_value: value })
+    .eq('id', id);
+  btn.disabled = false;
+
+  if (error) {
+    showToast('บันทึกราคาไม่สำเร็จ');
+    console.error('savePrice failed', id, error);
+    return;
+  }
+
+  showToast('บันทึกราคาแล้ว');
 }
