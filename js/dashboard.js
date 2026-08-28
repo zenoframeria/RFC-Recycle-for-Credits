@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadRecycledTotal(currentUser.id);
   await loadHistory(currentUser.id);
+  await refreshPoints(currentUser.id);
 });
 
 function renderHeader(user) {
@@ -30,6 +31,33 @@ function renderHeader(user) {
 
 function renderPoints(pointsTotal) {
   document.getElementById('points-value').textContent = (pointsTotal ?? 0).toLocaleString();
+}
+
+// Instant paint above uses the cached currentUser.pointsTotal (set at login,
+// never updated after). This corrects it in the background from the live
+// profiles.points_total once it arrives, and writes the fresh value back to
+// localStorage so me.html/shop.js (which read the same cached field) also
+// pick up the correction on their next load.
+async function refreshPoints(userId) {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('points_total')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('refreshPoints failed', error);
+    return; // keep showing the cached value already on screen
+  }
+
+  const pointsTotal = data.points_total ?? 0;
+  renderPoints(pointsTotal);
+
+  const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  if (cached) {
+    cached.pointsTotal = pointsTotal;
+    localStorage.setItem('currentUser', JSON.stringify(cached));
+  }
 }
 
 // Sum of weight_kg across this student's approved submissions only —
@@ -81,8 +109,18 @@ async function loadHistory(userId) {
   list.innerHTML = rows.map(renderHistoryRow).join('');
 }
 
+// Escapes user/admin-entered free text before it's dropped into innerHTML.
+// Used for row.comment (an admin-typed rejection reason rendered into a
+// different user's — the student's — session) and, defensively, for
+// category, in case waste_categories.name ever includes admin free text.
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
 function renderHistoryRow(row) {
-  const category = row.waste_categories?.name || '-';
+  const category = escapeHtml(row.waste_categories?.name || '-');
   const when = new Date(row.created_at).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
 
   let statusHtml;
@@ -98,7 +136,7 @@ function renderHistoryRow(row) {
   }
 
   const commentHtml = (row.status === 'rejected' && row.comment)
-    ? `<div class="history-comment">เหตุผล: ${row.comment}</div>`
+    ? `<div class="history-comment">เหตุผล: ${escapeHtml(row.comment)}</div>`
     : '';
 
   return `
