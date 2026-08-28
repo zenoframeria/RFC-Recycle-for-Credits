@@ -1,20 +1,27 @@
-// ขยะแลกแต้ม — populates the dashboard from the fake data in data.js.
+// ขยะแลกแต้ม — populates the dashboard with real data from Supabase:
+// profiles.points_total (via currentUser, same pattern me.html/shop.js
+// already use) + the student's own submissions (kg recycled + history).
+// No fake percentage/level/target — those concepts don't exist in the
+// current product model, see CLAUDE.md's "Product model (current)" section.
 
-const STAT_ICONS = [
-  { d: 'M7 7l-3 5 3 2M17 7l3 5-3 2M7 17h10M12 4 8 10h8z', tint: 'var(--sb-green)' },
-  { d: 'M12 3c2 4 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z', tint: 'var(--sb-red)' },
-  { d: 'M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l8-8', tint: 'var(--accent)' },
-];
+const STATUS_LABEL = {
+  approved: 'อนุมัติแล้ว',
+  pending: 'รอตรวจสอบ',
+  rejected: 'ถูกปฏิเสธ',
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
   renderHeader(currentUser);
-  renderProgressRing(FAKE_DASHBOARD.points);
-  renderStats(FAKE_DASHBOARD.stats);
+  renderPoints(currentUser.pointsTotal);
   wireNotifications();
   wireReportModal();
+
+  await loadRecycledTotal(currentUser.id);
+  await loadHistory(currentUser.id);
+  await refreshPoints(currentUser.id);
 });
 
 function renderHeader(user) {
@@ -22,55 +29,127 @@ function renderHeader(user) {
   document.getElementById('avatar-initial').textContent = user.name.trim().charAt(0);
 }
 
-function renderProgressRing({ value, target, nextRankIn, level }) {
-  const r = 74;
-  const circ = 2 * Math.PI * r;
-  const pct = Math.min(value / target, 1);
-  const filled = pct * circ;
-
-  const fillCircle = document.getElementById('ring-fill');
-  // start fully empty, then transition the dashoffset so the ring visibly fills on load
-  fillCircle.style.transition = 'none';
-  fillCircle.setAttribute('stroke-dasharray', `${circ} ${circ}`);
-  fillCircle.setAttribute('stroke-dashoffset', circ);
-  fillCircle.getBoundingClientRect(); // force layout so the empty state registers first
-  requestAnimationFrame(() => {
-    fillCircle.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1)';
-    fillCircle.setAttribute('stroke-dashoffset', circ - filled);
-  });
-
-  const ticks = document.getElementById('ring-ticks');
-  for (let i = 0; i < 20; i++) {
-    const a = (i / 20) * Math.PI * 2 - Math.PI / 2;
-    const r1 = r + 5, r2 = r + 9;
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', 95 + Math.cos(a) * r1);
-    line.setAttribute('y1', 95 + Math.sin(a) * r1);
-    line.setAttribute('x2', 95 + Math.cos(a) * r2);
-    line.setAttribute('y2', 95 + Math.sin(a) * r2);
-    line.setAttribute('stroke', 'rgba(26,31,51,0.2)');
-    line.setAttribute('stroke-width', '0.6');
-    ticks.appendChild(line);
-  }
-
-  document.getElementById('ring-value').textContent = value.toLocaleString();
-  document.getElementById('ring-target').textContent = `/ ${target.toLocaleString()} pts`;
-  document.getElementById('ring-next').textContent = nextRankIn.toLocaleString();
-  document.getElementById('level-stamp').textContent = `LV ⋅ ${level}`;
+function renderPoints(pointsTotal) {
+  document.getElementById('points-value').textContent = (pointsTotal ?? 0).toLocaleString();
 }
 
-function renderStats(stats) {
-  const grid = document.getElementById('stats-grid');
-  grid.innerHTML = stats.map((s, i) => {
-    const icon = STAT_ICONS[i % STAT_ICONS.length];
-    return `
-      <div class="stat-tile">
-        <svg width="14" height="14" viewBox="0 0 24 24"><path d="${icon.d}" fill="none" stroke="${icon.tint}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="value">${s.value}<span class="unit">${s.unit}</span></div>
-        <div class="label">${s.label}</div>
-      </div>
+// Instant paint above uses the cached currentUser.pointsTotal (set at login,
+// never updated after). This corrects it in the background from the live
+// profiles.points_total once it arrives, and writes the fresh value back to
+// localStorage so me.html/shop.js (which read the same cached field) also
+// pick up the correction on their next load.
+async function refreshPoints(userId) {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('points_total')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('refreshPoints failed', error);
+    return; // keep showing the cached value already on screen
+  }
+
+  const pointsTotal = data.points_total ?? 0;
+  renderPoints(pointsTotal);
+
+  const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  if (cached) {
+    cached.pointsTotal = pointsTotal;
+    localStorage.setItem('currentUser', JSON.stringify(cached));
+  }
+}
+
+// Sum of weight_kg across this student's approved submissions only —
+// pending/rejected don't count since nothing was actually awarded for them.
+async function loadRecycledTotal(userId) {
+  const el = document.getElementById('kg-recycled-value');
+
+  const { data, error } = await supabaseClient
+    .from('submissions')
+    .select('weight_kg')
+    .eq('user_id', userId)
+    .eq('status', 'approved');
+
+  if (error) {
+    console.error('loadRecycledTotal failed', error);
+    el.textContent = '-';
+    return;
+  }
+
+  const totalKg = (data || []).reduce((sum, row) => sum + Number(row.weight_kg || 0), 0);
+  el.textContent = totalKg.toFixed(1);
+}
+
+async function loadHistory(userId) {
+  const list = document.getElementById('history-list');
+
+  const { data, error } = await supabaseClient
+    .from('submissions')
+    .select(`
+      id, created_at, weight_kg, status, points_awarded, comment,
+      waste_categories ( name )
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  if (error) {
+    list.innerHTML = '<div class="history-empty">โหลดประวัติไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
+    console.error('loadHistory failed', error);
+    return;
+  }
+
+  const rows = data || [];
+  if (!rows.length) {
+    list.innerHTML = '<div class="history-empty">ยังไม่มีประวัติการส่งขยะ ลองไปที่ Scan &amp; Launch ดูสิ</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(renderHistoryRow).join('');
+}
+
+// Escapes user/admin-entered free text before it's dropped into innerHTML.
+// Used for row.comment (an admin-typed rejection reason rendered into a
+// different user's — the student's — session) and, defensively, for
+// category, in case waste_categories.name ever includes admin free text.
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
+function renderHistoryRow(row) {
+  const category = escapeHtml(row.waste_categories?.name || '-');
+  const when = new Date(row.created_at).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+
+  let statusHtml;
+  if (row.status === 'approved') {
+    statusHtml = `
+      <span class="history-status is-approved">${STATUS_LABEL.approved}</span>
+      <span class="history-points">+${(row.points_awarded ?? 0).toLocaleString()} pts</span>
     `;
-  }).join('');
+  } else if (row.status === 'pending') {
+    statusHtml = `<span class="history-status is-pending">${STATUS_LABEL.pending}</span>`;
+  } else {
+    statusHtml = `<span class="history-status is-rejected">${STATUS_LABEL.rejected}</span>`;
+  }
+
+  const commentHtml = (row.status === 'rejected' && row.comment)
+    ? `<div class="history-comment">เหตุผล: ${escapeHtml(row.comment)}</div>`
+    : '';
+
+  return `
+    <div class="history-row">
+      <div class="history-top">
+        <div class="history-category">${category}</div>
+        <div class="history-weight">${Number(row.weight_kg).toFixed(2)} kg</div>
+      </div>
+      <div class="history-status-row">${statusHtml}</div>
+      ${commentHtml}
+      <div class="history-time">${when}</div>
+    </div>
+  `;
 }
 
 const FAKE_NOTIFICATIONS = [
