@@ -93,42 +93,36 @@
       <div class="progress-card-head">
         <div>
           <div class="section-heading lg" style="margin-bottom:0;padding-left:0;"><span class="title">Personal Progress</span></div>
-          <div class="sub" style="font-family:var(--font-thai);font-size:11px;color:rgba(26,31,51,0.6);margin-top:3px;">คะแนนสะสมส่วนตัว · เลื่อนขั้นยศ</div>
-        </div>
-        <div class="stamp" style="--stamp-color:var(--accent);transform:rotate(6deg);margin-top:2px;flex-shrink:0;" id="level-stamp">LV ⋅ 7</div>
-      </div>
-
-      <div class="ring-wrap">
-        <svg width="190" height="190" viewBox="0 0 190 190">
-          <defs>
-            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="var(--accent)"/>
-              <stop offset="100%" stop-color="var(--sb-yellow)"/>
-            </linearGradient>
-            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="var(--sb-yellow)" stop-opacity="0.4"/>
-              <stop offset="100%" stop-color="var(--sb-yellow)" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <circle cx="95" cy="95" r="88" fill="none" stroke="rgba(26,31,51,0.13)" stroke-width="0.8" stroke-dasharray="2 5"/>
-          <circle cx="95" cy="95" r="74" fill="none" stroke="rgba(30,58,138,0.12)" stroke-width="10" id="ring-track"/>
-          <circle cx="95" cy="95" r="74" fill="none" stroke="url(#ringGrad)" stroke-width="10" stroke-linecap="round"
-            id="ring-fill" transform="rotate(-90 95 95)"/>
-          <g id="ring-ticks"></g>
-          <circle cx="95" cy="95" r="66" fill="url(#centerGlow)"/>
-        </svg>
-        <div class="ring-center">
-          <div class="caption">your points</div>
-          <div class="value" id="ring-value">0</div>
-          <div class="target" id="ring-target">/ 0 pts</div>
-          <div class="next-pill">
-            <svg width="10" height="10" viewBox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" fill="none" stroke="var(--sb-yellow)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>อีก <b id="ring-next">0</b> แต้ม</span>
-          </div>
+          <div class="sub" style="font-family:var(--font-thai);font-size:11px;color:rgba(26,31,51,0.6);margin-top:3px;">คะแนนสะสมส่วนตัว</div>
         </div>
       </div>
 
-      <div class="stats-grid" id="stats-grid"></div>
+      <div class="points-display">
+        <div class="caption">your points</div>
+        <div class="value" id="points-value">0</div>
+        <div class="unit">pts</div>
+      </div>
+
+      <div class="single-stat-wrap">
+        <div class="stat-tile stat-tile--single">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 3c2 4 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z" fill="none" stroke="var(--sb-green)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="value"><span id="kg-recycled-value">0</span><span class="unit">kg</span></div>
+          <div class="label">รีไซเคิลแล้ว (อนุมัติ)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- recent activity -->
+  <div class="section">
+    <div class="section-heading">
+      <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 7v5l3.5 2.1M21 12a9 9 0 1 1-9-9" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="title">Recent Activity</span>
+      <span class="sub">· ประวัติการส่งล่าสุด</span>
+    </div>
+    <div class="card history-card">
+      <div class="tape tape--dots" style="width:50px;height:15px;background:var(--sb-yellow-soft);transform:rotate(-7deg);left:-10px;top:-8px;"></div>
+      <div class="history-list" id="history-list"></div>
     </div>
   </div>
 
@@ -189,7 +183,6 @@
 <script src="js/supabase-client.js"></script>
 <script src="js/session-guard.js"></script>
 <script src="js/nav-common.js"></script>
-<script src="js/data.js"></script>
 <script src="js/dashboard.js"></script>
 </body>
 </html>
