@@ -138,22 +138,16 @@
 .progress-card { text-align: center; }
 .progress-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 10px; text-align: left; }
 
-.ring-wrap { position: relative; width: 190px; height: 190px; margin: 8px auto 4px; }
-.ring-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none;
+.points-display { padding: 20px 0 6px; text-align: center; }
+.points-display .caption { font-family: var(--font-script); font-size: 15px; color: var(--accent); transform: rotate(-2deg); display: inline-block; }
+.points-display .value {
+  font-family: var(--font-display); font-weight: 700; font-size: 52px; line-height: 1.05;
+  font-variant-numeric: tabular-nums; margin-top: 4px;
 }
-.ring-center .caption { font-family: var(--font-script); font-size: 13px; color: var(--accent); transform: rotate(-3deg); line-height: 1; margin-bottom: 2px; }
-.ring-center .value { font-family: var(--font-display); font-weight: 600; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 2px; }
-.ring-center .target { font-family: var(--font-mono); font-size: 9px; color: rgba(26,31,51,0.55); margin-top: 3px; letter-spacing: 0.14em; }
-.ring-center .next-pill {
-  margin-top: 6px; display: inline-flex; align-items: center; gap: 4px;
-  padding: 2px 8px; border-radius: 999px; background: var(--sb-cream);
-  border: 1px dashed rgba(26,31,51,0.27);
-  font-family: var(--font-thai); font-size: 10px; white-space: nowrap;
-}
-.ring-center .next-pill b { color: var(--accent); }
+.points-display .unit { font-family: var(--font-mono); font-size: 12px; color: rgba(26,31,51,0.55); letter-spacing: 0.14em; margin-top: 4px; }
+
+.single-stat-wrap { display: flex; justify-content: center; margin-top: 14px; }
+.stat-tile--single { width: 150px; }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
 .stat-tile { padding: 8px 6px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.08); border-radius: 10px; text-align: center; }
@@ -475,3 +469,21 @@
   font-size: 11.5px;
   color: #8C2E26;
 }
+
+/* ── recent activity (submission history) ────────────────────── */
+.history-card { text-align: left; }
+.history-list { display: flex; flex-direction: column; }
+.history-row { padding: 12px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
+.history-row:last-child { border-bottom: none; }
+.history-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.history-category { font-family: var(--font-thai-serif); font-weight: 600; font-size: 13px; color: var(--sb-ink); }
+.history-weight { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.55); white-space: nowrap; flex-shrink: 0; }
+.history-status-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+.history-status { font-family: var(--font-thai); font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
+.history-status.is-approved { background: rgba(110,139,90,0.15); color: var(--sb-green); }
+.history-status.is-pending { background: rgba(242,200,75,0.25); color: #8A6D1A; }
+.history-status.is-rejected { background: rgba(192,70,58,0.12); color: var(--sb-red); }
+.history-points { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--accent); }
+.history-comment { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.6); margin-top: 5px; line-height: 1.4; }
+.history-time { font-family: var(--font-mono); font-size: 9.5px; color: rgba(26,31,51,0.45); margin-top: 5px; letter-spacing: 0.06em; }
+.history-empty { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.5); text-align: center; padding: 20px 0; }
