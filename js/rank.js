@@ -1,9 +1,12 @@
-// ขยะแลกแต้ม — Rank tab. Top 10 leaderboard (name + points_total, students
-// only) via the SECURITY DEFINER public.leaderboard_top10() function, plus
-// the logged-in student's own rank (public.my_rank()) shown separately when
-// they aren't among the returned top 10 rows. See sql/phase6b-rank.sql —
-// profiles RLS only lets a student read their own row, so a cross-student
-// leaderboard read has to go through these functions, not a direct query.
+// ขยะแลกแต้ม — Rank tab. Top 10 leaderboard (name + points_total + is_you,
+// students only, zero-point students excluded) via the SECURITY DEFINER
+// public.leaderboard_top10() function, plus the logged-in student's own
+// rank (public.my_rank()) shown separately when they aren't among the
+// returned top 10 rows. See sql/phase6b-rank.sql — profiles RLS only lets a
+// student read their own row, so a cross-student leaderboard read has to go
+// through these functions, not a direct query. The caller's own row is
+// identified via the server-computed `is_you` column, not by comparing
+// my_rank()'s (possibly tied) rank number against list position.
 
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({
@@ -27,21 +30,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const myRank = !myRankError && myRankRows?.length ? myRankRows[0].my_rank : null;
+  if (myRankError) {
+    console.error('my_rank failed', myRankError);
+  }
 
   const rows = (top10 || []).map((row, i) => ({
     rank: i + 1,
     initial: (row.name || '-').trim().charAt(0) || '-',
     name: row.name,
     points: row.points_total,
-    isYou: myRank !== null && (i + 1) === myRank,
+    isYou: row.is_you === true,
   }));
 
   renderLeaderboard(rows);
 
-  const isInTop10 = myRank !== null && rows.some((r) => r.rank === myRank);
-  if (!isInTop10 && myRank !== null) {
-    renderMyRank(myRank, myRankRows[0].points_total);
+  const isInTop10 = rows.some((r) => r.isYou);
+  if (!isInTop10 && !myRankError && myRankRows?.length) {
+    renderMyRank(myRankRows[0].my_rank, myRankRows[0].points_total);
   }
 });
 
@@ -68,23 +73,23 @@ function renderPodium(top3) {
   const [first, second, third] = top3;
   document.getElementById('rank-podium').innerHTML = `
     <div class="rank-podium-slot">
-      <div class="rank-avatar">${second.initial}</div>
+      <div class="rank-avatar">${escapeHtml(second.initial)}</div>
       <div class="num">#${second.rank}</div>
       <div class="name">${escapeHtml(second.name)}</div>
-      <div class="pts">${second.points.toLocaleString()}</div>
+      <div class="pts">${(second.points ?? 0).toLocaleString()}</div>
     </div>
     <div class="rank-podium-slot is-first">
       <div class="rank-star">★</div>
-      <div class="rank-avatar">${first.initial}</div>
+      <div class="rank-avatar">${escapeHtml(first.initial)}</div>
       <div class="num">#${first.rank}</div>
       <div class="name">${escapeHtml(first.name)}</div>
-      <div class="pts">${first.points.toLocaleString()}</div>
+      <div class="pts">${(first.points ?? 0).toLocaleString()}</div>
     </div>
     <div class="rank-podium-slot">
-      <div class="rank-avatar">${third.initial}</div>
+      <div class="rank-avatar">${escapeHtml(third.initial)}</div>
       <div class="num">#${third.rank}</div>
       <div class="name">${escapeHtml(third.name)}</div>
-      <div class="pts">${third.points.toLocaleString()}</div>
+      <div class="pts">${(third.points ?? 0).toLocaleString()}</div>
     </div>
   `;
 }
@@ -93,9 +98,9 @@ function renderList(rest) {
   document.getElementById('rank-list').innerHTML = rest.map((r) => `
     <div class="rank-row${r.isYou ? ' is-you' : ''}">
       <div class="rank-num">${String(r.rank).padStart(2, '0')}</div>
-      <div class="rank-avatar">${r.initial}</div>
+      <div class="rank-avatar">${escapeHtml(r.initial)}</div>
       <div class="rank-name">${escapeHtml(r.name)}${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
-      <div class="rank-pts">${r.points.toLocaleString()}</div>
+      <div class="rank-pts">${(r.points ?? 0).toLocaleString()}</div>
     </div>
   `).join('');
 }

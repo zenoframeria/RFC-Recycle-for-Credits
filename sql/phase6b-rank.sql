@@ -11,17 +11,24 @@
 -- should be able to see the leaderboard, that's the whole point of it.
 
 -- 1) Top 10 by points_total, students only (admins don't compete on the
---    leaderboard). Secondary sort by name keeps ordering deterministic
---    across repeated calls when points_total ties.
+--    leaderboard), excluding students with points_total = 0 (the vast
+--    majority who haven't submitted anything yet — never pad the list with
+--    blank/zero rows). Secondary sort by name keeps ordering deterministic
+--    across repeated calls when points_total ties. Also returns a
+--    server-computed `is_you` flag (p.id = auth.uid()) so the client can
+--    identify the caller's own row by identity, not by comparing rank
+--    numbers — my_rank() below uses competition ranking (ties share one
+--    rank), which does not correspond 1:1 with this function's unique list
+--    positions when two students tie on points_total.
 create or replace function public.leaderboard_top10()
-returns table (name text, points_total integer)
+returns table (name text, points_total integer, is_you boolean)
 language sql
 security definer
 set search_path = public
 as $$
-  select p.name, p.points_total
+  select p.name, p.points_total, (p.id = auth.uid()) as is_you
   from public.profiles p
-  where p.role = 'student'
+  where p.role = 'student' and p.points_total > 0
   order by p.points_total desc, p.name asc
   limit 10;
 $$;
