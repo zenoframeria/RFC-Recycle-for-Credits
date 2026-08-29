@@ -26,6 +26,7 @@ as $$
   limit 10;
 $$;
 
+revoke execute on function public.leaderboard_top10() from public;
 grant execute on function public.leaderboard_top10() to authenticated;
 
 -- 2) The calling student's own rank + points, even if outside the top 10.
@@ -59,6 +60,7 @@ begin
 end;
 $$;
 
+revoke execute on function public.my_rank() from public;
 grant execute on function public.my_rank() to authenticated;
 
 -- Informational only — confirms both functions exist as SECURITY DEFINER
