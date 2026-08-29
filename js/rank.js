@@ -5,6 +5,12 @@
 // profiles RLS only lets a student read their own row, so a cross-student
 // leaderboard read has to go through these functions, not a direct query.
 
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
@@ -21,23 +27,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  const myRank = !myRankError && myRankRows?.length ? myRankRows[0].my_rank : null;
+
   const rows = (top10 || []).map((row, i) => ({
     rank: i + 1,
     initial: (row.name || '-').trim().charAt(0) || '-',
     name: row.name,
     points: row.points_total,
-    isYou: row.name === currentUser.name && row.points_total === currentUser.pointsTotal,
+    isYou: myRank !== null && (i + 1) === myRank,
   }));
 
   renderLeaderboard(rows);
 
-  const isInTop10 = rows.some((r) => r.isYou);
-  if (!isInTop10) {
-    if (myRankError) {
-      console.error('my_rank failed', myRankError);
-    } else if (myRankRows && myRankRows.length) {
-      renderMyRank(myRankRows[0].my_rank, myRankRows[0].points_total);
-    }
+  const isInTop10 = myRank !== null && rows.some((r) => r.rank === myRank);
+  if (!isInTop10 && myRank !== null) {
+    renderMyRank(myRank, myRankRows[0].points_total);
   }
 });
 
@@ -66,20 +70,20 @@ function renderPodium(top3) {
     <div class="rank-podium-slot">
       <div class="rank-avatar">${second.initial}</div>
       <div class="num">#${second.rank}</div>
-      <div class="name">${second.name}</div>
+      <div class="name">${escapeHtml(second.name)}</div>
       <div class="pts">${second.points.toLocaleString()}</div>
     </div>
     <div class="rank-podium-slot is-first">
       <div class="rank-star">★</div>
       <div class="rank-avatar">${first.initial}</div>
       <div class="num">#${first.rank}</div>
-      <div class="name">${first.name}</div>
+      <div class="name">${escapeHtml(first.name)}</div>
       <div class="pts">${first.points.toLocaleString()}</div>
     </div>
     <div class="rank-podium-slot">
       <div class="rank-avatar">${third.initial}</div>
       <div class="num">#${third.rank}</div>
-      <div class="name">${third.name}</div>
+      <div class="name">${escapeHtml(third.name)}</div>
       <div class="pts">${third.points.toLocaleString()}</div>
     </div>
   `;
@@ -90,7 +94,7 @@ function renderList(rest) {
     <div class="rank-row${r.isYou ? ' is-you' : ''}">
       <div class="rank-num">${String(r.rank).padStart(2, '0')}</div>
       <div class="rank-avatar">${r.initial}</div>
-      <div class="rank-name">${r.name}${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
+      <div class="rank-name">${escapeHtml(r.name)}${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
       <div class="rank-pts">${r.points.toLocaleString()}</div>
     </div>
   `).join('');
