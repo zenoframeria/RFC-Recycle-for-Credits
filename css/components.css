@@ -283,6 +283,36 @@
   box-shadow: 0 0 0 1.5px var(--sb-paper);
 }
 
+/* blurred corner blobs layered over .app-shell for extra depth — shared by
+   any page using the navy-tinted background (dashboard.css and login.css
+   pages); markup adds three fixed instances (--1/--2/--3) right after
+   .app-shell opens */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-blob--1 {
+  width: 260px; height: 260px;
+  top: -70px; left: -80px;
+  background: #AFD2FA;
+  opacity: 0.22;
+}
+.bg-blob--2 {
+  width: 300px; height: 300px;
+  bottom: -90px; right: -100px;
+  background: #B9915E;
+  opacity: 0.18;
+}
+.bg-blob--3 {
+  width: 180px; height: 180px;
+  top: 38%; right: -70px;
+  background: #B9915E;
+  opacity: 0.15;
+}
+
 /* simple "coming soon" placeholder used for undesigned screens */
 .coming-soon {
   margin-top: 10px;

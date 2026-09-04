@@ -1,11 +1,12 @@
 /* ขยะแลกแต้ม — dashboard page layout */
 
-/* Home page only: Poppins for English numbers/headline text, the site's
-   original Thai fonts (Sarabun / Bai Jamjuree, same as tokens.css) for Thai
-   text. Overriding the shared font tokens here, scoped to #dashboard-page,
-   remaps every existing class that references them without touching
-   tokens.css or other pages. */
-#dashboard-page {
+/* Poppins for English numbers/headline text, the site's original Thai fonts
+   (Sarabun / Bai Jamjuree, same as tokens.css) for Thai text. Overriding the
+   shared font tokens here, scoped to .app-shell — which every page loading
+   this stylesheet already has — remaps every existing class that references
+   them without touching tokens.css or the login/admin pages (which don't
+   load this file). */
+.app-shell {
   --font-display: 'Poppins', system-ui, sans-serif;
   --font-script: 'Poppins', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
@@ -17,11 +18,11 @@
 
 /* Thai content still slips through a couple of --font-display / nav spots —
    pin those back to the Thai face explicitly. */
-#dashboard-page .btn-primary .label {
+.app-shell .btn-primary .label {
   font-family: var(--font-thai);
   font-style: normal;
 }
-#dashboard-page .nav-item .label {
+.app-shell .nav-item .label {
   font-family: var(--font-thai);
   font-style: normal;
 }
@@ -31,58 +32,89 @@
    (Fraunces) styling. Only the main points number stays at bold/700;
    every other heading/number on this page sits at semibold/600 so the
    points value reads as the one bold element on the page. */
-#dashboard-page .section-heading .title,
-#dashboard-page .notif-panel-heading .title {
+.app-shell .section-heading .title,
+.app-shell .notif-panel-heading .title {
   font-weight: 600;
   font-style: normal;
 }
-#dashboard-page .launch-text .headline {
+.app-shell .launch-text .headline {
   font-weight: 600;
   font-style: normal;
 }
-#dashboard-page .stat-tile .value {
+.app-shell .stat-tile .value {
   font-weight: 600;
 }
 
-/* soft navy-tinting-toward-cream gradient (reintroduced, scoped to this page
-   only), plus the blurred corner blobs layered on top for extra depth. Every
-   card, the top bar, and the CTA all set their own explicit solid fill, so
-   this gradient only ever shows through the gaps/margins around them. */
-#dashboard-page {
+/* soft navy-tinting-toward-cream gradient (scoped to .app-shell, i.e. every
+   page loading this stylesheet), plus the blurred corner blobs layered on
+   top for extra depth. Every card, the top bar, and the CTA all set their
+   own explicit solid fill, so this gradient only ever shows through the
+   gaps/margins around them. */
+.app-shell {
   background:
     radial-gradient(ellipse at 80% -10%, rgba(30,58,138,0.18) 0%, transparent 55%),
     linear-gradient(180deg, #F5EFDB 0%, #FBF7EC 55%, #FEFAEF 100%);
 }
-.bg-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 0;
-}
-.bg-blob--1 {
-  width: 260px; height: 260px;
-  top: -70px; left: -80px;
-  background: #AFD2FA;
-  opacity: 0.22;
-}
-.bg-blob--2 {
-  width: 300px; height: 300px;
-  bottom: -90px; right: -100px;
-  background: #B9915E;
-  opacity: 0.18;
-}
-.bg-blob--3 {
-  width: 180px; height: 180px;
-  top: 38%; right: -70px;
-  background: #B9915E;
-  opacity: 0.15;
-}
-
 .dash-scroll {
   position: relative;
   z-index: 2;
   padding-bottom: 110px;
+}
+
+/* ── hero glow (Home page only) ──────────────────────────────────
+   Soft blurred glow layered behind the top bar, profile header, the
+   Scan & Launch button, and trailing on through the Personal
+   Progress card — navy in the top-right fading through a warm
+   yellow toward the bottom-left, then faded to nothing (via
+   mask-image) before Recent Activity, which stays on the plain
+   cream + grid background like the rest of the page. Sits above the
+   .bg-blob layer and app-shell's own background/grid, but below
+   .dash-scroll's content (z-index 2), so it only ever shows through
+   the gaps/margins around the opaque topbar/header/cards — same
+   rule the base app-shell gradient already follows. */
+.hero-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 680px;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
+}
+.hero-glow-navy {
+  position: absolute;
+  top: -160px; right: -160px;
+  width: 560px; height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sb-blue-deep) 0%, var(--sb-blue) 45%, transparent 72%);
+  filter: blur(80px);
+  opacity: 0.42;
+}
+/* Home page only: the shared bottom-right corner blob (bg-blob--2,
+   normally a flat brown blur used on other pages) is recolored and
+   moved to the bottom-left as a proper radial-gradient glow here —
+   same construction as .hero-glow-navy above — so the pale patch
+   that used to sit in the bottom-right corner now reads as a soft
+   yellow echo of the navy glow instead of a flat, out-of-place blob.
+   Scoped via this extra class, present only in dashboard.html, so
+   shop/rank/me/scan/login keep the original bg-blob--2 untouched. */
+.dash-corner-glow {
+  left: -110px; right: auto;
+  width: 440px; height: 440px;
+  background: radial-gradient(circle, var(--sb-yellow) 0%, var(--sb-yellow-soft) 50%, transparent 74%);
+  filter: blur(70px);
+  opacity: 0.5;
+}
+
+.hero-glow-yellow {
+  position: absolute;
+  top: 300px; left: -170px;
+  width: 560px; height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sb-yellow) 0%, var(--sb-yellow-soft) 50%, transparent 72%);
+  filter: blur(80px);
+  opacity: 0.38;
 }
 
 /* ── top bar ──────────────────────────────────────────────────── */
@@ -90,7 +122,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px 12px;
+  padding: 11px 18px 9px;
   background: #F7F2E2;
   border-bottom: 1px solid rgba(26,31,51,0.16);
   color: #182350;
@@ -102,12 +134,12 @@
 .topbar-brand { display: flex; align-items: center; gap: 6px; }
 .topbar-brand-badge {
   display: flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; border-radius: 999px; flex-shrink: 0;
+  width: 36px; height: 36px; border-radius: 999px; flex-shrink: 0;
   background: var(--sb-cream2);
   border: 1px solid rgba(26,31,51,0.13);
   box-shadow: 0 3px 8px rgba(242,200,75,0.3), 0 0 8px rgba(242,200,75,0.25);
 }
-.topbar-brand-icon { height: 26px; width: auto; display: block; }
+.topbar-brand-icon { height: 22px; width: auto; display: block; }
 
 /* ── header ────────────────────────────────────────────────── */
 .dash-header {
@@ -142,7 +174,7 @@
 .avatar-wrap { position: relative; flex-shrink: 0; }
 .polaroid {
   width: 68px; padding: 6px 6px 14px;
-  background: #FDFBF4;
+  background: #F7F2E2;
   box-shadow: 0 4px 10px rgba(20,30,60,0.15), 0 1px 0 rgba(0,0,0,0.05);
   transform: rotate(-4deg);
   position: relative;
@@ -272,7 +304,7 @@
    (matching the avatar's tape elsewhere on the page) — nothing else changed */
 .progress-card {
   text-align: center;
-  background: linear-gradient(165deg, #FDF6E6 0%, #F6E9C9 100%);
+  background: #F7F2E2;
   box-shadow: 0 16px 32px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset;
 }
 .progress-card .tape {
@@ -493,7 +525,7 @@
 
 .redeem-btn {
   border: none; border-radius: 20px; padding: 8px 12px; white-space: nowrap; cursor: pointer;
-  font-family: var(--font-body); font-weight: 700; font-size: 11px;
+  font-family: var(--font-thai); font-weight: 700; font-size: 11px;
   background: var(--accent); color: var(--sb-cream);
   flex-shrink: 0; transition: transform 0.12s ease, opacity 0.12s ease;
 }
@@ -520,7 +552,7 @@
 }
 .shop-cert-body { position: relative; flex: 1; min-width: 0; }
 .shop-cert-tag { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow-soft); }
-.shop-cert-title { font-family: var(--font-display); font-weight: 600; font-size: 17px; color: var(--sb-cream); line-height: 1.2; }
+.shop-cert-title { font-family: var(--font-thai); font-weight: 600; font-size: 17px; color: var(--sb-cream); line-height: 1.2; }
 .shop-cert-title .cost { font-family: var(--font-mono); font-weight: 400; font-size: 11px; color: var(--sb-blue-mist); }
 .shop-cert-desc { font-family: var(--font-thai); font-size: 11.5px; color: var(--sb-blue-mist); margin-top: 2px; }
 
@@ -548,7 +580,7 @@
 }
 .limited-badge {
   position: absolute; top: -11px; left: 14px; background: var(--sb-red); color: var(--sb-paper);
-  font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.03em;
+  font-family: var(--font-thai); font-size: 10px; font-weight: 600; letter-spacing: 0.03em;
   padding: 4px 10px; border-radius: 10px; white-space: nowrap;
 }
 .limited-item {
@@ -562,14 +594,14 @@
 }
 .limited-body { flex: 1; min-width: 0; }
 .limited-body .name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); }
-.limited-body .meta { font-family: var(--font-mono); font-size: 10px; color: rgba(26,31,51,0.55); margin: 3px 0 4px; }
+.limited-body .meta { font-family: var(--font-thai); font-size: 10px; color: rgba(26,31,51,0.55); margin: 3px 0 4px; }
 .limited-stock-bar { height: 5px; border-radius: 3px; background: var(--sb-tape); overflow: hidden; }
 .limited-stock-bar .fill { height: 100%; border-radius: 3px; background: var(--sb-red); }
 .limited-stamp {
   position: absolute; right: 12px; top: 2px; width: 72px; height: 72px; border-radius: 50%;
   border: 2.5px solid var(--sb-red); display: flex; align-items: center; justify-content: center;
   opacity: 0.85; mix-blend-mode: multiply; pointer-events: none;
-  font-family: var(--font-mono); font-weight: 700; font-size: 9px; color: var(--sb-red);
+  font-family: var(--font-thai); font-weight: 700; font-size: 9px; color: var(--sb-red);
   text-align: center; line-height: 1.3;
 }
 
