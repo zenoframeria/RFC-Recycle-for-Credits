@@ -44,6 +44,9 @@
 
   <!-- header -->
   <div class="dash-header">
+    <span class="header-sparkle" aria-hidden="true" style="top:13px;right:20px;font-size:16px;color:rgba(242,200,75,0.55);">✦</span>
+    <span class="header-sparkle" aria-hidden="true" style="top:29px;right:38px;font-size:9px;color:rgba(26,31,51,0.3);">★</span>
+    <span class="header-sparkle" aria-hidden="true" style="top:9px;right:44px;font-size:11px;color:rgba(242,200,75,0.4);">✦</span>
     <div class="header-row">
       <div class="avatar-wrap">
         <div class="tape tape--stripe" style="width:44px;height:14px;background:var(--sb-yellow-soft);transform:rotate(-12deg);left:-6px;top:-8px;"></div>
@@ -103,6 +106,7 @@
   <!-- personal progress -->
   <div class="section">
     <div class="card progress-card">
+      <div class="tape tape--stripe"></div>
       <div class="progress-card-head">
         <div>
           <div class="section-heading lg" style="margin-bottom:0;padding-left:0;"><span class="title">Personal Progress</span></div>
@@ -112,6 +116,7 @@
 
       <div class="points-ring-wrap">
         <svg class="points-ring" width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-outline" cx="90" cy="90" r="88"/>
           <circle class="ring-track" cx="90" cy="90" r="78"/>
           <circle class="ring-fill" id="points-ring-fill" cx="90" cy="90" r="78"/>
         </svg>
