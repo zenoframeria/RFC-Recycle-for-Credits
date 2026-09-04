@@ -37,6 +37,7 @@ function saveCurrentUser(role, profile) {
     role,
     id: profile.id,
     name: profile.name,
+    nickname: profile.nickname || null,
     studentId: profile.student_id || null,
     classroom: profile.class_room || null,
     pointsTotal: profile.points_total || 0,
