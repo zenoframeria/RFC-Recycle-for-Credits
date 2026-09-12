@@ -39,7 +39,8 @@ body[data-role="admin"] {
 html, body { margin: 0; padding: 0; }
 
 body {
-  min-height: 100vh;
+  min-height: 100vh; /* fallback for browsers without dvh support */
+  min-height: 100dvh; /* real visible height on mobile Safari (accounts for the address bar) */
   background:
     radial-gradient(ellipse at 20% 0%, #E8DDC2 0%, transparent 60%),
     radial-gradient(ellipse at 80% 100%, var(--bg-tint2) 0%, transparent 50%),
@@ -59,7 +60,8 @@ body {
      caps at 600px so content doesn't float tiny in a huge frame */
   max-width: clamp(430px, 18vw + 350px, 600px);
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 100vh; /* fallback for browsers without dvh support */
+  min-height: 100dvh; /* real visible height on mobile Safari (accounts for the address bar) */
   position: relative;
   background:
     radial-gradient(ellipse at 80% -10%, var(--accent) 12%, transparent 55%),

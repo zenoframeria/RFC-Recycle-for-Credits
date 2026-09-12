@@ -40,7 +40,8 @@
   padding: 40px 22px 30px;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* fallback for browsers without dvh support */
+  min-height: 100dvh; /* real visible height on mobile Safari (accounts for the address bar) */
 }
 
 /* ── logo block ───────────────────────────────────────────── */
