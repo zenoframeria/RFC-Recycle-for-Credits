@@ -7,7 +7,7 @@
    during a rubber-band scroll. Matches the navy theme-color meta tag set
    on these 5 pages' <head>. */
 html, body {
-  background-color: var(--sb-blue-deep);
+  background-color: #2B438E; /* matches the theme-color meta tag on these 5 pages — a touch lighter than --sb-blue-deep so the status-bar seam isn't too dark */
 }
 
 /* Poppins for English numbers/headline text, the site's original Thai fonts
