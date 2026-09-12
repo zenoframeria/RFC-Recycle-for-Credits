@@ -55,9 +55,10 @@
     radial-gradient(ellipse at 80% -10%, rgba(30,58,138,0.18) 0%, transparent 55%),
     linear-gradient(180deg, #F5EFDB 0%, #FBF7EC 55%, #FEFAEF 100%);
 }
-/* Home page only: stronger navy gradient weighted to the top-right, per the
-   dashboard-preview.html restyle — scoped so shop/rank/me/scan (which share
-   this stylesheet's base .app-shell rule above) keep the softer gradient. */
+/* Stronger navy gradient weighted to the top-right, per the
+   dashboard-preview.html restyle — originally home-only, now shared by
+   shop/rank/scan/me too so every logged-in page carries the same
+   gradient identity as Home. */
 .app-shell--home {
   background:
     radial-gradient(ellipse at 92% -6%, rgba(0, 64, 255, 0.6) 0%, rgba(30,58,138,0.1) 50%, transparent 58%),
@@ -69,17 +70,17 @@
   padding-bottom: 110px;
 }
 
-/* ── hero glow (Home page only) ──────────────────────────────────
-   Soft blurred glow layered behind the top bar, profile header, the
-   Scan & Launch button, and trailing on through the Personal
-   Progress card — navy in the top-right fading through a warm
-   yellow toward the bottom-left, then faded to nothing (via
-   mask-image) before Recent Activity, which stays on the plain
-   cream + grid background like the rest of the page. Sits above the
-   .bg-blob layer and app-shell's own background/grid, but below
-   .dash-scroll's content (z-index 2), so it only ever shows through
-   the gaps/margins around the opaque topbar/header/cards — same
-   rule the base app-shell gradient already follows. */
+/* ── hero glow ────────────────────────────────────────────────────
+   Soft blurred glow layered behind the header and first card(s) of a
+   page — navy in the top-right fading through a warm yellow toward
+   the bottom-left, then faded to nothing (via mask-image) further
+   down, where the page stays on the plain cream + grid background.
+   Sits above the .bg-blob layer and app-shell's own background/grid,
+   but below .dash-scroll's content (z-index 2), so it only ever
+   shows through the gaps/margins around opaque cards — same rule the
+   base app-shell gradient already follows. Originally Home-only, now
+   also used on shop/rank/scan/me (behind their card-style
+   .dash-header, which still fully covers it where the card sits). */
 .hero-glow {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -99,14 +100,14 @@
   filter: blur(80px);
   opacity: 0.4;
 }
-/* Home page only: the shared bottom-right corner blob (bg-blob--2,
-   normally a flat brown blur used on other pages) is recolored and
-   moved to the bottom-left as a proper radial-gradient glow here —
-   same construction as .hero-glow-navy above — so the pale patch
-   that used to sit in the bottom-right corner now reads as a soft
-   yellow echo of the navy glow instead of a flat, out-of-place blob.
-   Scoped via this extra class, present only in dashboard.html, so
-   shop/rank/me/scan/login keep the original bg-blob--2 untouched. */
+/* The shared bottom-right corner blob (bg-blob--2, normally a flat
+   brown blur) is recolored and moved to the bottom-left as a proper
+   radial-gradient glow here — same construction as .hero-glow-navy
+   above — so the pale patch that used to sit in the bottom-right
+   corner now reads as a soft yellow echo of the navy glow instead of
+   a flat, out-of-place blob. Originally Home-only, now also applied
+   on shop/rank/scan/me; login pages don't load this stylesheet and
+   keep the plain bg-blob--2. */
 .dash-corner-glow {
   left: -110px; right: auto;
   width: 440px; height: 440px;
