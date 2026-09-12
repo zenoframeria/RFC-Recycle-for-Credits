@@ -1,5 +1,15 @@
 /* ขยะแลกแต้ม — dashboard page layout */
 
+/* This stylesheet only ever loads on the 5 "home-style" pages (dashboard,
+   shop, rank, scan, me), so scoping the iOS overscroll-bounce color here
+   (rather than forcing it on every page from tokens.css) keeps the
+   login/admin pages on their own cream/red tone instead of flashing navy
+   during a rubber-band scroll. Matches the navy theme-color meta tag set
+   on these 5 pages' <head>. */
+html, body {
+  background-color: var(--sb-blue-deep);
+}
+
 /* Poppins for English numbers/headline text, the site's original Thai fonts
    (Sarabun / Bai Jamjuree, same as tokens.css) for Thai text. Overriding the
    shared font tokens here, scoped to .app-shell — which every page loading
