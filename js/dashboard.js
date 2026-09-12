@@ -48,31 +48,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   await refreshPoints(currentUser.id);
 });
 
-// Thai honorific prefixes that can appear in student_roster.name, with or
-// without a space before the first name (e.g. "เด็กชายปิยะ ใจดี" or "ด.ช. ปิยะ ใจดี").
-const THAI_TITLES = ['เด็กชาย', 'เด็กหญิง', 'ด.ช.', 'ด.ญ.', 'นางสาว', 'นาย', 'นาง'];
-
-function stripTitle(fullName) {
-  let name = fullName.trim();
-  for (const title of THAI_TITLES) {
-    if (name.startsWith(title)) {
-      name = name.slice(title.length).trim();
-      break;
-    }
-  }
-  return name;
-}
-
-function firstNameOnly(fullName) {
-  return stripTitle(fullName).split(/\s+/)[0] || fullName;
-}
-
 function renderHeader(user) {
-  const nickname = user.nickname?.trim();
-  const displayName = nickname || firstNameOnly(user.name);
-  document.getElementById('student-name').textContent = displayName;
+  const shownName = displayName(user.name, user.nickname);
+  document.getElementById('student-name').textContent = shownName;
   document.getElementById('student-fullname').textContent = stripTitle(user.name);
-  document.getElementById('avatar-initial').textContent = displayName.charAt(0);
+  document.getElementById('avatar-initial').textContent = shownName.charAt(0);
 }
 
 function wireNicknameEdit(currentUser) {

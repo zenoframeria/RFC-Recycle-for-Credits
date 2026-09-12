@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const rows = (top10 || []).map((row, i) => ({
     rank: i + 1,
-    initial: (row.name || '-').trim().charAt(0) || '-',
-    name: row.name,
+    name: displayName(row.name, row.nickname),
     points: row.points_total,
     isYou: row.is_you === true,
   }));
@@ -51,54 +50,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function renderLeaderboard(rows) {
-  const podiumEl = document.getElementById('rank-podium');
-  const listEl = document.getElementById('rank-list');
+  renderPodium(rows.slice(0, 3));
+  renderList(rows.slice(3));
+}
 
-  if (!rows.length) {
-    podiumEl.innerHTML = '';
-    listEl.innerHTML = '<div class="history-empty">ยังไม่มีใครสะสมแต้มเลย รอนักเรียนคนแรกส่งขยะก่อน</div>';
-    return;
-  }
+const MEDAL_CLASS = { 1: 'medal-gold', 2: 'medal-silver', 3: 'medal-bronze' };
+const BLOCK_CLASS = { 1: 'block-gold', 2: 'block-silver', 3: 'block-bronze' };
 
-  if (rows.length >= 3) {
-    renderPodium(rows.slice(0, 3));
-    renderList(rows.slice(3));
-  } else {
-    podiumEl.innerHTML = '';
-    renderList(rows);
-  }
+// Podium slots 1-3 always render, even before 3 students have points yet —
+// a missing slot shows a grayed-out placeholder instead of disappearing,
+// so the podium's shape/layout stays stable rather than popping in later.
+function podiumSlot(row, rank) {
+  return `
+    <div class="rank-podium-slot${rank === 1 ? ' is-first' : ''}${row ? '' : ' is-empty'}">
+      <div class="rank-medal ${MEDAL_CLASS[rank]}">${rank}</div>
+      <div class="name">${row ? escapeHtml(row.name) : 'ยังไม่มีใคร'}</div>
+      <div class="pts">${row ? (row.points ?? 0).toLocaleString() : '—'}</div>
+      <div class="podium-block ${BLOCK_CLASS[rank]}"></div>
+    </div>
+  `;
 }
 
 function renderPodium(top3) {
-  const [first, second, third] = top3;
-  document.getElementById('rank-podium').innerHTML = `
-    <div class="rank-podium-slot">
-      <div class="rank-avatar">${escapeHtml(second.initial)}</div>
-      <div class="num">#${second.rank}</div>
-      <div class="name">${escapeHtml(second.name)}</div>
-      <div class="pts">${(second.points ?? 0).toLocaleString()}</div>
-    </div>
-    <div class="rank-podium-slot is-first">
-      <div class="rank-star">★</div>
-      <div class="rank-avatar">${escapeHtml(first.initial)}</div>
-      <div class="num">#${first.rank}</div>
-      <div class="name">${escapeHtml(first.name)}</div>
-      <div class="pts">${(first.points ?? 0).toLocaleString()}</div>
-    </div>
-    <div class="rank-podium-slot">
-      <div class="rank-avatar">${escapeHtml(third.initial)}</div>
-      <div class="num">#${third.rank}</div>
-      <div class="name">${escapeHtml(third.name)}</div>
-      <div class="pts">${(third.points ?? 0).toLocaleString()}</div>
-    </div>
-  `;
+  const [first, second, third] = [top3[0] || null, top3[1] || null, top3[2] || null];
+  document.getElementById('rank-podium').innerHTML =
+    podiumSlot(second, 2) + podiumSlot(first, 1) + podiumSlot(third, 3);
 }
 
 function renderList(rest) {
   document.getElementById('rank-list').innerHTML = rest.map((r) => `
     <div class="rank-row${r.isYou ? ' is-you' : ''}">
-      <div class="rank-num">${String(r.rank).padStart(2, '0')}</div>
-      <div class="rank-avatar">${escapeHtml(r.initial)}</div>
+      <div class="rank-stamp">${r.rank}</div>
       <div class="rank-name">${escapeHtml(r.name)}${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
       <div class="rank-pts">${(r.points ?? 0).toLocaleString()}</div>
     </div>
