@@ -62,6 +62,10 @@ body {
   margin: 0 auto;
   min-height: 100vh; /* fallback for browsers without dvh support */
   min-height: 100dvh; /* real visible height on mobile Safari (accounts for the address bar) */
+  /* let the background paint under the iPhone notch/home-indicator (viewport-fit=cover
+     on every page makes that area paintable), but keep real content clear of it */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   background:
     radial-gradient(ellipse at 80% -10%, var(--accent) 12%, transparent 55%),

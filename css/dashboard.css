@@ -67,7 +67,8 @@
 .dash-scroll {
   position: relative;
   z-index: 2;
-  padding-bottom: 110px;
+  padding-bottom: 110px; /* fallback */
+  padding-bottom: calc(110px + env(safe-area-inset-bottom)); /* keep last card clear of the nav, which itself shifts up for the home-indicator bar */
 }
 
 /* ── hero glow ────────────────────────────────────────────────────
@@ -388,7 +389,11 @@
 .stat-tile .label { font-family: var(--font-thai); font-size: 9.5px; color: rgba(26,31,51,0.55); margin-top: 1px; }
 
 /* ── bottom nav ───────────────────────────────────────────────── */
-.bottom-nav-wrap { position: fixed; left: 50%; transform: translateX(-50%); bottom: 12px; z-index: 20; width: 100%; max-width: 402px; padding: 0 14px; }
+.bottom-nav-wrap {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20; width: 100%; max-width: 402px; padding: 0 14px;
+  bottom: 12px; /* fallback */
+  bottom: calc(12px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+}
 .bottom-nav {
   position: relative; background: var(--sb-paper); border: 1px solid rgba(26,31,51,0.1); border-radius: 22px;
   padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;
