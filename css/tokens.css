@@ -54,7 +54,10 @@ body {
 }
 
 .app-shell {
-  max-width: 430px;
+  /* fluid card width: stays 430px on phones (viewport already narrower
+     than that anyway), grows gradually past 430px on wider screens,
+     caps at 600px so content doesn't float tiny in a huge frame */
+  max-width: clamp(430px, 18vw + 350px, 600px);
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
