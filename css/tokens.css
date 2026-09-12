@@ -16,6 +16,7 @@
   --sb-red: #C0463A;
   --sb-green: #6E8B5A;
   --sb-tape: #E8DDB8;
+  --sb-page-bg: #EFE7D2;
 
   /* fonts */
   --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -38,13 +39,18 @@ body[data-role="admin"] {
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 
+/* solid fallback color behind everything — this is what shows for an instant
+   during iOS Safari's rubber-band overscroll bounce, so it must never be the
+   browser's default white */
+html { background-color: var(--sb-page-bg); }
+
 body {
   min-height: 100vh; /* fallback for browsers without dvh support */
   min-height: 100dvh; /* real visible height on mobile Safari (accounts for the address bar) */
   background:
     radial-gradient(ellipse at 20% 0%, #E8DDC2 0%, transparent 60%),
     radial-gradient(ellipse at 80% 100%, var(--bg-tint2) 0%, transparent 50%),
-    #EFE7D2;
+    var(--sb-page-bg);
   font-family: var(--font-body);
   color: var(--sb-ink);
 }
