@@ -55,6 +55,14 @@
     radial-gradient(ellipse at 80% -10%, rgba(30,58,138,0.18) 0%, transparent 55%),
     linear-gradient(180deg, #F5EFDB 0%, #FBF7EC 55%, #FEFAEF 100%);
 }
+/* Home page only: stronger navy gradient weighted to the top-right, per the
+   dashboard-preview.html restyle — scoped so shop/rank/me/scan (which share
+   this stylesheet's base .app-shell rule above) keep the softer gradient. */
+.app-shell--home {
+  background:
+    radial-gradient(ellipse at 92% -6%, rgba(0, 64, 255, 0.6) 0%, rgba(30,58,138,0.1) 50%, transparent 58%),
+    linear-gradient(180deg, #F5EFDB 0%, #FBF7EC 55%, #FEFAEF 100%);
+}
 .dash-scroll {
   position: relative;
   z-index: 2;
@@ -75,7 +83,7 @@
 .hero-glow {
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 680px;
+  height: 800px;
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
@@ -84,12 +92,12 @@
 }
 .hero-glow-navy {
   position: absolute;
-  top: -160px; right: -160px;
+  top: -160px; right: -190px;
   width: 560px; height: 560px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--sb-blue-deep) 0%, var(--sb-blue) 45%, transparent 72%);
   filter: blur(80px);
-  opacity: 0.42;
+  opacity: 0.4;
 }
 /* Home page only: the shared bottom-right corner blob (bg-blob--2,
    normally a flat brown blur used on other pages) is recolored and
@@ -114,32 +122,8 @@
   border-radius: 50%;
   background: radial-gradient(circle, var(--sb-yellow) 0%, var(--sb-yellow-soft) 50%, transparent 72%);
   filter: blur(80px);
-  opacity: 0.38;
+  opacity: 0.9;
 }
-
-/* ── top bar ──────────────────────────────────────────────────── */
-.dash-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 18px 9px;
-  background: #F7F2E2;
-  border-bottom: 1px solid rgba(26,31,51,0.16);
-  color: #182350;
-  position: relative;
-  z-index: 3;
-}
-.dash-topbar .hello-script { color: #182350; }
-.dash-topbar .icon-btn { color: #182350; }
-.topbar-brand { display: flex; align-items: center; gap: 6px; }
-.topbar-brand-badge {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 999px; flex-shrink: 0;
-  background: var(--sb-cream2);
-  border: 1px solid rgba(26,31,51,0.13);
-  box-shadow: 0 3px 8px rgba(242,200,75,0.3), 0 0 8px rgba(242,200,75,0.25);
-}
-.topbar-brand-icon { height: 22px; width: auto; display: block; }
 
 /* ── header ────────────────────────────────────────────────── */
 .dash-header {
@@ -150,6 +134,25 @@
   border-radius: 18px;
   border: 1px solid rgba(26,31,51,0.08);
   box-shadow: 0 4px 14px rgba(20,30,60,0.06);
+}
+/* Home page only: drop the card look so name+photo float directly on the
+   gradient — the notification bell now lives inline in .header-row instead
+   of a separate top bar (see .header-notif below). Scoped so shop/rank/me/
+   scan (which share .dash-header) keep the card-style header. */
+.dash-header--home {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 18px 18px 0;
+  padding: 0 2px;
+}
+/* header-name-block has flex:1, which pushes this to the far right on its
+   own; align-self keeps it pinned near the top of the row instead of
+   centered against the taller polaroid photo. */
+.header-notif {
+  align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .meta-line {
@@ -313,9 +316,19 @@
   transform: rotate(9deg);
   right: -8px; top: -9px;
 }
+/* second tape at the opposite corner, mirroring the yellow one above */
+.progress-card .tape--corner-left {
+  width: 46px;
+  height: 15px;
+  background: var(--sb-blue);
+  transform: rotate(-8deg);
+  left: -8px;
+  right: auto;
+  top: -9px;
+}
 .progress-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 10px; text-align: left; }
 
-.points-ring-wrap { position: relative; width: 180px; height: 180px; margin: 14px auto 0; }
+.points-ring-wrap { position: relative; width: 200px; height: 200px; margin: 14px auto 0; }
 .points-ring { transform: rotate(-90deg); }
 .points-ring .ring-outline {
   fill: none;
@@ -323,44 +336,48 @@
   stroke-width: 1.2;
   stroke-dasharray: 3 4;
 }
-.points-ring .ring-track {
-  fill: none; stroke: var(--sb-cream2); stroke-width: 12;
+/* colored fill: a plain round div painted with conic-gradient (angular/
+   clockwise, unlike linear-gradient — SVG has no true conic gradient),
+   punched into a donut by ::after. Background/cap positions are set
+   dynamically in js/dashboard.js from the real points fraction. */
+.points-ring-conic {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
-.points-ring .ring-fill {
-  fill: none; stroke: var(--sb-yellow); stroke-width: 12;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.5s ease;
+.points-ring-conic::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 156px;
+  height: 156px;
+  border-radius: 50%;
+  background: #F7F2E2; /* matches .progress-card's own background */
+  transform: translate(-50%, -50%);
+}
+/* rounded "stroke-linecap" effect at each end of the fill — both sit on the
+   ring's own midline radius ((outer 90 + inner 78) / 2 = 84px from center),
+   same diameter as the band's thickness (12px), positioned/colored by JS. */
+.points-ring-cap {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 .points-ring-center {
   position: absolute; inset: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 .points-ring-center .value {
-  font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.05;
+  font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.05;
   font-variant-numeric: tabular-nums; color: var(--sb-blue-deep);
 }
-.points-ring-center .unit {
-  font-family: var(--font-thai); font-weight: 500; font-size: 12px; color: rgba(26,31,51,0.55);
-  letter-spacing: 0.08em; margin-top: 2px;
-}
-.points-remaining {
-  font-family: var(--font-thai); font-weight: 400; font-size: 11.5px;
-  color: rgba(26,31,51,0.6); text-align: center; margin-top: 10px;
-}
-
-.single-stat-wrap { display: flex; justify-content: center; margin-top: 8px; }
-.stat-tile.stat-tile--single {
-  display: inline-flex; align-items: center; gap: 8px;
-  width: auto; text-align: left;
-  padding: 8px 16px;
-  background: #FFF8E7;
-  border: 1px dashed #E2D7C3;
-  border-radius: 999px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-}
-.stat-tile--single svg { display: block; margin: 0; flex-shrink: 0; }
-.stat-tile--single .value { color: #182350; font-weight: 700; }
-.stat-tile--single .label { margin-top: 0; }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
 .stat-tile { padding: 8px 6px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.08); border-radius: 10px; text-align: center; }

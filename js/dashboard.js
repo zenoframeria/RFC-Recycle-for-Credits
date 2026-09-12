@@ -1,6 +1,6 @@
 // ขยะแลกแต้ม — populates the dashboard with real data from Supabase:
 // profiles.points_total (via currentUser, same pattern me.html/shop.js
-// already use) + the student's own submissions (kg recycled + activity).
+// already use) + the student's own submissions (activity history).
 // The points ring shows fill toward a fixed 50,000-point storage cap
 // (display only, not a level/goal system — see CLAUDE.md's
 // "Product model (current)" section for why levels don't exist here).
@@ -16,8 +16,15 @@ const STATUS_LABEL = {
 
 // Storage cap for the points ring — not a goal, just the display ceiling.
 const POINTS_CAP = 50000;
-const RING_RADIUS = 78;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+// Ring geometry (see .points-ring-conic/.points-ring-cap in dashboard.css):
+// midline radius = (outer 90 + inner 78) / 2 = 84px from the 200x200 wrap's center.
+const RING_CENTER = 100;
+const RING_MID_RADIUS = 84;
+const RING_TRACK_COLOR = '#EDE3CC';
+// Seedling → Sprout → Gold → Master tiers, each stop scaled by the real
+// points fraction so the gradient always ends exactly where the fill does.
+const RING_TIER_COLORS = ['#F8E29A', '#F2C84B', '#1E3A8A', '#0F2461'];
+const RING_TIER_STOPS = [0, 30, 62, 100];
 const PAGE_SIZE = 5;
 const REJECTED_VISIBLE_DAYS = 7;
 
@@ -33,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireLightbox();
   wireNicknameEdit(currentUser);
 
-  await loadRecycledTotal(currentUser.id);
   await Promise.all([
     loadPendingTab(currentUser.id),
     loadRejectedTab(currentUser.id),
@@ -126,16 +132,45 @@ function wireNicknameEdit(currentUser) {
 function renderPoints(pointsTotal) {
   const points = pointsTotal ?? 0;
   document.getElementById('points-value').textContent = points.toLocaleString();
+  renderPointsRing(points);
+}
 
-  const fraction = Math.min(points / POINTS_CAP, 1);
-  const ring = document.getElementById('points-ring-fill');
-  ring.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
-  ring.style.strokeDashoffset = `${RING_CIRCUMFERENCE * (1 - fraction)}`;
+function ringCapPosition(angleDeg) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return {
+    top: RING_CENTER - RING_MID_RADIUS * Math.cos(rad),
+    left: RING_CENTER + RING_MID_RADIUS * Math.sin(rad),
+  };
+}
 
-  const remaining = Math.max(POINTS_CAP - points, 0);
-  document.getElementById('points-remaining').textContent = remaining > 0
-    ? `เก็บได้อีก ${remaining.toLocaleString()} pts ก่อนเต็ม`
-    : 'เก็บครบเพดานแล้ว';
+function renderPointsRing(points) {
+  const fraction = Math.max(0, Math.min(points / POINTS_CAP, 1));
+  const conic = document.getElementById('points-ring-conic');
+  const capStart = document.getElementById('points-ring-cap-start');
+  const capEnd = document.getElementById('points-ring-cap-end');
+
+  if (fraction <= 0) {
+    conic.style.background = RING_TRACK_COLOR;
+    capStart.style.display = 'none';
+    capEnd.style.display = 'none';
+    return;
+  }
+
+  const [c0, c1, c2, c3] = RING_TIER_COLORS;
+  const [, s1, s2, s3] = RING_TIER_STOPS.map((pct) => pct * fraction);
+  conic.style.background = `conic-gradient(from 0deg, ${c0} 0%, ${c1} ${s1}%, ${c2} ${s2}%, ${c3} ${s3}%, ${RING_TRACK_COLOR} ${s3}%, ${RING_TRACK_COLOR} 100%)`;
+
+  const startPos = ringCapPosition(0);
+  capStart.style.display = '';
+  capStart.style.top = `${startPos.top}px`;
+  capStart.style.left = `${startPos.left}px`;
+  capStart.style.background = c0;
+
+  const endPos = ringCapPosition(360 * fraction);
+  capEnd.style.display = '';
+  capEnd.style.top = `${endPos.top}px`;
+  capEnd.style.left = `${endPos.left}px`;
+  capEnd.style.background = c3;
 }
 
 // Instant paint above uses the cached currentUser.pointsTotal (set at login,
@@ -163,27 +198,6 @@ async function refreshPoints(userId) {
     cached.pointsTotal = pointsTotal;
     localStorage.setItem('currentUser', JSON.stringify(cached));
   }
-}
-
-// Sum of weight_kg across this student's approved submissions only —
-// pending/rejected don't count since nothing was actually awarded for them.
-async function loadRecycledTotal(userId) {
-  const el = document.getElementById('kg-recycled-value');
-
-  const { data, error } = await supabaseClient
-    .from('submissions')
-    .select('weight_kg')
-    .eq('user_id', userId)
-    .eq('status', 'approved');
-
-  if (error) {
-    console.error('loadRecycledTotal failed', error);
-    el.textContent = '-';
-    return;
-  }
-
-  const totalKg = (data || []).reduce((sum, row) => sum + Number(row.weight_kg || 0), 0);
-  el.textContent = totalKg.toFixed(1);
 }
 
 // Escapes user/admin-entered free text before it's dropped into innerHTML.
