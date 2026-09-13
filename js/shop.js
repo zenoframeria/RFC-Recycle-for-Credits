@@ -18,6 +18,29 @@ const SHOP_ITEMS = [
   { id: 'pin', section: 'limited', name: 'เข็มกลัดตราปั๊ม', cost: 650, notYetOpen: true, opensOn: '1 ต.ค.', tint: 'var(--sb-yellow-soft)' },
 ];
 
+// one line-icon per item, shown inside its .item-medallion badge — replaces
+// the old flat diagonal-stripe placeholder rectangles (see rank.js's medal
+// badges for the same "icon-in-a-tinted-circle" language this borrows).
+const ITEM_ICONS = {
+  pen: '<path d="M4 20h3.2l10-10-3.2-3.2-10 10V20zM13.8 5l3.2 3.2"/>',
+  notebook: '<path d="M5 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5zM5 3v18M9 8h6M9 12h6"/>',
+  stickers: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  highlighter: '<path d="M8 21 4 17l9-9 4 4-9 9zM13 8l3-3 4 4-3 3"/>',
+  washi: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6"/>',
+  passportbook: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 3v18"/>',
+  tote: '<path d="M6 8h12l-1 12a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1zM9 8V6a3 3 0 0 1 6 0v2"/>',
+  bottle: '<path d="M9 2h6v3.5L17 8v12a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 7 20V8l2-2.5z"/>',
+  pin: '<path d="M12 2v6M8 8h8l2 12H6z"/>',
+};
+
+function itemMedallion(item) {
+  return `
+    <div class="item-medallion" style="--tint:${item.tint}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ITEM_ICONS[item.id] || ''}</svg>
+    </div>
+  `;
+}
+
 const shopState = { points: 0, redeemed: new Set() };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -60,10 +83,12 @@ function renderStationery() {
   const items = SHOP_ITEMS.filter((i) => i.section === 'stationery');
   document.getElementById('shop-stationery').innerHTML = items.map((item) => `
     <div class="stationery-item">
-      <div class="stationery-photo" style="--tint:${item.tint}"></div>
-      <div class="stationery-name">${item.name}</div>
+      <div class="stationery-top">
+        ${itemMedallion(item)}
+        <div class="stationery-name">${item.name}</div>
+      </div>
       <div class="stationery-foot">
-        <div class="price-badge">${item.cost.toLocaleString()}<br>pts</div>
+        <div class="price-chip">${item.cost.toLocaleString()}<span class="unit">&nbsp;pts</span></div>
         <button class="redeem-btn" data-item="${item.id}"></button>
       </div>
     </div>
@@ -87,7 +112,7 @@ function renderLimited() {
       : `<div class="limited-stock-bar"><div class="fill" data-fill style="width:${(item.stock / item.stockMax) * 100}%"></div></div>`;
     return `
       <div class="limited-item${unavailable ? ' is-unavailable' : ''}" data-limited="${item.id}">
-        <div class="limited-photo" style="--tint:${item.tint}"></div>
+        ${itemMedallion(item)}
         <div class="limited-body">
           <div class="name">${item.name}</div>
           <div class="meta" data-meta>${limitedMeta(item)}</div>

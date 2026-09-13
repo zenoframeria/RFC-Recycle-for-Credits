@@ -10,18 +10,18 @@ html, body {
   background-color: #2B438E; /* matches the theme-color meta tag on these 5 pages — a touch lighter than --sb-blue-deep so the status-bar seam isn't too dark */
 }
 
-/* Poppins for English numbers/headline text, the site's original Thai fonts
-   (Sarabun / Bai Jamjuree, same as tokens.css) for Thai text. Overriding the
-   shared font tokens here, scoped to .app-shell — which every page loading
-   this stylesheet already has — remaps every existing class that references
-   them without touching tokens.css or the login/admin pages (which don't
-   load this file). */
+/* Poppins for English numbers/headline text, Sarabun for all Thai text
+   (both --font-thai and --font-thai-serif resolve to Sarabun now — Bai
+   Jamjuree was dropped site-wide so every page reads as one Thai font).
+   Overriding the shared font tokens here, scoped to .app-shell — which
+   every page loading this stylesheet already has — remaps every existing
+   class that references them. */
 .app-shell {
   --font-display: 'Poppins', system-ui, sans-serif;
   --font-script: 'Poppins', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
   --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-thai-serif: 'Bai Jamjuree', 'Sarabun', system-ui, sans-serif;
+  --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
   --font-mono: 'Poppins', system-ui, sans-serif;
   font-family: var(--font-thai);
 }
@@ -147,10 +147,11 @@ html, body {
   border: 1px solid rgba(26,31,51,0.08);
   box-shadow: 0 4px 14px rgba(20,30,60,0.06);
 }
-/* Home page only: drop the card look so name+photo float directly on the
-   gradient — the notification bell now lives inline in .header-row instead
-   of a separate top bar (see .header-notif below). Scoped so shop/rank/me/
-   scan (which share .dash-header) keep the card-style header. */
+/* Drops the card look so the header text floats directly on the gradient
+   instead of sitting in its own white box — originally Home-only (where the
+   notification bell lives inline in .header-row instead of a separate top
+   bar, see .header-notif below), now shared by shop/scan/rank/me too so
+   every logged-in page's header reads the same way. */
 .dash-header--home {
   background: none;
   border: none;
@@ -159,6 +160,11 @@ html, body {
   margin: 18px 18px 0;
   padding: 0 2px;
 }
+/* Pages without Home's avatar (shop/scan/rank/me) have nothing to balance
+   the header-name-block against, so the default .student-name size (19px)
+   reads too small against the freed-up space — bumped up here to fill it. */
+.hero-tagline { font-size: 15px; }
+.hero-title { font-size: 27px; margin-top: 5px; }
 /* header-name-block has flex:1, which pushes this to the far right on its
    own; align-self keeps it pinned near the top of the row instead of
    centered against the taller polaroid photo. */
@@ -263,6 +269,7 @@ html, body {
 .section-heading {
   display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-left: 4px;
 }
+.section-heading .icon { flex-shrink: 0; display: flex; }
 .section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; }
 .section-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); }
 .section-heading.lg .title { font-size: 18px; }
@@ -567,15 +574,15 @@ html, body {
 .redeem-btn--limited:not(:disabled) { background: var(--sb-red); }
 
 .shop-cert {
-  position: relative; border-radius: 20px; padding: 16px 14px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 10px 24px rgba(15,36,97,0.3);
+  position: relative; border-radius: 18px; padding: 16px 18px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
+  box-shadow: 0 6px 18px rgba(30,58,138,0.33), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.18);
   display: flex; align-items: center; gap: 12px;
   margin-top: 14px;
 }
 .shop-cert::before {
-  content: ''; position: absolute; inset: 6px; border-radius: 15px;
-  border: 1.5px dashed rgba(242,200,75,0.5); pointer-events: none;
+  content: ''; position: absolute; inset: 6px; border-radius: 14px;
+  border: 1px dashed rgba(242,200,75,0.4); pointer-events: none;
 }
 .shop-cert-badge {
   position: relative; width: 48px; height: 48px; min-width: 48px; border-radius: 50%;
@@ -591,21 +598,43 @@ html, body {
 
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); margin: 2px 0 10px; }
 
+/* icon-in-a-tinted-circle badge — same "medal" language rank.html uses,
+   replacing the old flat diagonal-stripe placeholder rectangles so each
+   item actually depicts something instead of an abstract swatch. */
+.item-medallion {
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.65) 0%, transparent 55%),
+    var(--tint);
+  border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(20,30,60,0.14), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.item-medallion svg { color: var(--sb-ink); opacity: 0.72; }
+
 .stationery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
-.stationery-photo {
-  height: 64px; border-radius: 6px; border: 5px solid #fff; border-bottom-width: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 8px;
-  background-image: repeating-linear-gradient(45deg, var(--tint) 0 8px, var(--sb-cream) 8px 16px);
-}
-.stationery-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); margin-bottom: 8px; line-height: 1.25; min-height: 2.3em; }
+.stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; }
+.stationery-top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.stationery-top .item-medallion { width: 44px; height: 44px; }
+.stationery-top .item-medallion svg { width: 20px; height: 20px; }
+.stationery-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .stationery-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.price-badge {
-  width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  font-family: var(--font-mono); font-size: 9px; font-weight: 700; color: var(--accent);
-  text-align: center; line-height: 1.15;
+
+/* price pill — same shape language as .redeem-btn / .balance-chip, replacing
+   the old circular .price-badge (a 4-digit cost like "3,200 pts" wrapped
+   across two lines inside a 42px circle at 9px font — unreadable, and a
+   second circle competing with the item-medallion right above it). */
+.price-chip {
+  display: inline-flex; align-items: baseline; gap: 2px; flex-shrink: 0;
+  padding: 7px 10px; border-radius: 999px;
+  background: var(--sb-cream2); border: 1.5px solid var(--accent);
+  font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--accent);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
 }
+.price-chip .unit { font-size: 9px; font-weight: 600; color: rgba(26,31,51,0.6); }
 
 .limited-section {
   position: relative; background: var(--sb-cream); border-radius: 16px;
@@ -621,10 +650,8 @@ html, body {
   background: var(--sb-paper); border-radius: 12px; padding: 10px; margin-bottom: 10px;
 }
 .limited-item.is-unavailable { opacity: 0.68; }
-.limited-photo {
-  width: 56px; height: 56px; min-width: 56px; border: 4px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  background-image: repeating-linear-gradient(45deg, var(--tint) 0 7px, var(--sb-cream) 7px 14px);
-}
+.limited-item .item-medallion { width: 52px; height: 52px; }
+.limited-item .item-medallion svg { width: 24px; height: 24px; }
 .limited-body { flex: 1; min-width: 0; }
 .limited-body .name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); }
 .limited-body .meta { font-family: var(--font-thai); font-size: 10px; color: rgba(26,31,51,0.55); margin: 3px 0 4px; }

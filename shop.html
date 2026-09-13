@@ -25,14 +25,15 @@
 </div>
 <div class="dash-scroll">
 
-  <!-- header -->
-  <div class="dash-header">
+  <!-- header (dash-header--home: text floats on the gradient, same as
+       Home's header, instead of sitting in its own white card) -->
+  <div class="dash-header dash-header--home">
     <span class="header-sparkle" aria-hidden="true" style="top:6px;right:18px;font-size:13px;color:rgba(242,200,75,0.5);">✦</span>
     <span class="header-sparkle" aria-hidden="true" style="top:11px;right:38px;font-size:8px;color:rgba(26,31,51,0.28);">★</span>
     <div class="header-row" style="justify-content:space-between;align-items:flex-start;">
       <div class="header-name-block">
-        <div class="hello-script">the collector's shop~</div>
-        <div class="student-name">ร้านแลกของ · Shop</div>
+        <div class="hello-script hero-tagline">let's shop ✦</div>
+        <div class="student-name hero-title">แลกของรางวัล</div>
       </div>
       <div class="balance-chip">
         <span class="k">your balance</span>
@@ -43,6 +44,11 @@
 
   <!-- certificate CTA -->
   <div class="section">
+    <div class="section-heading">
+      <span class="icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 3l2.4 5.5 6 .5-4.5 4 1.4 6-5.3-3.2L6.7 19l1.4-6L3.6 9l6-.5z" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="title">Featured</span>
+      <span class="sub">· ของรางวัลแนะนำ</span>
+    </div>
     <div id="shop-cert"></div>
   </div>
 
@@ -52,8 +58,9 @@
       <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--accent);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
       <div class="tape tape--dots" style="width:42px;height:14px;background:var(--sb-yellow-soft);transform:rotate(12deg);right:-8px;top:-6px;"></div>
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16v4zM14.5 6.5l3 3" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="title">Stationery</span>
-        <span class="sub">· ของรางวัลเครื่องเขียน</span>
+        <span class="sub">· เครื่องเขียนสะสม</span>
       </div>
       <div class="shop-section-note">แลกได้ตลอด · ไม่จำกัดจำนวน</div>
       <div class="stationery-grid" id="shop-stationery"></div>
@@ -65,6 +72,7 @@
     <div class="limited-section">
       <div class="limited-badge">เปิดแลกเฉพาะช่วง · 1–15 ก.ย.</div>
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6z" fill="none" stroke="var(--sb-red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="title">Limited Edition</span>
       </div>
       <div class="shop-section-note">ของรางวัลจำกัดจำนวน · ของจริง สต๊อกจำกัดต่อรอบ หมดแล้วรอรอบถัดไป</div>

@@ -23,7 +23,7 @@
   --font-script: 'Caveat', 'Kalam', cursive;
   --font-body: 'Nunito', 'Quicksand', system-ui, sans-serif;
   --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-thai-serif: 'Bai Jamjuree', 'Sarabun', system-ui, sans-serif;
+  --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   /* role accent: blue by default, red on the admin login */
