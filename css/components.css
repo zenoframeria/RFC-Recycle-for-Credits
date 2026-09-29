@@ -199,52 +199,15 @@
   color: var(--accent);
 }
 
-/* checkbox pill */
+/* row holding the forgot-password link (student) / SECURE tag (admin) —
+   used to hold a "remember me" checkbox too, removed since Supabase always
+   persists the session regardless of it (see CLAUDE.md). */
 .check-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: 12px;
 }
-.check-label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: var(--font-thai);
-  font-size: 11px;
-  color: rgba(26,31,51,0.65);
-}
-/* real checkbox input, visually hidden but still clickable/focusable/
-   keyboard-operable — sits on top of .check-box (positioned elements paint
-   above static siblings regardless of DOM order) so it captures the click,
-   while .check-box just renders the visible square + checkmark. */
-.check-input {
-  position: absolute;
-  width: 14px; height: 14px;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.check-input:focus-visible + .check-box {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.check-box {
-  width: 14px; height: 14px;
-  border-radius: 4px;
-  background: var(--sb-cream2);
-  border: 1.5px solid var(--accent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--accent);
-}
-.check-box svg { opacity: 0; transition: opacity 0.1s ease; }
-.check-input:checked + .check-box svg { opacity: 1; }
 
 /* role chip under the logo */
 .chip {
