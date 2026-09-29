@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const role = document.body.dataset.role;
   wirePasswordToggle();
   wireAuthTabs();
+  wireForgotLink();
   wireLoginForm(role);
   wireSignupForm(role);
 });
@@ -61,6 +62,20 @@ function wirePasswordToggle() {
     const showing = pwInput.type === 'text';
     pwInput.type = showing ? 'password' : 'text';
     eyePath.setAttribute('d', showing ? EYE_PATH : EYE_OFF_PATH);
+    toggleBtn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+  });
+}
+
+// ── forgot password (student login only — no real reset flow exists since
+// this app has no real email, so this just points to the same manual-reset
+// path signup already tells rejected roster IDs to use) ──────────────────
+function wireForgotLink() {
+  const forgotBtn = document.querySelector('.forgot-link');
+  if (!forgotBtn) return;
+  const errorEl = document.getElementById('login-error');
+
+  forgotBtn.addEventListener('click', () => {
+    showError(errorEl, 'ลืมรหัสผ่าน? กรุณาติดต่อสภานักเรียนเพื่อขอรีเซ็ตรหัสผ่าน');
   });
 }
 
