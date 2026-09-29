@@ -146,22 +146,6 @@
   line-height: 1.4;
 }
 
-.secure-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--sb-red);
-  letter-spacing: 0.14em;
-  white-space: nowrap;
-}
-.secure-tag .dot {
-  width: 5px; height: 5px; border-radius: 999px;
-  background: var(--sb-red);
-  box-shadow: 0 0 4px var(--sb-red);
-}
-
 .forgot-link {
   background: transparent; border: none; cursor: pointer;
   font-family: var(--font-display); font-style: italic;
