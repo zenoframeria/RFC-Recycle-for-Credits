@@ -2,9 +2,30 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=login-student.html" />
   <title>ขยะแลกแต้ม</title>
-  <script>window.location.replace("login-student.html");</script>
 </head>
-<body></body>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+(async function () {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+  if (!currentUser) {
+    window.location.replace('login-student.html');
+    return;
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+    localStorage.removeItem('currentUser');
+    window.location.replace(currentUser.role === 'admin' ? 'login-admin.html' : 'login-student.html');
+    return;
+  }
+
+  window.location.replace(currentUser.role === 'admin' ? 'admin-review.html' : 'dashboard.html');
+})();
+</script>
+</body>
 </html>
