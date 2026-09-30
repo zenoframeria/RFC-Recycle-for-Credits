@@ -142,6 +142,11 @@ function wireShopModal() {
   });
 
   document.getElementById('shop-item-save-btn').addEventListener('click', saveShopItem);
+
+  // clear a field's red error as soon as the admin starts fixing it
+  REQUIRED_SHOP_FIELDS.forEach((id) => {
+    document.getElementById(id).addEventListener('input', () => setShopFieldError(id, ''));
+  });
 }
 
 function openShopItemModal(item) {
@@ -152,6 +157,7 @@ function openShopItemModal(item) {
     shopManageState.photoPreviewUrl = null;
   }
 
+  clearShopFieldErrors();
   document.getElementById('shop-item-modal-title').textContent = item ? 'แก้ไขสินค้า' : 'เพิ่มสินค้า';
   document.getElementById('shop-item-name').value = item?.name || '';
   document.getElementById('shop-item-section').value = item?.section || 'stationery';
@@ -200,11 +206,43 @@ function readShopItemForm() {
   };
 }
 
+// Required-field errors shown inline in red under each field (plus a red
+// border on its box), instead of a toast that vanishes before it's read.
+const REQUIRED_SHOP_FIELDS = ['shop-item-name', 'shop-item-cost'];
+
+function setShopFieldError(inputId, message) {
+  const input = document.getElementById(inputId);
+  const errorEl = document.getElementById(`${inputId}-error`);
+  input.closest('.field-box').classList.toggle('is-invalid', !!message);
+  input.setAttribute('aria-invalid', message ? 'true' : 'false');
+  errorEl.textContent = message || '';
+  errorEl.hidden = !message;
+}
+
+function clearShopFieldErrors() {
+  REQUIRED_SHOP_FIELDS.forEach((id) => setShopFieldError(id, ''));
+}
+
+function validateShopItemForm(form) {
+  const errors = {};
+  if (!form.name) errors['shop-item-name'] = 'กรุณากรอกชื่อสินค้า';
+  if (!Number.isFinite(form.cost)) errors['shop-item-cost'] = 'กรุณากรอกราคาเป็นตัวเลข';
+  else if (form.cost < 0) errors['shop-item-cost'] = 'ราคาต้องไม่ติดลบ';
+
+  REQUIRED_SHOP_FIELDS.forEach((id) => setShopFieldError(id, errors[id]));
+
+  const firstInvalid = REQUIRED_SHOP_FIELDS.find((id) => errors[id]);
+  if (firstInvalid) {
+    const input = document.getElementById(firstInvalid);
+    input.closest('.field').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus({ preventScroll: true });
+  }
+  return !firstInvalid;
+}
+
 async function saveShopItem() {
   const form = readShopItemForm();
-
-  if (!form.name) { showToast('กรอกชื่อสินค้าก่อน'); return; }
-  if (!Number.isFinite(form.cost) || form.cost < 0) { showToast('ราคาต้องเป็นตัวเลขไม่ติดลบ'); return; }
+  if (!validateShopItemForm(form)) return;
 
   const saveBtn = document.getElementById('shop-item-save-btn');
   const saveLabel = document.getElementById('shop-item-save-label');

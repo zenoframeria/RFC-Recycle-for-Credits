@@ -86,10 +86,12 @@
     <div class="section-heading lg" style="padding-left:0;margin-bottom:10px;">
       <span class="title" id="shop-item-modal-title">เพิ่มสินค้า</span>
     </div>
+    <div class="required-note">ช่องที่มี <span class="req">*</span> ต้องกรอก</div>
 
     <div class="field">
-      <div class="field-label"><span class="name">ชื่อสินค้า</span></div>
-      <div class="field-box"><input type="text" id="shop-item-name" placeholder="เช่น ปากกาเจลหมึกสี"></div>
+      <div class="field-label"><span class="name">ชื่อสินค้า <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></div>
+      <div class="field-box"><input type="text" id="shop-item-name" placeholder="เช่น ปากกาเจลหมึกสี" aria-required="true" aria-describedby="shop-item-name-error"></div>
+      <div class="field-error" id="shop-item-name-error" hidden></div>
     </div>
 
     <div class="field">
@@ -104,8 +106,9 @@
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">ราคา (แต้ม)</span></div>
-      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-cost" placeholder="350"></div>
+      <div class="field-label"><span class="name">ราคา (แต้ม) <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></div>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-cost" placeholder="เช่น 350" aria-required="true" aria-describedby="shop-item-cost-error"></div>
+      <div class="field-error" id="shop-item-cost-error" hidden></div>
     </div>
 
     <div class="field">

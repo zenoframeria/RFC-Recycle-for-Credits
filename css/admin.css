@@ -89,4 +89,11 @@
 /* item-form modal is taller than a phone screen once a photo is attached —
    cap it to the viewport and let it scroll so the Save button stays reachable */
 #shop-item-modal .modal-card { max-height: calc(100dvh - 48px); overflow-y: auto; }
+/* required-field markers + inline validation (red, like a normal form) */
+.required-note { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.6); margin: -4px 0 10px 2px; }
+.req { color: var(--sb-red); font-style: normal; font-weight: 700; }
+.field-label .sub.req-sub { color: var(--sb-red); }
+.field-box.is-invalid { border-color: var(--sb-red); background: rgba(192,70,58,0.06); }
+.field-box.is-invalid:focus-within { box-shadow: 0 0 0 3px rgba(192,70,58,0.15), inset 0 1px 0 rgba(255,255,255,0.5); }
+
 #shop-item-modal .photo-preview img { max-height: 180px; object-fit: contain; background: var(--sb-cream2); }
