@@ -66,7 +66,7 @@ This project is moving from fake/local data (`data.js` + `localStorage`) to a re
 
 **Implementation note (Phase 3, Round 3a) — three deviations from the "locked" spec above, all explicitly requested for that round:**
 - The Scan tab rendered as a plain equal-weight button in Round 3a, not the large center FAB. **Reverted in Round 3b** — the FAB styling is restored now that the nav is 5-symmetric again (see Nav layout above).
-- Report-a-problem ended up as a **floating pill button, bottom-left of the screen** (opens a modal), not a header icon as this section originally said. This wasn't a mistake — it was explicitly requested this way for Round 3a, and is still the current implementation (untouched by Round 3b).
+- Report-a-problem ended up as a **floating pill button, bottom-left of the screen** (opens a modal), not a header icon as this section originally said. This wasn't a mistake — it was explicitly requested this way for Round 3a, and stayed that way through Round 3b — later superseded by the desktop layout foundation (header icon on phones / sidebar item from `md` up, Home-only; see "Desktop layout foundation" below).
 - **Profile/logout was cut entirely in Round 3a, not moved to a header icon.** **Reverted in Round 3b** — see the "Me" tab in Nav layout above.
 - Notifications did land as a header icon (bell, with a dropdown panel), matching the spec as written. Unchanged by Round 3b.
 
