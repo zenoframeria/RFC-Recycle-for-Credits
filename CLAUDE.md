@@ -28,7 +28,7 @@ There is now a CSS build step (Tailwind v4) — see "Desktop layout foundation" 
 - `components.css` holds shared, reusable pieces used across multiple pages (buttons, cards, the decorative "tape"/"stamp" scrapbook motifs, form fields).
 - `dashboard.css` / `login.css` hold styles specific to their respective page(s); `admin.css` the admin console; `layout.css` (responsive sidebar) and `motion.css` (liveliness) are described under "Desktop layout foundation".
 - The visual design language is a "scrapbook/passport stamp" aesthetic (washi tape strips, rotated stamps, polaroid-style avatar frame) — match this style when adding new UI rather than introducing a different visual language.
-- Layout is mobile-first: below 768px (`md`) it is a `max-width: 430px` centered `.app-shell` card with the floating bottom nav; from `md` up the shell spans the viewport with a left sidebar (see "Desktop layout foundation").
+- Layout is mobile-first: below 768px (`md`) the `.app-shell` is a centered card with `max-width: clamp(430px, 18vw + 350px, 600px)` (≈430–488px) and the floating bottom nav; from `md` up on student/admin pages it is uncapped and spans the viewport with a left sidebar (login pages keep the clamp at all widths) (see "Desktop layout foundation").
 
 ## Conventions worth following
 
