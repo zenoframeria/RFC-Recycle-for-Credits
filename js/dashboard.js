@@ -96,6 +96,7 @@ function wireNicknameEdit(currentUser) {
     currentUser.nickname = newNickname;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     renderHeader(currentUser);
+    renderSidebarUser(currentUser);
     closeEditor();
     showToast('บันทึกชื่อเล่นแล้ว');
   }
@@ -111,7 +112,7 @@ function wireNicknameEdit(currentUser) {
 
 function renderPoints(pointsTotal) {
   const points = pointsTotal ?? 0;
-  document.getElementById('points-value').textContent = points.toLocaleString();
+  countUp(document.getElementById('points-value'), points);
   renderPointsRing(points);
 }
 
@@ -172,6 +173,7 @@ async function refreshPoints(userId) {
 
   const pointsTotal = data.points_total ?? 0;
   renderPoints(pointsTotal);
+  renderSidebarPoints(pointsTotal);
 
   const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
   if (cached) {
@@ -447,7 +449,7 @@ function wireNotifications() {
 }
 
 function wireReportModal() {
-  const fab = document.getElementById('report-fab');
+  const triggers = document.querySelectorAll('[data-open-report]');
   const overlay = document.getElementById('report-modal');
   const closeBtn = document.getElementById('report-close');
   const submitBtn = document.getElementById('report-submit');
@@ -461,7 +463,7 @@ function wireReportModal() {
     overlay.classList.remove('open');
   }
 
-  fab.addEventListener('click', openModal);
+  triggers.forEach((btn) => btn.addEventListener('click', openModal));
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();

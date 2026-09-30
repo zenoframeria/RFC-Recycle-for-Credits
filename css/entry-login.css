@@ -1,0 +1,6 @@
+/* Tailwind entry for login-student.html + login-admin.html. Same
+   stylesheets, same order, those pages used to <link> one by one. */
+@import "./tailwind-setup.css";
+@import "./tokens.css" layer(base);
+@import "./components.css" layer(components);
+@import "./login.css" layer(components);

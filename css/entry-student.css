@@ -1,0 +1,8 @@
+/* Tailwind entry for the 5 student pages (dashboard, shop, rank, scan, me).
+   Same stylesheets, same order, those pages used to <link> one by one. */
+@import "./tailwind-setup.css";
+@import "./tokens.css" layer(base);
+@import "./components.css" layer(components);
+@import "./dashboard.css" layer(components);
+@import "./layout.css" layer(components);
+@import "./motion.css" layer(components);

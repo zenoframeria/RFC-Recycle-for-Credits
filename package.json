@@ -1,0 +1,19 @@
+{
+  "name": "recycle-for-credits",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n student,admin,login \"npm:watch:*\"",
+    "watch:student": "tailwindcss -i ./css/entry-student.css -o ./css/build/student.css --watch=always",
+    "watch:admin": "tailwindcss -i ./css/entry-admin.css -o ./css/build/admin.css --watch=always",
+    "watch:login": "tailwindcss -i ./css/entry-login.css -o ./css/build/login.css --watch=always",
+    "build": "npm run build:student && npm run build:admin && npm run build:login",
+    "build:student": "tailwindcss -i ./css/entry-student.css -o ./css/build/student.css --minify",
+    "build:admin": "tailwindcss -i ./css/entry-admin.css -o ./css/build/admin.css --minify",
+    "build:login": "tailwindcss -i ./css/entry-login.css -o ./css/build/login.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "concurrently": "^9.2.4",
+    "tailwindcss": "^4.3.3"
+  }
+}

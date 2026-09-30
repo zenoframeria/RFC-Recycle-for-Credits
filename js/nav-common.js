@@ -3,7 +3,8 @@
 // for the dashboard header's nickname-edit feature, now also used by the
 // Rank leaderboard to show other students' names the same way, and the
 // shared compressImage() photo compressor (scan.js + admin-shop.js; the
-// admin page loads this file too). Scan is a
+// admin page loads this file too), the desktop sidebar's user block, and the
+// shared countUp() number animation. Scan is a
 // real link to scan.html now (Phase 4), same as Home/Shop/Rank/Me, so it no
 // longer needs its own click handler here.
 
@@ -69,4 +70,57 @@ function compressImage(file, maxWidth, quality) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+// Animates a number in `el` up/down to `target`, eased, formatted like the
+// rest of the app (toLocaleString). Safe to call repeatedly: the same target
+// while an animation toward it is running is left alone (so the cached-then-
+// live points refresh doesn't cut the count short), and a new target
+// mid-animation glides on from the number currently on screen. Skips straight
+// to the final value when the OS "reduce motion" setting is on.
+function countUp(el, target, duration = 800) {
+  const to = Number(target) || 0;
+  const running = el.dataset.countFrame;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (running && !reduceMotion && Number(el.dataset.countValue) === to) return;
+  if (running) cancelAnimationFrame(Number(running));
+  delete el.dataset.countFrame;
+
+  const from = Number(el.dataset.countShown || 0);
+  el.dataset.countValue = String(to);
+  if (reduceMotion || from === to) {
+    el.dataset.countShown = String(to);
+    el.textContent = to.toLocaleString();
+    return;
+  }
+
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const shown = Math.round(from + (to - from) * eased);
+    el.dataset.countShown = String(shown);
+    el.textContent = shown.toLocaleString();
+    if (t < 1) el.dataset.countFrame = String(requestAnimationFrame(step));
+    else delete el.dataset.countFrame;
+  }
+  el.dataset.countFrame = String(requestAnimationFrame(step));
+}
+
+// Fills the sidebar's user block (only visible at lg / 1024px+). Pages
+// without the sidebar markup (admin, login) have no #side-name, so this
+// quietly does nothing there.
+function renderSidebarUser(user) {
+  const nameEl = document.getElementById('side-name');
+  if (!nameEl) return;
+  const shownName = displayName(user.name || '', user.nickname);
+  nameEl.textContent = shownName;
+  document.getElementById('side-initial').textContent = shownName.charAt(0);
+  renderSidebarPoints(user.pointsTotal);
+}
+
+function renderSidebarPoints(points) {
+  const el = document.getElementById('side-points');
+  if (el) countUp(el, points ?? 0);
 }
