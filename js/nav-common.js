@@ -72,20 +72,25 @@ function compressImage(file, maxWidth, quality) {
   });
 }
 
-// Animates a number in `el` from the last value countUp() put there (0 the
-// first time) up/down to `target`, eased, formatted like the rest of the
-// app (toLocaleString). Starting from the previous value means a second call
-// — e.g. dashboard's cached-then-live points refresh — glides from the old
-// number instead of restarting at 0. Skips straight to the final value when
-// the OS "reduce motion" setting is on.
+// Animates a number in `el` up/down to `target`, eased, formatted like the
+// rest of the app (toLocaleString). Safe to call repeatedly: the same target
+// while an animation toward it is running is left alone (so the cached-then-
+// live points refresh doesn't cut the count short), and a new target
+// mid-animation glides on from the number currently on screen. Skips straight
+// to the final value when the OS "reduce motion" setting is on.
 function countUp(el, target, duration = 800) {
   const to = Number(target) || 0;
-  const from = Number(el.dataset.countValue || 0);
-  el.dataset.countValue = String(to);
-  cancelAnimationFrame(Number(el.dataset.countFrame || 0));
-
+  const running = el.dataset.countFrame;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (running && !reduceMotion && Number(el.dataset.countValue) === to) return;
+  if (running) cancelAnimationFrame(Number(running));
+  delete el.dataset.countFrame;
+
+  const from = Number(el.dataset.countShown || 0);
+  el.dataset.countValue = String(to);
   if (reduceMotion || from === to) {
+    el.dataset.countShown = String(to);
     el.textContent = to.toLocaleString();
     return;
   }
@@ -94,8 +99,11 @@ function countUp(el, target, duration = 800) {
   function step(now) {
     const t = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(from + (to - from) * eased).toLocaleString();
+    const shown = Math.round(from + (to - from) * eased);
+    el.dataset.countShown = String(shown);
+    el.textContent = shown.toLocaleString();
     if (t < 1) el.dataset.countFrame = String(requestAnimationFrame(step));
+    else delete el.dataset.countFrame;
   }
   el.dataset.countFrame = String(requestAnimationFrame(step));
 }
