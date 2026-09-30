@@ -449,7 +449,7 @@ function wireNotifications() {
 }
 
 function wireReportModal() {
-  const fab = document.getElementById('report-fab');
+  const triggers = document.querySelectorAll('[data-open-report]');
   const overlay = document.getElementById('report-modal');
   const closeBtn = document.getElementById('report-close');
   const submitBtn = document.getElementById('report-submit');
@@ -463,7 +463,7 @@ function wireReportModal() {
     overlay.classList.remove('open');
   }
 
-  fab.addEventListener('click', openModal);
+  triggers.forEach((btn) => btn.addEventListener('click', openModal));
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();

@@ -104,6 +104,10 @@
   .side-report .label { display: inline; }
 }
 
+/* Home header: report-a-problem icon next to the bell (phones only —
+   hidden from md up by the md:hidden utility, where the sidebar has it) */
+.header-report { align-self: flex-start; flex-shrink: 0; color: var(--sb-red); margin-right: -6px; }
+
 /* ── admin console (admin-review.html) ───────────────────────────
    Phones: header + tabs across the top, unchanged. md+: the same
    elements become a fixed sidebar — name at top, Review/Prices/Shop
