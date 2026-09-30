@@ -615,6 +615,32 @@ html, body {
 }
 .item-medallion svg { color: var(--sb-ink); opacity: 0.72; }
 .item-medallion img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.item-medallion { position: relative; }
+/* little magnifier on photo medallions — hints "tap me to see it bigger" */
+.item-zoom-hint {
+  position: absolute; right: -4px; bottom: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); color: var(--sb-cream); border: 1.5px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.item-medallion .item-zoom-hint svg { width: 10px; height: 10px; color: var(--sb-cream); opacity: 1; }
+
+/* tappable parts of a shop item (open the detail popup) */
+[data-open-item] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+[data-open-item]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+
+/* item detail popup — capped to the viewport and scrollable, same as the
+   admin item-form fix, so a tall photo never pushes the text off a phone screen */
+.item-detail-card { max-height: calc(100dvh - 48px); overflow-y: auto; }
+.item-detail-img { max-height: 55dvh; object-fit: contain; background: var(--sb-cream2); margin-top: 22px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.item-detail-name { font-family: var(--font-thai-serif); font-weight: 700; font-size: 17px; color: var(--sb-ink); line-height: 1.3; margin-top: 14px; padding-right: 30px; }
+.item-detail-img[hidden] + .item-detail-name { margin-top: 2px; }
+.item-detail-cost { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-top: 4px; }
+.item-detail-desc {
+  font-family: var(--font-thai); font-size: 13px; line-height: 1.55; color: rgba(26,31,51,0.78);
+  margin-top: 10px; padding-top: 10px; border-top: 1.5px dashed rgba(26,31,51,0.15);
+  white-space: pre-line;
+}
 
 .stationery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; }

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadShopItems();
   refreshButtons();
   wireRedeemClicks();
+  wireItemDetail();
 });
 
 async function loadShopItems() {
@@ -50,7 +51,12 @@ function itemImageUrl(item) {
 function itemMedallion(item) {
   const url = itemImageUrl(item);
   if (url) {
-    return `<div class="item-medallion" aria-hidden="true"><img src="${url}" alt=""></div>`;
+    return `
+      <div class="item-medallion" aria-hidden="true">
+        <img src="${url}" alt="">
+        <span class="item-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></svg></span>
+      </div>
+    `;
   }
   return `
     <div class="item-medallion" style="--tint:var(--sb-cream2)" aria-hidden="true">
@@ -79,7 +85,7 @@ function renderCert() {
   document.getElementById('shop-cert').innerHTML = items.map((item) => `
     <div class="shop-cert">
       <div class="shop-cert-badge">★</div>
-      <div class="shop-cert-body">
+      <div class="shop-cert-body" ${openItemAttrs(item)}>
         <div class="shop-cert-tag">honor &amp; recognition</div>
         <div class="shop-cert-title">${item.name} <span class="cost">· ${item.cost.toLocaleString()} pts</span></div>
         ${item.description ? `<div class="shop-cert-desc">${item.description}</div>` : ''}
@@ -93,7 +99,7 @@ function renderStationery() {
   const items = shopState.items.filter((i) => i.section === 'stationery');
   document.getElementById('shop-stationery').innerHTML = items.map((item) => `
     <div class="stationery-item">
-      <div class="stationery-top">
+      <div class="stationery-top" ${openItemAttrs(item)}>
         ${itemMedallion(item)}
         <div class="stationery-name">${item.name}</div>
       </div>
@@ -129,7 +135,7 @@ function renderLimited() {
       ? `<div class="limited-stock-bar"><div class="fill" data-fill style="width:${(item.stock / (item.stock_max || 1)) * 100}%"></div></div>`
       : '';
     return `
-      <div class="limited-item${unavailable ? ' is-unavailable' : ''}" data-limited="${item.id}">
+      <div class="limited-item${unavailable ? ' is-unavailable' : ''}" data-limited="${item.id}" ${openItemAttrs(item)}>
         ${itemMedallion(item)}
         <div class="limited-body">
           <div class="name">${item.name}</div>
@@ -141,6 +147,55 @@ function renderLimited() {
       </div>
     `;
   }).join('');
+}
+
+// ── item detail popup (tap an item to see its photo full-size + its
+//    description, which the compact grid/list cards have no room for) ──
+function openItemAttrs(item) {
+  return `data-open-item="${item.id}" role="button" tabindex="0" aria-label="ดูรายละเอียดสินค้า"`;
+}
+
+function openItemDetail(item) {
+  const img = document.getElementById('item-detail-img');
+  const url = itemImageUrl(item);
+  img.hidden = !url;
+  img.src = url || '';
+  img.alt = url ? item.name : '';
+
+  // textContent, not innerHTML — admin-typed name/description never get
+  // parsed as markup here.
+  document.getElementById('item-detail-name').textContent = item.name;
+  document.getElementById('item-detail-cost').textContent = `${item.cost.toLocaleString()} pts`;
+
+  const desc = document.getElementById('item-detail-desc');
+  desc.textContent = item.description || '';
+  desc.hidden = !item.description;
+
+  document.getElementById('item-detail').classList.add('open');
+}
+
+function wireItemDetail() {
+  const overlay = document.getElementById('item-detail');
+  const close = () => overlay.classList.remove('open');
+
+  document.getElementById('item-detail-close').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+  const openFrom = (target) => {
+    if (target.closest('.redeem-btn')) return false; // redeem keeps its own behavior
+    const el = target.closest('[data-open-item]');
+    if (!el) return false;
+    const item = shopState.items.find((i) => String(i.id) === el.dataset.openItem);
+    if (!item) return false;
+    openItemDetail(item);
+    return true;
+  };
+
+  document.addEventListener('click', (e) => openFrom(e.target));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { close(); return; }
+    if ((e.key === 'Enter' || e.key === ' ') && openFrom(e.target)) e.preventDefault();
+  });
 }
 
 function refreshButtons() {
