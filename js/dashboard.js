@@ -112,7 +112,7 @@ function wireNicknameEdit(currentUser) {
 
 function renderPoints(pointsTotal) {
   const points = pointsTotal ?? 0;
-  document.getElementById('points-value').textContent = points.toLocaleString();
+  countUp(document.getElementById('points-value'), points);
   renderPointsRing(points);
 }
 

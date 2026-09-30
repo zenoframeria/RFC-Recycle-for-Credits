@@ -1,0 +1,49 @@
+/* ขยะแลกแต้ม — shared "liveliness" toolkit. Everything here is switched
+   off by the global prefers-reduced-motion rule in tokens.css.
+   Uses the individual translate / rotate / scale properties (not
+   `transform`) wherever an element might already have its own transform
+   — e.g. .tape pieces rotated via inline style — so these compose with it
+   instead of overwriting it. */
+
+/* 1. entrance: each top-level block of a page rises in, staggered like
+   paper being laid on a desk. `backwards` (not `both`) so no transform is
+   left behind after the animation — a leftover transform would break
+   position:fixed descendants. .admin-side is excluded: it's fixed on md+. */
+@keyframes sbrise {
+  from { opacity: 0; translate: 0 10px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+.dash-scroll > :not(.admin-side) { animation: sbrise 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) backwards; }
+.dash-scroll > :nth-child(2) { animation-delay: 0.05s; }
+.dash-scroll > :nth-child(3) { animation-delay: 0.10s; }
+.dash-scroll > :nth-child(4) { animation-delay: 0.15s; }
+.dash-scroll > :nth-child(5) { animation-delay: 0.20s; }
+.dash-scroll > :nth-child(6) { animation-delay: 0.25s; }
+.dash-scroll > :nth-child(7) { animation-delay: 0.30s; }
+.dash-scroll > :nth-child(n+8) { animation-delay: 0.35s; }
+
+/* 2. paper-lift hover — mouse/trackpad only, never on touch */
+@media (hover: hover) and (pointer: fine) {
+  .card { transition: translate 0.2s ease, rotate 0.2s ease, box-shadow 0.2s ease; }
+  .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16); }
+  .card > .tape { transition: translate 0.2s ease; }
+  .card:hover > .tape { translate: 0 -2px; }
+}
+
+/* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
+   (sidebar sizes only — the phone bottom nav keeps its plain accent color) */
+@media (min-width: 48rem) {
+  .bottom-nav .nav-item.active {
+    background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
+}
+
+/* 4. press feedback for the buttons that didn't have any yet */
+.btn-primary:not(:disabled):active,
+.icon-btn:active,
+.admin-tab:active,
+.activity-tab:active,
+.side-report:active { scale: 0.96; }
+.btn-primary, .icon-btn, .admin-tab, .activity-tab, .side-report { transition: scale 0.12s ease; }

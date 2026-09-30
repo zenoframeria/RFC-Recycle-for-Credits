@@ -6,3 +6,4 @@
 @import "./dashboard.css" layer(components);
 @import "./admin.css" layer(components);
 @import "./layout.css" layer(components);
+@import "./motion.css" layer(components);
