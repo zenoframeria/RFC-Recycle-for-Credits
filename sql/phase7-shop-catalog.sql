@@ -35,6 +35,13 @@ create table if not exists public.shop_items (
 
 alter table public.shop_items enable row level security;
 
+-- Table-level privileges. This project doesn't auto-grant new tables to
+-- `authenticated` (same as waste_categories needed in Phase 4), so without
+-- this every request 403s before RLS is even consulted. Granting all four
+-- here is safe: the RLS policies below still limit INSERT/UPDATE/DELETE to
+-- is_admin() — students can only ever SELECT.
+grant select, insert, update, delete on public.shop_items to authenticated;
+
 -- Every logged-in student and admin needs to read the catalog — it's the
 -- Shop page's data source, no restriction beyond being authenticated.
 do $$
