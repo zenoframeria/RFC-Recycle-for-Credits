@@ -60,6 +60,15 @@ body {
   50%      { opacity: 1;   transform: scale(1.06); }
 }
 
+/* respect the OS "reduce motion" setting: stop the looping sbglow pulses
+   and make hover/tap transitions effectively instant */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .app-shell {
   /* fluid card width: stays 430px on phones (viewport already narrower
      than that anyway), grows gradually past 430px on wider screens,

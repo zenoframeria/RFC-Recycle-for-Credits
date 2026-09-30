@@ -131,7 +131,7 @@ function renderFeed() {
           <div class="feed-card-row"><span class="k">แต้มที่คาด</span><span class="v points">${suggestedPoints(row).toLocaleString()} pts</span></div>
           <div class="feed-card-row"><span class="k">เวลาส่ง</span><span class="v">${when}</span></div>
         </div>
-        <textarea class="feed-card-comment" placeholder="เหตุผล (ถ้ามี — ใช้ตอนปฏิเสธ)"></textarea>
+        <textarea class="feed-card-comment" aria-label="เหตุผลที่ปฏิเสธ" placeholder="เหตุผล (ถ้ามี — ใช้ตอนปฏิเสธ)"></textarea>
         <div class="feed-card-actions">
           <button type="button" class="btn-approve" data-action="approve">อนุมัติ · Approve</button>
           <button type="button" class="btn-reject" data-action="reject">ปฏิเสธ · Reject</button>
@@ -263,7 +263,7 @@ async function loadCategoriesForEditing() {
   list.innerHTML = data.map((cat) => `
     <div class="price-row" data-id="${cat.id}">
       <span class="name">${cat.name}</span>
-      <input type="number" min="0" step="1" value="${cat.point_value}">
+      <input type="number" min="0" step="1" value="${cat.point_value}" aria-label="แต้มต่อกิโลกรัม">
       <button type="button" class="save-btn">Save</button>
     </div>
   `).join('');

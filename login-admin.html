@@ -71,10 +71,10 @@
 
       <form id="login-form" novalidate>
         <div class="field">
-          <div class="field-label">
+          <label class="field-label" for="field-id">
             <span class="name">Student ID</span>
             <span class="sub">· รหัสนักเรียน</span>
-          </div>
+          </label>
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <input type="text" id="field-id" placeholder="6XXXXX" autocomplete="username" required>
@@ -82,10 +82,10 @@
         </div>
 
         <div class="field">
-          <div class="field-label">
+          <label class="field-label" for="field-password">
             <span class="name">Password</span>
             <span class="sub">· รหัสผ่าน</span>
-          </div>
+          </label>
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zM12 14v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <input type="password" id="field-password" placeholder="••••••••" autocomplete="current-password" required>
@@ -113,25 +113,25 @@
 
       <form id="signup-form" novalidate hidden>
         <div class="field">
-          <div class="field-label">
+          <label class="field-label" for="signup-id">
             <span class="name">Student ID</span>
             <span class="sub">· รหัสนักเรียน</span>
-          </div>
+          </label>
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <input type="text" id="signup-id" placeholder="6XXXXX" autocomplete="username" required>
           </div>
         </div>
 
-        <div style="font-family:var(--font-thai);font-size:10.5px;color:rgba(26,31,51,0.55);margin-top:6px;line-height:1.4;">
+        <div style="font-family:var(--font-thai);font-size:11.5px;color:rgba(26,31,51,0.55);margin-top:6px;line-height:1.4;">
           ระบบจะตรวจสอบรหัสนักเรียนจากทะเบียนสภานักเรียนให้อัตโนมัติ ไม่ต้องกรอกชื่อ
         </div>
 
         <div class="field">
-          <div class="field-label">
+          <label class="field-label" for="signup-password">
             <span class="name">Password</span>
             <span class="sub">· อย่างน้อย 6 ตัวอักษร</span>
-          </div>
+          </label>
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zM12 14v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <input type="password" id="signup-password" placeholder="••••••••" autocomplete="new-password" required minlength="6">
@@ -139,10 +139,10 @@
         </div>
 
         <div class="field">
-          <div class="field-label">
+          <label class="field-label" for="signup-password-confirm">
             <span class="name">Confirm</span>
             <span class="sub">· ยืนยันรหัสผ่าน</span>
-          </div>
+          </label>
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zM12 14v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <input type="password" id="signup-password-confirm" placeholder="••••••••" autocomplete="new-password" required>

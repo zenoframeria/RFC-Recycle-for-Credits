@@ -257,12 +257,15 @@ A full UI/UX audit (not a backend phase — pure frontend review) was done acros
 3. ✅ **Fixed — password show/hide toggle button's `aria-label` never updated.** It stayed "Show password" forever (a screen-reader-only bug — the eye icon itself did visually flip correctly). `wirePasswordToggle()` in `js/auth.js` now also flips `aria-label` between "Show password"/"Hide password" in sync with the icon.
 4. ✅ **Removed entirely, per explicit instruction — the "ติดต่อสภานักเรียน" (contact student council) button** on `login-student.html`, plus the "or" divider above it (kept alone, it had nothing left to divide). Its only job (pointing students at the student council for help) is now covered by the forgot-password fix above. Removed the now-dead `.contact-btn`/`.or-divider` rules from `css/login.css` along with the markup.
 
-**Found but explicitly deferred, not done in this round — don't assume these are fixed:**
-- Form fields across every page (login/signup/scan) use a styled `<div class="field-label">` instead of a real `<label for="...">` — screen readers can't associate the label with its input, and clicking the label text doesn't focus the input. Affects every text/number input in the app, not just login.
-- Several `animation: sbglow ... infinite` pulsing-glow effects (login logo, CTA buttons, shop certificate badge) never check `prefers-reduced-motion` — they keep animating even if the user's OS has reduced-motion turned on.
-- A lot of secondary/meta text sits at 8–10px (notification timestamps, stat-tile units, history timestamps) — hard to read on a phone screen, worth raising to ~11px minimum.
-- `#photo-lightbox`'s `<img>` on `dashboard.html` has a hardcoded `alt="รูปหลักฐานที่ถูกปฏิเสธ"` (photo evidence that was rejected) even though the lightbox is now used to view a submission's photo regardless of status.
-- `scan.html`'s weight input has no `max` attribute (low-priority — every submission is admin-reviewed before points are awarded anyway).
+**Items deferred from Round 1 — handled in Round 2 below.**
+
+## UI/UX polish pass — Round 2 (accessibility leftovers from Round 1) — built on branch `ui-polish-round2`, pending real-device check
+
+- ✅ **Real `<label for>` on form fields:** every `<div class="field-label">` (both login pages' login + signup forms, admin Shop item form) is now `<label class="field-label" for="...">` — `.field-label` was already `display: flex`, so it looks identical. Fields with no visible label of their own got an `aria-label` instead: scan weight input (+ `aria-describedby="weight-error"`), admin stock/stock_max inputs, dashboard nickname input, report textarea, admin feed reject-comment textarea, admin Prices-tab inputs (`js/admin-review.js`).
+- ✅ **`prefers-reduced-motion`:** one global rule in `css/tokens.css` (loaded on every page) turns off all animations (the looping `sbglow` pulses) and makes transitions effectively instant when the OS has reduce-motion on.
+- ✅ **Small text raised to 11px minimum** for informational text (notification times, stat-tile unit/label, history times, balance-chip label, price-chip unit, limited-item meta, podium pts, category rate, photo notes, field-label `.sub`, card-heading label, admin feed/shop meta; login error box + signup hint → 11.5px, login tab sub-caption 8 → 10px). **Deliberately left small:** purely decorative pieces — `.stamp`, `.chip` (role chip under the logo), `.limited-stamp` (SOLD OUT circle, fixed 72px), `.limited-badge`, header `★` sparkles, and `.meta-line` (unused CSS).
+- ❎ **Not a bug — `#photo-lightbox` alt text:** Round 1's audit said the "รูปหลักฐานที่ถูกปฏิเสธ" alt was wrong for non-rejected photos, but the lightbox is only ever opened from the rejected list (approved photos are deleted from Storage on approve), so the alt is accurate. Left unchanged.
+- ❎ **Decided not to do — weight input `max`:** project owner chose no upper limit (admin reviews every submission anyway).
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)

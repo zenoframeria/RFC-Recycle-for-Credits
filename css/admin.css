@@ -21,7 +21,7 @@
 .feed-card { position: relative; }
 .feed-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
 .feed-card-student { font-family: var(--font-thai-serif); font-weight: 600; font-size: 14px; color: var(--sb-ink); }
-.feed-card-meta { font-family: var(--font-mono); font-size: 9.5px; color: rgba(26,31,51,0.5); text-align: right; }
+.feed-card-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.5); text-align: right; }
 
 .feed-card-photo { width: 100%; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; cursor: zoom-in; background: var(--sb-cream2); min-height: 140px; object-fit: cover; }
 
@@ -60,7 +60,7 @@
 /* ── Shop tab (Phase 7 — admin-managed catalog) ─────────────────── */
 .shop-manage-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
 .shop-manage-section-label {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
   color: rgba(26,31,51,0.5); text-transform: uppercase; margin: 14px 0 2px;
 }
 .shop-manage-section-label:first-child { margin-top: 0; }
@@ -68,13 +68,13 @@
 .shop-manage-thumb { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: var(--sb-cream); flex-shrink: 0; border: 1.5px solid rgba(26,31,51,0.1); }
 .shop-manage-thumb.is-empty {
   display: flex; align-items: center; justify-content: center; text-align: center;
-  font-family: var(--font-thai); font-size: 9px; color: rgba(26,31,51,0.4);
+  font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.4);
 }
 .shop-manage-info { flex: 1; min-width: 0; }
 .shop-manage-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); }
-.shop-manage-meta { font-family: var(--font-mono); font-size: 10px; color: rgba(26,31,51,0.55); margin-top: 2px; }
+.shop-manage-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 2px; }
 .shop-manage-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.shop-manage-actions button { border: none; border-radius: 8px; padding: 6px 9px; font-family: var(--font-thai); font-size: 10.5px; font-weight: 600; cursor: pointer; background: var(--sb-cream); }
+.shop-manage-actions button { border: none; border-radius: 8px; padding: 6px 9px; font-family: var(--font-thai); font-size: 11px; font-weight: 600; cursor: pointer; background: var(--sb-cream); }
 .shop-manage-edit { color: var(--accent); border: 1.5px solid var(--accent) !important; }
 .shop-manage-delete { color: var(--sb-red); border: 1.5px solid var(--sb-red) !important; }
 

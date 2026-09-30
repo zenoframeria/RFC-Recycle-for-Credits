@@ -89,13 +89,13 @@
     <div class="required-note">ช่องที่มี <span class="req">*</span> ต้องกรอก</div>
 
     <div class="field">
-      <div class="field-label"><span class="name">ชื่อสินค้า <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></div>
+      <label class="field-label" for="shop-item-name"><span class="name">ชื่อสินค้า <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></label>
       <div class="field-box"><input type="text" id="shop-item-name" placeholder="เช่น ปากกาเจลหมึกสี" aria-required="true" aria-describedby="shop-item-name-error"></div>
       <div class="field-error" id="shop-item-name-error" hidden></div>
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">โซน</span></div>
+      <label class="field-label" for="shop-item-section"><span class="name">โซน</span></label>
       <div class="field-box">
         <select id="shop-item-section" class="field-select">
           <option value="stationery">เครื่องเขียน (Stationery)</option>
@@ -106,26 +106,26 @@
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">ราคา (แต้ม) <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></div>
+      <label class="field-label" for="shop-item-cost"><span class="name">ราคา (แต้ม) <span class="req">*</span></span><span class="sub req-sub">จำเป็น</span></label>
       <div class="field-box"><input type="number" min="0" step="1" id="shop-item-cost" placeholder="เช่น 350" aria-required="true" aria-describedby="shop-item-cost-error"></div>
       <div class="field-error" id="shop-item-cost-error" hidden></div>
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">คำอธิบาย</span><span class="sub">ไม่บังคับ</span></div>
+      <label class="field-label" for="shop-item-desc"><span class="name">คำอธิบาย</span><span class="sub">ไม่บังคับ</span></label>
       <div class="field-box"><input type="text" id="shop-item-desc" placeholder=""></div>
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">จำนวนคงเหลือ / ทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></div>
+      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ / ทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></label>
       <div class="field-row">
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="คงเหลือ"></div>
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="ทั้งหมด"></div>
+        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="คงเหลือ" aria-label="จำนวนคงเหลือ"></div>
+        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="ทั้งหมด" aria-label="จำนวนทั้งหมด"></div>
       </div>
     </div>
 
     <div class="field">
-      <div class="field-label"><span class="name">วันที่เปิดแลก</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited ที่ยังไม่เปิด</span></div>
+      <label class="field-label" for="shop-item-opens-on"><span class="name">วันที่เปิดแลก</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited ที่ยังไม่เปิด</span></label>
       <div class="field-box"><input type="date" id="shop-item-opens-on"></div>
     </div>
 

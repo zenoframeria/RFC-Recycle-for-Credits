@@ -58,7 +58,7 @@
 .card-heading .line { flex: 1; height: 1px; background: rgba(26,31,51,0.1); }
 .card-heading .label {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   color: rgba(26,31,51,0.55);
   letter-spacing: 0.24em;
   font-weight: 600;
@@ -85,7 +85,7 @@
 }
 .field-label .sub {
   font-family: var(--font-thai);
-  font-size: 10px;
+  font-size: 11px;
   color: rgba(26,31,51,0.55);
   white-space: nowrap;
 }
