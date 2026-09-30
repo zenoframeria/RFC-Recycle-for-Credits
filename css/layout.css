@@ -103,3 +103,28 @@
   .side-report { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 10px 14px; }
   .side-report .label { display: inline; }
 }
+
+/* ── admin console (admin-review.html) ───────────────────────────
+   Phones: header + tabs across the top, unchanged. md+: the same
+   elements become a fixed sidebar — name at top, Review/Prices/Shop
+   stacked, logout pinned to the bottom. Tabs have text labels only (no
+   icons), so admin gets the wide sidebar from md, not an icon strip. */
+@variant md {
+  body[data-role="admin"] { --sidebar-w: 232px; }
+
+  .admin-side {
+    position: fixed; top: 14px; bottom: 14px; left: 14px; z-index: 20;
+    width: calc(var(--sidebar-w) - 14px);
+    display: flex; flex-direction: column;
+    padding: 22px 14px 16px;
+    background: var(--sb-paper); border: 1px solid rgba(26,31,51,0.1); border-radius: 22px;
+    box-shadow: 0 10px 24px rgba(20,30,60,0.16), inset 0 1px 0 rgba(255,255,255,0.7);
+    overflow-y: auto;
+  }
+  /* let the header's two children (name block, logout) become direct
+     flex items of the sidebar so logout can be pushed to the bottom */
+  .admin-side .admin-header { display: contents; }
+  .admin-side .admin-tabs { order: 1; flex-direction: column; gap: 6px; padding: 18px 0 0; }
+  .admin-side .admin-tab { flex: none; text-align: left; padding: 11px 14px; }
+  .admin-side .admin-logout-btn { order: 2; margin-top: auto; align-self: flex-start; }
+}

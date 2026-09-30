@@ -16,21 +16,23 @@
 <div class="app-shell">
 <div class="dash-scroll">
 
-  <div class="admin-header">
-    <div>
-      <div class="hello-script">mission control ★</div>
-      <div class="admin-name" id="admin-name">-</div>
+  <aside class="admin-side" aria-label="เมนูผู้ดูแล">
+    <div class="admin-header">
+      <div>
+        <div class="hello-script">mission control ★</div>
+        <div class="admin-name" id="admin-name">-</div>
+      </div>
+      <button class="icon-btn admin-logout-btn" id="logout-btn" aria-label="Log out" title="Log out">
+        <svg width="17" height="17" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
-    <button class="icon-btn admin-logout-btn" id="logout-btn" aria-label="Log out" title="Log out">
-      <svg width="17" height="17" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-  </div>
 
-  <div class="admin-tabs">
-    <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
-    <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
-    <button type="button" class="admin-tab" data-panel="shop-panel">Shop</button>
-  </div>
+    <div class="admin-tabs">
+      <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
+      <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
+      <button type="button" class="admin-tab" data-panel="shop-panel">Shop</button>
+    </div>
+  </aside>
 
   <div class="section admin-panel active" id="feed-panel">
     <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
