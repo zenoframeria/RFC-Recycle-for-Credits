@@ -32,6 +32,7 @@
   <div class="admin-tabs">
     <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
     <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
+    <button type="button" class="admin-tab" data-panel="shop-panel">Shop</button>
   </div>
 
   <div class="section admin-panel active" id="feed-panel">
@@ -55,12 +56,92 @@
       </div>
     </div>
   </div>
+
+  <div class="section admin-panel" id="shop-panel">
+    <div class="card">
+      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="title">Shop Catalog</span>
+        <span class="sub">· จัดการสินค้าและรูปภาพ</span>
+      </div>
+      <button type="button" class="btn-secondary" id="shop-add-btn" style="margin-top:10px;">
+        <span class="label">+ เพิ่มสินค้า</span>
+      </button>
+      <div class="shop-manage-list" id="shop-manage-list">
+        <div class="coming-soon">กำลังโหลดรายการสินค้า...</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="lightbox-overlay">
   <div class="modal-card" style="max-width:400px;">
     <button class="modal-close" id="lightbox-close">&times;</button>
     <img class="lightbox-img" id="lightbox-img" alt="รูปเต็ม">
+  </div>
+</div>
+
+<div class="modal-overlay" id="shop-item-modal">
+  <div class="modal-card" style="max-width:360px;">
+    <button class="modal-close" id="shop-item-modal-close">&times;</button>
+    <div class="section-heading lg" style="padding-left:0;margin-bottom:10px;">
+      <span class="title" id="shop-item-modal-title">เพิ่มสินค้า</span>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">ชื่อสินค้า</span></div>
+      <div class="field-box"><input type="text" id="shop-item-name" placeholder="เช่น ปากกาเจลหมึกสี"></div>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">โซน</span></div>
+      <div class="field-box">
+        <select id="shop-item-section" class="field-select">
+          <option value="stationery">เครื่องเขียน (Stationery)</option>
+          <option value="cert">เกียรติบัตร (Cert)</option>
+          <option value="limited">Limited Edition</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">ราคา (แต้ม)</span></div>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-cost" placeholder="350"></div>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">คำอธิบาย</span><span class="sub">ไม่บังคับ · ใช้เฉพาะเกียรติบัตร</span></div>
+      <div class="field-box"><input type="text" id="shop-item-desc" placeholder=""></div>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">จำนวนคงเหลือ / ทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></div>
+      <div class="field-row">
+        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="คงเหลือ"></div>
+        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="ทั้งหมด"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label"><span class="name">วันที่เปิดแลก</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited ที่ยังไม่เปิด</span></div>
+      <div class="field-box"><input type="date" id="shop-item-opens-on"></div>
+    </div>
+
+    <div class="field">
+      <input type="file" accept="image/jpeg,image/png" id="shop-item-photo-input" hidden>
+      <button type="button" class="btn-secondary" id="shop-item-photo-trigger">
+        <span class="label">แนบรูปสินค้า</span>
+      </button>
+      <div class="photo-preview" id="shop-item-photo-preview" hidden>
+        <img id="shop-item-photo-preview-img" alt="ตัวอย่างรูปสินค้า">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px;">
+      <button type="button" class="btn-primary" id="shop-item-save-btn">
+        <span class="glow"></span>
+        <span class="body"><span class="label" id="shop-item-save-label">บันทึก</span></span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -71,6 +152,7 @@
 <script src="js/supabase-client.js"></script>
 <script src="js/admin-session-guard.js"></script>
 <script src="js/nav-common.js"></script>
+<script src="js/admin-shop.js"></script>
 <script src="js/admin-review.js"></script>
 </body>
 </html>
