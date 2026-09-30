@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadFeed();
   await loadCategoriesForEditing();
+  await initShopTab();
 });
 
 // ── tabs ────────────────────────────────────────────────────────────
