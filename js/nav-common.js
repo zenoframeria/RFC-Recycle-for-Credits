@@ -1,7 +1,9 @@
 // ขยะแลกแต้ม — bits shared across every logged-in page: the toast helper,
 // and the display-name helpers (nickname-or-first-name) originally written
 // for the dashboard header's nickname-edit feature, now also used by the
-// Rank leaderboard to show other students' names the same way. Scan is a
+// Rank leaderboard to show other students' names the same way, and the
+// shared compressImage() photo compressor (scan.js + admin-shop.js; the
+// admin page loads this file too). Scan is a
 // real link to scan.html now (Phase 4), same as Home/Shop/Rank/Me, so it no
 // longer needs its own click handler here.
 
@@ -38,4 +40,33 @@ function firstNameOnly(fullName) {
 function displayName(name, nickname) {
   const trimmedNickname = (nickname || '').trim();
   return trimmedNickname || firstNameOnly(name);
+}
+
+// Shared client-side image compressor — draws the source image onto a
+// canvas scaled to maxWidth and re-encodes as JPEG. Used by both scan.js
+// (submission photos) and admin-shop.js (shop item photos) so the resize
+// logic isn't duplicated.
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob); else reject(new Error('compress failed'));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }

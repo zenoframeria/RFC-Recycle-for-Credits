@@ -104,31 +104,8 @@ function updateSuggestedPoints() {
     : Math.round(weight * cat.point_value).toLocaleString();
 }
 
-// ── photo (compress client-side before it ever touches state) ────────
-function compressImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const scale = Math.min(1, MAX_PHOTO_WIDTH / img.width);
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-        const canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        canvas.toBlob((blob) => {
-          if (blob) resolve(blob); else reject(new Error('compress failed'));
-        }, 'image/jpeg', PHOTO_QUALITY);
-      };
-      img.onerror = reject;
-      img.src = reader.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
+// ── photo (compress client-side before it ever touches state; compressImage
+//    itself now lives in nav-common.js, shared with admin-shop.js) ───────
 
 function wirePhotoInput() {
   const input = document.getElementById('photo-input');
@@ -148,7 +125,7 @@ function wirePhotoInput() {
     triggerLabel.textContent = 'กำลังบีบอัดรูป...';
 
     try {
-      const blob = await compressImage(file);
+      const blob = await compressImage(file, MAX_PHOTO_WIDTH, PHOTO_QUALITY);
       scanState.photoBlob = blob;
 
       if (scanState.photoPreviewUrl) URL.revokeObjectURL(scanState.photoPreviewUrl);
