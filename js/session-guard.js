@@ -16,6 +16,6 @@ async function requireStudentSession() {
 
   // every student page has the sidebar, and every one of them passes
   // through here first — so this is the one place to fill it
-  renderSidebarUser(currentUser);
+  try { renderSidebarUser(currentUser); } catch (err) { console.error('renderSidebarUser failed', err); }
   return currentUser;
 }

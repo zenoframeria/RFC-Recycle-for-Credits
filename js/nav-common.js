@@ -114,7 +114,7 @@ function countUp(el, target, duration = 800) {
 function renderSidebarUser(user) {
   const nameEl = document.getElementById('side-name');
   if (!nameEl) return;
-  const shownName = displayName(user.name, user.nickname);
+  const shownName = displayName(user.name || '', user.nickname);
   nameEl.textContent = shownName;
   document.getElementById('side-initial').textContent = shownName.charAt(0);
   renderSidebarPoints(user.pointsTotal);
