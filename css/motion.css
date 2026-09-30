@@ -21,18 +21,20 @@
 .dash-scroll > :nth-child(6) { animation-delay: 0.25s; }
 .dash-scroll > :nth-child(7) { animation-delay: 0.30s; }
 .dash-scroll > :nth-child(n+8) { animation-delay: 0.35s; }
+/* admin tab panels swap on click: no stagger wait (out-specifies the nth-child rules) */
+.dash-scroll > .admin-panel { animation-delay: 0s; }
 
 /* 2. paper-lift hover — mouse/trackpad only, never on touch */
 @media (hover: hover) and (pointer: fine) {
   .card { transition: translate 0.2s ease, rotate 0.2s ease, box-shadow 0.2s ease; }
-  .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16); }
+  body:not([data-role="admin"]) .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset; }
   .card > .tape { transition: translate 0.2s ease; }
-  .card:hover > .tape { translate: 0 -2px; }
+  body:not([data-role="admin"]) .card:hover > .tape { translate: 0 -2px; }
 }
 
 /* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
    (sidebar sizes only — the phone bottom nav keeps its plain accent color) */
-@media (min-width: 48rem) {
+@variant md {
   .bottom-nav .nav-item.active {
     background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
     box-shadow: inset 3px 0 0 var(--accent);
@@ -46,4 +48,7 @@
 .admin-tab:active,
 .activity-tab:active,
 .side-report:active { scale: 0.96; }
-.btn-primary, .icon-btn, .admin-tab, .activity-tab, .side-report { transition: scale 0.12s ease; }
+.btn-primary, .icon-btn, .side-report { transition: scale 0.12s ease; }
+/* these two already animate colors: keep those, add scale */
+.admin-tab { transition: border-color 0.15s, background 0.15s, scale 0.12s ease; }
+.activity-tab { transition: color 0.15s ease, border-color 0.15s ease, scale 0.12s ease; }
