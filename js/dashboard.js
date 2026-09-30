@@ -96,6 +96,7 @@ function wireNicknameEdit(currentUser) {
     currentUser.nickname = newNickname;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     renderHeader(currentUser);
+    renderSidebarUser(currentUser);
     closeEditor();
     showToast('บันทึกชื่อเล่นแล้ว');
   }
@@ -172,6 +173,7 @@ async function refreshPoints(userId) {
 
   const pointsTotal = data.points_total ?? 0;
   renderPoints(pointsTotal);
+  renderSidebarPoints(pointsTotal);
 
   const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
   if (cached) {

@@ -5,3 +5,4 @@
 @import "./components.css" layer(components);
 @import "./dashboard.css" layer(components);
 @import "./admin.css" layer(components);
+@import "./layout.css" layer(components);

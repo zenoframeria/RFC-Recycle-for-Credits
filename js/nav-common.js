@@ -3,7 +3,8 @@
 // for the dashboard header's nickname-edit feature, now also used by the
 // Rank leaderboard to show other students' names the same way, and the
 // shared compressImage() photo compressor (scan.js + admin-shop.js; the
-// admin page loads this file too). Scan is a
+// admin page loads this file too), the desktop sidebar's user block, and the
+// shared countUp() number animation. Scan is a
 // real link to scan.html now (Phase 4), same as Home/Shop/Rank/Me, so it no
 // longer needs its own click handler here.
 
@@ -69,4 +70,49 @@ function compressImage(file, maxWidth, quality) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+// Animates a number in `el` from the last value countUp() put there (0 the
+// first time) up/down to `target`, eased, formatted like the rest of the
+// app (toLocaleString). Starting from the previous value means a second call
+// — e.g. dashboard's cached-then-live points refresh — glides from the old
+// number instead of restarting at 0. Skips straight to the final value when
+// the OS "reduce motion" setting is on.
+function countUp(el, target, duration = 800) {
+  const to = Number(target) || 0;
+  const from = Number(el.dataset.countValue || 0);
+  el.dataset.countValue = String(to);
+  cancelAnimationFrame(Number(el.dataset.countFrame || 0));
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || from === to) {
+    el.textContent = to.toLocaleString();
+    return;
+  }
+
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(from + (to - from) * eased).toLocaleString();
+    if (t < 1) el.dataset.countFrame = String(requestAnimationFrame(step));
+  }
+  el.dataset.countFrame = String(requestAnimationFrame(step));
+}
+
+// Fills the sidebar's user block (only visible at lg / 1024px+). Pages
+// without the sidebar markup (admin, login) have no #side-name, so this
+// quietly does nothing there.
+function renderSidebarUser(user) {
+  const nameEl = document.getElementById('side-name');
+  if (!nameEl) return;
+  const shownName = displayName(user.name, user.nickname);
+  nameEl.textContent = shownName;
+  document.getElementById('side-initial').textContent = shownName.charAt(0);
+  renderSidebarPoints(user.pointsTotal);
+}
+
+function renderSidebarPoints(points) {
+  const el = document.getElementById('side-points');
+  if (el) countUp(el, points ?? 0);
 }

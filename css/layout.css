@@ -1,0 +1,105 @@
+/* ขยะแลกแต้ม — responsive app shell. Phones (< md, 768px) keep the
+   floating bottom nav exactly as before. From md up, the same <nav>
+   becomes a fixed left sidebar: icon-only at md (tablet), full with
+   labels + user block at lg (1024px+). Uses Tailwind's @variant so the
+   breakpoints are the same ones md:/lg: utilities use.
+   Loaded by the student + admin bundles only — login pages never see it. */
+
+:root { --sidebar-w: 0px; }
+
+/* sidebar-only pieces don't exist on phones */
+.side-brand, .side-user, .side-divider, .side-report { display: none; }
+
+.side-brand { align-items: center; justify-content: center; gap: 10px; text-decoration: none; padding: 2px 0 8px; }
+.side-brand-mark {
+  width: 40px; height: 40px; border-radius: 999px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--accent), var(--sb-blue-deep));
+  color: var(--sb-cream); font-size: 20px;
+  box-shadow: 0 4px 10px rgba(30,58,138,0.3);
+}
+.side-brand-text { display: none; font-family: var(--font-thai); font-weight: 700; font-size: 16px; color: var(--sb-ink); }
+
+.side-user {
+  align-items: center; gap: 12px; padding: 10px 8px 12px;
+  border: 1.5px dashed rgba(26,31,51,0.15); border-radius: 14px;
+  background: var(--sb-cream);
+}
+.side-polaroid { width: 46px; padding: 4px 4px 10px; flex-shrink: 0; }
+.side-polaroid .photo { width: 38px; height: 38px; font-size: 18px; }
+.side-user-text { min-width: 0; }
+.side-name {
+  font-family: var(--font-thai); font-weight: 600; font-size: 14px; color: var(--sb-ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.side-points { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--accent); margin-top: 2px; }
+
+.side-divider { align-self: stretch; border-top: 1.5px dashed rgba(26,31,51,0.15); margin: 6px 4px; }
+
+.side-report {
+  flex-direction: column; align-items: center; gap: 2px; width: 100%;
+  padding: 8px 4px; border: none; border-radius: 12px; background: transparent; cursor: pointer;
+  color: rgba(26,31,51,0.6); font-family: var(--font-thai); font-size: 12px; font-weight: 600;
+}
+.side-report svg { color: var(--sb-red); flex-shrink: 0; }
+.side-report .label { display: none; }
+
+@variant md {
+  :root { --sidebar-w: 88px; }
+
+  /* the shell spans the viewport; the sidebar + centered column live inside it */
+  .app-shell { max-width: none; }
+
+  /* content column: pushed right of the sidebar, capped at 640px and
+     centered in the remaining space (a holding width until each page gets
+     its own multi-column layout). 100% here = the app-shell's width. */
+  .dash-scroll {
+    margin-left: var(--sidebar-w);
+    padding-inline: max(0px, calc((100% - var(--sidebar-w) - 640px) / 2));
+    padding-bottom: 40px;
+  }
+
+  .toast { left: calc(50% + var(--sidebar-w) / 2); }
+
+  .bottom-nav-wrap {
+    top: 0; bottom: 0; left: 0;
+    transform: none;
+    width: var(--sidebar-w); max-width: none;
+    padding: 14px 0 14px 14px;
+  }
+  .bottom-nav {
+    height: 100%;
+    flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 4px; padding: 16px 8px;
+    overflow-y: auto;
+  }
+  .side-brand, .side-divider { display: flex; }
+  .side-report { display: flex; order: 2; margin-top: auto; }
+
+  .bottom-nav .nav-item { width: 100%; padding: 8px 4px; border-radius: 12px; }
+  .bottom-nav .nav-item .label { display: none; }
+
+  /* Scan: no longer raised above a bar — sits after "me" as the big CTA */
+  .bottom-nav .nav-item--fab { order: 1; width: 54px; margin-top: 10px; padding: 0; }
+}
+
+@variant lg {
+  :root { --sidebar-w: 248px; }
+
+  .bottom-nav { align-items: stretch; padding: 20px 14px; }
+  .side-brand { justify-content: flex-start; padding: 2px 6px 12px; }
+  .side-brand-text { display: inline; }
+  .side-user { display: flex; margin-bottom: 4px; }
+
+  .bottom-nav .nav-item { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 14px; }
+  .bottom-nav .nav-item .label { display: inline; font-size: 14px; }
+
+  .bottom-nav .nav-item--fab {
+    width: auto; height: auto; padding: 14px 16px; margin-top: 12px;
+    border-radius: 16px; justify-content: flex-start;
+  }
+  .bottom-nav .nav-item--fab .label { color: var(--sb-cream); font-weight: 700; }
+
+  .side-report { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 10px 14px; }
+  .side-report .label { display: inline; }
+}
