@@ -1,0 +1,7 @@
+/* Tailwind entry for admin-review.html. Same stylesheets, same order,
+   that page used to <link> one by one. */
+@import "./tailwind-setup.css";
+@import "./tokens.css" layer(base);
+@import "./components.css" layer(components);
+@import "./dashboard.css" layer(components);
+@import "./admin.css" layer(components);

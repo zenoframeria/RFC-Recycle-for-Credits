@@ -1,0 +1,39 @@
+/* ขยะแลกแต้ม — shared Tailwind setup, imported first by every
+   css/entry-*.css bundle.
+
+   Layer order: the legacy stylesheets are imported into `base` /
+   `components`, Tailwind's utilities into `utilities`, so when a utility
+   class and a legacy rule set the same property on one element, the
+   utility wins. Tailwind's preflight (its CSS reset) is deliberately NOT
+   imported — it would reset the button/heading/img styling the scrapbook
+   design relies on. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Only scan real app files for class names — not docs/specs/markdown,
+   whose prose ("hidden", "block", …) would otherwise generate stray
+   utilities. */
+@source not "../docs";
+@source not "../sql";
+@source not "../*.md";
+
+/* Expose the existing SB palette to Tailwind so utilities like
+   bg-sb-cream / text-accent work. `inline` keeps them pointing at the
+   live var(), so the admin red --accent swap (tokens.css) still applies. */
+@theme inline {
+  --color-sb-cream: var(--sb-cream);
+  --color-sb-cream2: var(--sb-cream2);
+  --color-sb-paper: var(--sb-paper);
+  --color-sb-blue: var(--sb-blue);
+  --color-sb-blue-deep: var(--sb-blue-deep);
+  --color-sb-blue-soft: var(--sb-blue-soft);
+  --color-sb-blue-mist: var(--sb-blue-mist);
+  --color-sb-yellow: var(--sb-yellow);
+  --color-sb-yellow-soft: var(--sb-yellow-soft);
+  --color-sb-ink: var(--sb-ink);
+  --color-sb-ink-dim: var(--sb-ink-dim);
+  --color-sb-red: var(--sb-red);
+  --color-sb-green: var(--sb-green);
+  --color-accent: var(--accent);
+}
