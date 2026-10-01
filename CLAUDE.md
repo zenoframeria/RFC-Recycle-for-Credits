@@ -333,14 +333,14 @@ Last pages left after the student-page restyle; same live-preview process. `js/a
 - **Copy:** student "Ready to Join?" / "JOIN THE COMPETITION" → "Ready to Recycle?" / "LET'S RECYCLE" — the app hasn't been a room competition since the product model changed. Admin copy unchanged; signup keeps "CREATE ACCOUNT".
 - **Testing status:** Claude checked both pages on Go Live at ~420, ~800 and ~1366 wide, login + signup tabs (layout only, no submit). The owner then logged in for real on Go Live, checked the Vercel preview and a real phone — all passing.
 
-## Notifications (Home bell) — unread count, clear-all, realtime — on branch `notifications`
+## Notifications (Home bell) — unread count, clear-all, realtime — DONE on branch `notifications`, verified by the owner on Go Live + Vercel preview + a real phone
 
 - **SQL:** `sql/notifications.sql` (already run by the owner): `profiles.notif_seen_at` + `profiles.notif_cleared_at`, set only through two `SECURITY DEFINER` RPCs — `mark_notifications_seen()` (bell opened) and `clear_notifications()` (sets both) — so students still have no direct UPDATE on `profiles`. It also adds `submissions` to the `supabase_realtime` publication (the existing "students can read own submissions" RLS keeps each student to their own events).
 - **Bell:** lists own `approved` + `rejected` submissions with `reviewed_at` after `notif_cleared_at`, newest review first (rejected rows show the admin's reason). The badge is a red number pill counting reviews after `notif_seen_at` ("9+" above 9, hidden at 0); opening the bell marks them seen; "ล้างทั้งหมด" in the panel heading clears. Both timestamps live in the DB, so seen/cleared carries across phone and computer.
 - **Realtime:** `subscribeToReviews()` in `js/dashboard.js` listens for UPDATEs on the student's own `submissions`; on approve/reject it reloads (debounced 400ms) the bell, both Recent Activity tabs and the points. `loadNotifications()` ignores any response that isn't from its newest call, so an older overlapping load can't bring cleared rows back.
 - **Not done:** no bell/badge on other pages or in the desktop sidebar; no push notifications.
 - **Testing tip:** test with the student in a normal window and the admin in an Incognito window — normal windows on the same origin share one Supabase session, so logging in as admin there signs the student out.
-- **Testing status:** the owner checked on Go Live (Claude watching in Chrome): badge counts, approve + reject appearing live without a reload, opening clears the badge, clear-all empties the list immediately and stays empty after reload. Vercel preview + real phone: pending.
+- **Testing status:** the owner checked on Go Live (Claude watching in Chrome): badge counts, approve + reject appearing live without a reload, opening clears the badge, clear-all empties the list immediately and stays empty after reload. The owner then checked the same on the Vercel preview and a real phone (live badge, open clears it, clear-all, seen/cleared shared between phone and computer) — all passing.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
