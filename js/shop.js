@@ -82,15 +82,24 @@ function itemStatus(item) {
 
 function renderCert() {
   const items = shopState.items.filter((i) => i.section === 'cert');
+  // Same markup/classes as Home's "Scan & launch" button (owner asked for an
+  // exact match), star instead of camera; the yellow arrow is the redeem button.
   document.getElementById('shop-cert').innerHTML = items.map((item) => `
-    <div class="shop-cert">
-      <div class="shop-cert-badge">★</div>
-      <div class="shop-cert-body" ${openItemAttrs(item)}>
-        <div class="shop-cert-tag">honor &amp; recognition</div>
-        <div class="shop-cert-title">${item.name} <span class="cost">· ${item.cost.toLocaleString()} pts</span></div>
-        ${item.description ? `<div class="shop-cert-desc">${item.description}</div>` : ''}
+    <div class="launch-btn shop-cert">
+      <div class="launch-glow"></div>
+      <div class="launch-body">
+        <div class="camera-disc" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 3l2.4 5.5 6 .5-4.5 4 1.4 6-5.3-3.2L6.7 19l1.4-6L3.6 9l6-.5z" fill="none" stroke="var(--sb-ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="launch-text" ${openItemAttrs(item)}>
+          <span class="lets-go">honor &amp; recognition ★</span>
+          <div class="headline">${escapeHtml(item.name)}</div>
+          <div class="sub">${item.cost.toLocaleString()} pts${item.description ? ` · ${escapeHtml(item.description)}` : ''}<span data-cert-status></span></div>
+        </div>
+        <button class="launch-arrow redeem-btn" data-item="${item.id}" data-cert>
+          <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
-      <button class="redeem-btn" data-item="${item.id}"></button>
     </div>
   `).join('');
 }
@@ -101,7 +110,7 @@ function renderStationery() {
     <div class="stationery-item">
       <div class="stationery-top" ${openItemAttrs(item)}>
         ${itemMedallion(item)}
-        <div class="stationery-name">${item.name}</div>
+        <div class="stationery-name">${escapeHtml(item.name)}</div>
       </div>
       <div class="stationery-foot">
         <div class="price-chip">${item.cost.toLocaleString()}<span class="unit">&nbsp;pts</span></div>
@@ -138,7 +147,7 @@ function renderLimited() {
       <div class="limited-item${unavailable ? ' is-unavailable' : ''}" data-limited="${item.id}" ${openItemAttrs(item)}>
         ${itemMedallion(item)}
         <div class="limited-body">
-          <div class="name">${item.name}</div>
+          <div class="name">${escapeHtml(item.name)}</div>
           <div class="meta" data-meta>${limitedMeta(item)}</div>
           ${stockBar}
         </div>
@@ -206,7 +215,15 @@ function refreshButtons() {
     if (!btn) return;
     const { disabled, label } = itemStatus(item);
     btn.disabled = disabled;
-    btn.textContent = label;
+    if (btn.hasAttribute('data-cert')) {
+      // the cert's button is an arrow icon — keep the SVG, put the status
+      // in its label and (when it can't be redeemed) on the sub line
+      btn.setAttribute('aria-label', label);
+      const status = btn.closest('.launch-body').querySelector('[data-cert-status]');
+      if (status) status.textContent = disabled ? ` · ${label}` : '';
+    } else {
+      btn.textContent = label;
+    }
   });
 }
 

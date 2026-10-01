@@ -547,29 +547,6 @@ html, body {
 .redeem-btn:disabled { cursor: default; background: var(--sb-cream2); color: rgba(26,31,51,0.5); }
 .redeem-btn--limited:not(:disabled) { background: var(--sb-red); }
 
-.shop-cert {
-  position: relative; border-radius: 18px; padding: 16px 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 6px 18px rgba(30,58,138,0.33), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.18);
-  display: flex; align-items: center; gap: 12px;
-  margin-top: 14px;
-}
-.shop-cert::before {
-  content: ''; position: absolute; inset: 6px; border-radius: 14px;
-  border: 1px dashed rgba(242,200,75,0.4); pointer-events: none;
-}
-.shop-cert-badge {
-  position: relative; width: 48px; height: 48px; min-width: 48px; border-radius: 50%;
-  background: var(--sb-yellow); display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 24px; color: var(--sb-blue-deep);
-  animation: sbglow 2.6s ease-in-out infinite;
-}
-.shop-cert-body { position: relative; flex: 1; min-width: 0; }
-.shop-cert-tag { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow-soft); }
-.shop-cert-title { font-family: var(--font-thai); font-weight: 600; font-size: 17px; color: var(--sb-cream); line-height: 1.2; }
-.shop-cert-title .cost { font-family: var(--font-mono); font-weight: 400; font-size: 11px; color: var(--sb-blue-mist); }
-.shop-cert-desc { font-family: var(--font-thai); font-size: 11.5px; color: var(--sb-blue-mist); margin-top: 2px; }
-
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); margin: 2px 0 10px; }
 
 /* icon-in-a-tinted-circle badge — same "medal" language rank.html uses,
@@ -952,4 +929,58 @@ html, body {
   color: var(--sb-ink); background: var(--sb-yellow-soft);
   padding: 5px 15px 6px;
   clip-path: polygon(0 4%, 3% 0, 97% 3%, 100% 0, 98% 22%, 100% 40%, 97% 58%, 100% 76%, 98% 100%, 2% 97%, 0 100%, 2% 80%, 0 62%, 3% 44%, 0 26%);
+}
+
+/* ── Shop ─────────────────────────────────────────────────────────── */
+/* balance = a ticket with half-circle notches (mask clips box-shadow, so
+   the shadow is a drop-shadow on the .balance-ticket wrapper) */
+.page-shop .balance-ticket { flex-shrink: 0; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
+.page-shop .balance-chip {
+  position: relative; border: none; border-radius: 0; background: var(--sb-paper);
+  padding: 9px 18px; align-items: center; margin-top: 0;
+  -webkit-mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.page-shop .balance-chip::before { content: ''; position: absolute; inset: 4px 12px; border: 1px dashed rgba(26,31,51,.25); pointer-events: none; }
+.page-shop .balance-chip .k { font-family: var(--font-thai); letter-spacing: 0; }
+.page-shop .balance-chip .v { font-size: 24px; line-height: 1.1; }
+
+/* certificate = Home's launch button; the Thai name must not use Poppins
+   (no Thai glyphs → random system fallback) */
+.page-shop .shop-cert { margin-top: 14px; }
+.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
+.page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
+.page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
+
+.page-shop .redeem-btn:not(.launch-arrow) { border-radius: 3px; }
+.page-shop .price-chip { border-radius: 2px; background: transparent; }
+.page-shop .stationery-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.08), 0 0 0 1px rgba(26,31,51,.06); }
+/* item photos: square prints with a white border, not round medallions */
+.page-shop .item-medallion { border-radius: 2px; border-width: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.15); }
+.page-shop .item-medallion img { border-radius: 0; }
+
+/* Limited Edition: red/cream gift-ribbon stripe frame */
+.page-shop .limited-section {
+  border: 5px solid transparent; border-radius: 3px; padding-top: 22px;
+  background:
+    linear-gradient(var(--sb-cream), var(--sb-cream)) padding-box,
+    repeating-linear-gradient(-45deg, var(--sb-red) 0 6px, var(--sb-paper) 6px 12px) border-box;
+  box-shadow: var(--paper-shadow);
+}
+.page-shop .limited-badge { top: -13px; border-radius: 2px; }
+.page-shop .limited-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.07); }
+/* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
+.page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
+
+@variant lg {
+  .page-shop { --content-max: 960px; }
+  .page-shop .stationery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .page-shop #shop-limited { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+}
+@variant xl {
+  .page-shop .stationery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
