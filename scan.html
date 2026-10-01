@@ -35,11 +35,11 @@
 
   <div id="scan-form">
 
+    <!-- left column on desktop: steps 1-2 (plain block on phones) -->
+    <div class="scan-col">
     <!-- category -->
     <div class="section">
       <div class="card">
-        <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--accent);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
-        <div class="tape tape--dots" style="width:42px;height:14px;background:var(--sb-yellow-soft);transform:rotate(12deg);right:-8px;top:-6px;"></div>
         <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
           <span class="title">1. Category</span>
           <span class="sub">· เลือกประเภทขยะ</span>
@@ -68,6 +68,10 @@
       </div>
     </div>
 
+    </div>
+
+    <!-- right column on desktop: step 3 + submit -->
+    <div class="scan-col">
     <!-- photo -->
     <div class="section">
       <div class="card">
@@ -110,12 +114,12 @@
         </button>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- success -->
   <div id="scan-success" class="section" hidden>
     <div class="card">
-      <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--sb-green);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
         <span class="title">ส่งแล้ว ✅</span>
         <span class="sub">· รอแอดมินตรวจสอบ</span>

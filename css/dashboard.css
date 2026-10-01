@@ -1008,3 +1008,28 @@ html, body {
   /* medals + names looked tiny in the wider card */
   .page-rank .rank-podium { zoom: 1.3; }
 }
+
+/* ── Scan ─────────────────────────────────────────────────────────── */
+.page-scan .category-item,
+.page-scan .field-box,
+.page-scan .field-box input,
+.page-scan .btn-secondary { border-radius: 3px; }
+/* the 3 photo requirements read as a notebook checklist, not dark pills */
+.page-scan .photo-checklist-item {
+  border-radius: 0; background: transparent; padding-left: 2px;
+  border-bottom: 1px dashed rgba(26,31,51,.18);
+}
+.page-scan .btn-primary .body,
+.page-scan .btn-primary .glow { border-radius: 10px; }
+.page-scan .btn-primary .body::before { border-radius: 6px; }
+
+@variant lg {
+  .page-scan { --content-max: 960px; }
+  /* :not([hidden]) — a display value here would otherwise beat the hidden
+     attribute scan.js uses to swap the form for the success card */
+  .page-scan #scan-form:not([hidden]) {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 24px; align-items: start;
+  }
+  .page-scan .scan-col { min-width: 0; }
+}
