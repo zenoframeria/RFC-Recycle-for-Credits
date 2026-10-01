@@ -984,3 +984,27 @@ html, body {
 @variant xl {
   .page-shop .stationery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* ── Rank ─────────────────────────────────────────────────────────── */
+.page-rank .podium-block { border-radius: 2px 2px 0 0; box-shadow: 2px 3px 0 rgba(20,30,60,.10); }
+/* the ribbon under each medal overlapped the name below medals #2/#3 */
+.page-rank .rank-medal::after { display: none; }
+
+/* ── Me: logout is a quiet secondary action, not the page's main button ── */
+.page-me #logout-btn {
+  display: flex; width: auto; margin: 16px auto 0;
+  border: 1.5px solid var(--sb-red); border-radius: 3px; background: transparent;
+}
+.page-me #logout-btn .glow,
+.page-me #logout-btn .body::before { display: none; }
+.page-me #logout-btn .body { padding: 9px 22px; border-radius: 3px; background: transparent; box-shadow: none; }
+.page-me #logout-btn .label { font-size: 14px; color: var(--sb-red); text-shadow: none; }
+.page-me #logout-btn svg path { stroke: var(--sb-red); }
+
+@variant md {
+  .page-rank, .page-me { --content-max: 720px; }
+}
+@variant lg {
+  /* medals + names looked tiny in the wider card */
+  .page-rank .rank-podium { zoom: 1.3; }
+}
