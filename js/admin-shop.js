@@ -73,6 +73,7 @@ function renderShopManageList() {
     if (!items.length) return '';
     return `
       <div class="shop-manage-section-label">${SHOP_SECTION_LABELS[section]}</div>
+      <div class="shop-manage-group">
       ${items.map((item) => {
         const url = shopItemImageUrl(item);
         return `
@@ -91,6 +92,7 @@ function renderShopManageList() {
           </div>
         `;
       }).join('')}
+      </div>
     `;
   }).join('');
 
