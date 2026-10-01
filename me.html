@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="css/build/student.css">
 </head>
 <body data-role="student">
-<div class="app-shell app-shell--home">
+<div class="app-shell app-shell--home page-me">
 <div class="bg-blob bg-blob--1"></div>
 <div class="bg-blob bg-blob--2 dash-corner-glow"></div>
 <div class="bg-blob bg-blob--3"></div>
@@ -26,11 +26,8 @@
   <!-- header (dash-header--home: text floats on the gradient, same as
        Home/Shop/Scan/Rank, instead of sitting in its own white card) -->
   <div class="dash-header dash-header--home">
-    <span class="header-sparkle" aria-hidden="true" style="top:6px;right:18px;font-size:13px;color:rgba(242,200,75,0.5);">✦</span>
-    <span class="header-sparkle" aria-hidden="true" style="top:11px;right:38px;font-size:8px;color:rgba(26,31,51,0.28);">★</span>
     <div class="header-row" style="justify-content:flex-start;">
       <div class="header-name-block">
-        <div class="hello-script hero-tagline">that's you~</div>
         <div class="student-name hero-title">โปรไฟล์ของฉัน</div>
       </div>
     </div>
@@ -38,8 +35,6 @@
 
   <div class="section">
     <div class="card">
-      <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--accent);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
-      <div class="tape tape--dots" style="width:42px;height:14px;background:var(--sb-yellow-soft);transform:rotate(12deg);right:-8px;top:-6px;"></div>
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
         <span class="title">Me</span>
         <span class="sub">· ข้อมูลบัญชี</span>
@@ -52,7 +47,7 @@
         <div class="me-info-row"><span class="k">แต้มสะสม</span><span class="v" id="me-points">-</span></div>
       </div>
 
-      <button class="btn-primary" id="logout-btn" style="margin-top:16px;">
+      <button class="btn-primary" id="logout-btn">
         <div class="glow"></div>
         <div class="body">
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="var(--sb-yellow)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>

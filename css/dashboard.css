@@ -160,11 +160,9 @@ html, body {
   margin: 18px 18px 0;
   padding: 0 2px;
 }
-/* Pages without Home's avatar (shop/scan/rank/me) have nothing to balance
-   the header-name-block against, so the default .student-name size (19px)
-   reads too small against the freed-up space — bumped up here to fill it. */
-.hero-tagline { font-size: 15px; }
-.hero-title { font-size: 27px; margin-top: 5px; }
+/* Pages without Home's avatar (shop/scan/rank/me) show a page title
+   (.hero-title) instead — styled as a torn yellow strip, see the
+   "Student pages" block at the end of this file. */
 /* header-name-block has flex:1, which pushes this to the far right on its
    own; align-self keeps it pinned near the top of the row instead of
    centered against the taller polaroid photo. */
@@ -206,18 +204,6 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-thai-serif);
   font-size: 26px; color: var(--sb-cream); font-weight: 700;
-}
-
-/* purely decorative sparkle cluster in the profile card's empty top-right
-   space — same script-font/symbol treatment as "good to see you ✦" and
-   "let's go ★" elsewhere, muted and scattered like a small constellation.
-   Each instance sets its own position/size/color inline (same pattern as
-   the one-off .tape stickers elsewhere), this just holds the shared base. */
-.header-sparkle {
-  position: absolute;
-  font-family: var(--font-script);
-  line-height: 1;
-  pointer-events: none;
 }
 
 .header-name-block { flex: 1; min-width: 0; }
@@ -406,15 +392,19 @@ html, body {
 .stat-tile .label { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 1px; }
 
 /* ── bottom nav ───────────────────────────────────────────────── */
+/* docked to the bottom edge like a real app tab bar (not a floating pill);
+   same width as the phone .app-shell (tokens.css) */
 .bottom-nav-wrap {
-  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20; width: 100%; max-width: 402px; padding: 0 14px;
-  bottom: 12px; /* fallback */
-  bottom: calc(12px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20;
+  width: 100%; max-width: clamp(430px, 18vw + 350px, 600px); padding: 0;
+  bottom: 0;
 }
 .bottom-nav {
-  position: relative; background: var(--sb-paper); border: 1px solid rgba(26,31,51,0.1); border-radius: 22px;
-  padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;
-  box-shadow: 0 10px 24px rgba(20,30,60,0.16), inset 0 1px 0 rgba(255,255,255,0.7);
+  position: relative; background: var(--sb-paper); border: none; border-top: 1.5px solid rgba(26,31,51,0.18); border-radius: 0;
+  padding: 8px 18px 10px; /* fallback */
+  padding: 8px 18px calc(10px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 -3px 0 rgba(26,31,51,0.05);
 }
 .nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -432,12 +422,12 @@ html, body {
 .nav-item--fab {
   position: relative;
   width: 54px; height: 54px;
-  margin-top: -24px;
-  border-radius: 999px;
+  margin-top: -26px;
+  border-radius: 12px;
   justify-content: center;
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 10px 22px rgba(30,58,138,0.4), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 5px var(--sb-paper);
+  box-shadow: 0 0 0 4px var(--sb-paper), 3px 4px 0 4px rgba(26,31,51,0.12);
   color: var(--sb-cream);
 }
 .nav-item--fab svg { width: 22px; height: 22px; }
@@ -556,29 +546,6 @@ html, body {
 .redeem-btn:active { transform: scale(0.94); }
 .redeem-btn:disabled { cursor: default; background: var(--sb-cream2); color: rgba(26,31,51,0.5); }
 .redeem-btn--limited:not(:disabled) { background: var(--sb-red); }
-
-.shop-cert {
-  position: relative; border-radius: 18px; padding: 16px 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 6px 18px rgba(30,58,138,0.33), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.18);
-  display: flex; align-items: center; gap: 12px;
-  margin-top: 14px;
-}
-.shop-cert::before {
-  content: ''; position: absolute; inset: 6px; border-radius: 14px;
-  border: 1px dashed rgba(242,200,75,0.4); pointer-events: none;
-}
-.shop-cert-badge {
-  position: relative; width: 48px; height: 48px; min-width: 48px; border-radius: 50%;
-  background: var(--sb-yellow); display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 24px; color: var(--sb-blue-deep);
-  animation: sbglow 2.6s ease-in-out infinite;
-}
-.shop-cert-body { position: relative; flex: 1; min-width: 0; }
-.shop-cert-tag { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow-soft); }
-.shop-cert-title { font-family: var(--font-thai); font-weight: 600; font-size: 17px; color: var(--sb-cream); line-height: 1.2; }
-.shop-cert-title .cost { font-family: var(--font-mono); font-weight: 400; font-size: 11px; color: var(--sb-blue-mist); }
-.shop-cert-desc { font-family: var(--font-thai); font-size: 11.5px; color: var(--sb-blue-mist); margin-top: 2px; }
 
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); margin: 2px 0 10px; }
 
@@ -858,3 +825,214 @@ html, body {
   color: var(--accent); border-top: 1px dashed rgba(26,31,51,0.13);
 }
 .history-toggle:active { opacity: 0.7; }
+
+/* ── Student pages: "real paper" look ──────────────────────────────────────
+   Owner feedback: identical rounded boxes + soft floating shadows read as
+   "AI-made". Colors/gradients stay; only shapes change.
+   Shared paper base: .app-shell--home (= every student page);
+   Home-only pieces are scoped to .page-home. */
+.app-shell--home {
+  --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
+  --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
+}
+.app-shell--home .card {
+  --paper-tilt: 0deg;
+  border-radius: 3px;
+  rotate: var(--paper-tilt);
+  box-shadow: var(--paper-shadow);
+}
+
+/* Personal Progress: slightly tilted, bottom edge torn out of a notebook.
+   The tear is a strip in the card's own color shaped by an irregular
+   polygon (uneven teeth on purpose, so it doesn't read as a stamp edge). */
+.page-home .progress-card {
+  --paper-tilt: -0.6deg;
+  border-bottom-color: transparent;
+  filter: drop-shadow(1px 2px 0 rgba(20,30,60,.10));
+}
+.page-home .progress-card::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -13px; height: 14px;
+  background: #F7F2E2; /* = .progress-card background */
+  clip-path: polygon(0 0, 0% 0%, 4.2% 55%, 8.3% 20%, 12.5% 80%, 16.7% 35%, 20.8% 95%, 25% 10%, 29.2% 60%,
+    33.3% 40%, 37.5% 100%, 41.7% 25%, 45.8% 70%, 50% 5%, 54.2% 85%, 58.3% 45%, 62.5% 65%, 66.7% 15%,
+    70.8% 90%, 75% 30%, 79.2% 75%, 83.3% 50%, 87.5% 100%, 91.7% 20%, 95.8% 60%, 100% 0%, 100% 0);
+}
+
+/* Recent Activity: a spiral-notebook page — a column of punched holes down
+   the left edge. The mask = holes column (left 30px) + solid everywhere else.
+   `round` keeps whole holes only (no half hole at the ends, no slits).
+   A mask clips box-shadow, so the shadow moves to the parent section as a
+   drop-shadow (which also shades the inside of each hole). */
+.page-home .history-card {
+  padding-left: 34px;
+  box-shadow: none;
+  -webkit-mask:
+    radial-gradient(circle 5px at 15px 50%, #0000 97%, #000) left top / 30px 24px no-repeat round,
+    linear-gradient(#000 0 0) 30px 0 / calc(100% - 30px) 100% no-repeat;
+  mask:
+    radial-gradient(circle 5px at 15px 50%, #0000 97%, #000) left top / 30px 24px no-repeat round,
+    linear-gradient(#000 0 0) 30px 0 / calc(100% - 30px) 100% no-repeat;
+}
+.page-home .home-activity {
+  filter: drop-shadow(2px 3px 0 rgba(20,30,60,.08)) drop-shadow(0 1px 0 rgba(20,30,60,.06));
+}
+
+/* status badges as rubber stamps (single ink border, no pill) */
+.page-home .history-status {
+  background: transparent; border: 1.5px solid currentColor; border-radius: 2px;
+  padding: 1px 7px; font-weight: 700; letter-spacing: .04em;
+}
+.page-home .history-status.is-pending { color: #A2700F; }
+.page-home .history-status.is-rejected { color: var(--sb-red); }
+
+/* Scan & launch: less rounded, everything else unchanged */
+.app-shell--home .launch-body { border-radius: 10px; }
+.app-shell--home .launch-body::before { border-radius: 6px; }
+
+/* report + bell: straight cut-card squares with an ink edge */
+.page-home .dash-header .icon-btn {
+  border-radius: 2px;
+  border: 1.5px solid rgba(26,31,51,.7);
+  box-shadow: 2px 2px 0 rgba(26,31,51,.35);
+}
+.page-home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
+
+/* Home desktop: header + Launch Pad full width, then Progress | Activity */
+@variant lg {
+  .page-home { --content-max: 960px; }
+  .page-home .dash-scroll {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 28px;
+    align-items: start;
+  }
+  .page-home .dash-header,
+  .page-home .home-launch { grid-column: 1 / -1; }
+}
+
+/* ── Shop/Rank/Me/Scan: page title on a torn yellow paper strip ───
+   (Home has no title — it shows the student's polaroid + name instead.)
+   clip-path tears the left/right edges, so the shadow is a drop-shadow on
+   the parent (clip-path would cut a box-shadow off). */
+.app-shell--home:not(.page-home) .dash-header--home .header-row { align-items: center; }
+.app-shell--home:not(.page-home) .header-name-block { filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
+.app-shell--home .hero-title {
+  display: inline-block; white-space: nowrap; margin: 0;
+  font-family: var(--font-thai); font-weight: 700; font-size: 22px; line-height: 1.15;
+  color: var(--sb-ink); background: var(--sb-yellow-soft);
+  padding: 5px 15px 6px;
+  clip-path: polygon(0 4%, 3% 0, 97% 3%, 100% 0, 98% 22%, 100% 40%, 97% 58%, 100% 76%, 98% 100%, 2% 97%, 0 100%, 2% 80%, 0 62%, 3% 44%, 0 26%);
+}
+
+/* ── Shop ─────────────────────────────────────────────────────────── */
+/* balance = a ticket with half-circle notches (mask clips box-shadow, so
+   the shadow is a drop-shadow on the .balance-ticket wrapper) */
+.page-shop .balance-ticket { flex-shrink: 0; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
+.page-shop .balance-chip {
+  position: relative; border: none; border-radius: 0; background: var(--sb-paper);
+  padding: 9px 18px; align-items: center; margin-top: 0;
+  -webkit-mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.page-shop .balance-chip::before { content: ''; position: absolute; inset: 4px 12px; border: 1px dashed rgba(26,31,51,.25); pointer-events: none; }
+.page-shop .balance-chip .k { font-family: var(--font-thai); letter-spacing: 0; }
+.page-shop .balance-chip .v { font-size: 24px; line-height: 1.1; }
+
+/* certificate = Home's launch button; the Thai name must not use Poppins
+   (no Thai glyphs → random system fallback) */
+.page-shop .shop-cert { margin-top: 14px; }
+.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
+.page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
+.page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
+
+.page-shop .redeem-btn:not(.launch-arrow) { border-radius: 3px; }
+.page-shop .price-chip { border-radius: 2px; background: transparent; }
+.page-shop .stationery-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.08), 0 0 0 1px rgba(26,31,51,.06); }
+/* item photos: square prints with a white border, not round medallions */
+.page-shop .item-medallion { border-radius: 2px; border-width: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.15); }
+.page-shop .item-medallion img { border-radius: 0; }
+
+/* Limited Edition: red/cream gift-ribbon stripe frame */
+.page-shop .limited-section {
+  border: 5px solid transparent; border-radius: 3px; padding-top: 22px;
+  background:
+    linear-gradient(var(--sb-cream), var(--sb-cream)) padding-box,
+    repeating-linear-gradient(-45deg, var(--sb-red) 0 6px, var(--sb-paper) 6px 12px) border-box;
+  box-shadow: var(--paper-shadow);
+}
+.page-shop .limited-badge { top: -13px; border-radius: 2px; }
+.page-shop .limited-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.07); }
+/* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
+.page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
+
+@variant lg {
+  .page-shop { --content-max: 960px; }
+  .page-shop .stationery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .page-shop #shop-limited { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+}
+@variant xl {
+  .page-shop .stationery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ── Rank ─────────────────────────────────────────────────────────── */
+.page-rank .podium-block { border-radius: 2px 2px 0 0; box-shadow: 2px 3px 0 rgba(20,30,60,.10); }
+/* the ribbon under each medal overlapped the name below medals #2/#3 */
+.page-rank .rank-medal::after { display: none; }
+
+/* ── Me: logout is a quiet secondary action, not the page's main button ── */
+.page-me #logout-btn {
+  display: flex; width: auto; margin: 16px auto 0;
+  border: 1.5px solid var(--sb-red); border-radius: 3px; background: transparent;
+}
+.page-me #logout-btn .glow,
+.page-me #logout-btn .body::before { display: none; }
+.page-me #logout-btn .body { padding: 9px 22px; border-radius: 3px; background: transparent; box-shadow: none; }
+.page-me #logout-btn .label { font-size: 14px; color: var(--sb-red); text-shadow: none; }
+.page-me #logout-btn svg path { stroke: var(--sb-red); }
+
+@variant md {
+  .page-rank, .page-me { --content-max: 720px; }
+}
+@variant lg {
+  /* medals + names looked tiny in the wider card */
+  .page-rank .rank-podium { zoom: 1.3; }
+}
+
+/* ── Scan ─────────────────────────────────────────────────────────── */
+.page-scan .category-item,
+.page-scan .field-box,
+.page-scan .field-box input,
+.page-scan .btn-secondary { border-radius: 3px; }
+/* the 3 photo requirements read as a notebook checklist, not dark pills */
+.page-scan .photo-checklist-item {
+  border-radius: 0; background: transparent; padding-left: 2px;
+  border-bottom: 1px dashed rgba(26,31,51,.18);
+}
+.page-scan .btn-primary .body,
+.page-scan .btn-primary .glow { border-radius: 10px; }
+.page-scan .btn-primary .body::before { border-radius: 6px; }
+
+@variant lg {
+  .page-scan { --content-max: 960px; }
+  /* :not([hidden]) — a display value here would otherwise beat the hidden
+     attribute scan.js uses to swap the form for the success card */
+  .page-scan #scan-form:not([hidden]) {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 24px; align-items: start;
+  }
+  .page-scan .scan-col { min-width: 0; }
+}
+
+/* ── very wide screens (all student pages): enlarge the content column
+   (not the sidebar) by 18% so it doesn't sit tiny in the middle. Kept last
+   so these --content-max values win over the per-page lg/md ones. */
+@media (min-width: 1600px) {
+  .app-shell--home .dash-scroll > * { zoom: 1.18; }
+  .page-home .dash-scroll { column-gap: 34px; }
+  .page-home, .page-shop, .page-scan { --content-max: 1130px; }
+  .page-rank, .page-me { --content-max: 850px; }
+}
