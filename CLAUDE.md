@@ -288,7 +288,7 @@ First sub-project of a desktop/tablet layout effort (the phone layout at 390px m
 - **Known, not fixed:** keyboard Tab order in the sidebar follows the DOM (Scan comes before rank/me even though it's shown after "me").
 - **Testing status — done:** clean-checkout `npm run build` verified; the project owner checked every page on Live Server (phone/tablet/desktop widths, admin and both logins included) with no issues; on the Vercel preview they confirmed the pages are fully styled (Vercel runs `npm run build`), `/node_modules/tailwindcss/package.json` is **not** served (404), and the site works on a real phone.
 
-## Admin desktop layout — DONE on branch `admin-desktop-layout`, verified on Go Live (Vercel preview + real phone pending)
+## Admin desktop layout — DONE, merged to `main` (PR #8), verified on Go Live + Vercel preview + a real phone
 
 Second desktop sub-project. Phones (< 768px) look the same as before, except the new pending counter. Same CSS-first approach as the foundation: one markup for all sizes; desktop rules live in `css/admin.css` under `@variant md` (768px) / `@variant xl` (1280px).
 
@@ -299,7 +299,7 @@ Second desktop sub-project. Phones (< 768px) look the same as before, except the
 - **Shop tab:** heading + "+ เพิ่มสินค้า" wrapped in `.shop-head` (button moves to the right from `md`); `renderShopManageList()` wraps each section's items in `.shop-manage-group` (a plain column on phones, a 3-column grid from `md`, 4 from `xl`). Desktop item cards: square photo on top, a dashed "ไม่มีรูป" box when there's no photo, then name / meta / full-width แก้ไข · ลบ.
 - **Security fix bundled in:** student name / student ID / class / category name in the review feed, category names in Prices, and shop item names (text + `alt`) are now passed through `escapeHtml()` before `innerHTML`. `escapeHtml()` moved into `js/nav-common.js` (shared), removing the duplicate copies from `dashboard.js` and `rank.js`.
 - **Not done, deliberately:** no keyboard shortcuts, no bulk approve, no change to approve/reject logic, Storage or SQL.
-- **Testing status:** the project owner checked everything on Go Live — phone 390px unchanged in all three tabs; 768 / 1280 / 1920 layouts as described; approve + reject (counter −1 each), price save, shop add/edit/delete, an item named `<b>test</b>` shows as literal text, and student Home + Rank still render after the `escapeHtml()` move. Vercel preview + real phone: not yet checked at the time of writing.
+- **Testing status:** the project owner checked everything on Go Live — phone 390px unchanged in all three tabs; 768 / 1280 / 1920 layouts as described; approve + reject (counter −1 each), price save, shop add/edit/delete, an item named `<b>test</b>` shows as literal text, and student Home + Rank still render after the `escapeHtml()` move. The owner then also confirmed it on the Vercel preview and on a real phone.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
