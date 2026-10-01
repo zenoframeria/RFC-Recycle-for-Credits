@@ -866,11 +866,11 @@ html, body {
 /* ── Home: "real paper" look ──────────────────────────────────────
    Owner feedback: identical rounded boxes + soft floating shadows read as
    "AI-made". Colors/gradients stay; only shapes change. Home-only. */
-.app-shell--home {
+.page-home {
   --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
   --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
 }
-.app-shell--home .card {
+.page-home .card {
   --paper-tilt: 0deg;
   border-radius: 3px;
   rotate: var(--paper-tilt);
@@ -880,12 +880,12 @@ html, body {
 /* Personal Progress: slightly tilted, bottom edge torn out of a notebook.
    The tear is a strip in the card's own color shaped by an irregular
    polygon (uneven teeth on purpose, so it doesn't read as a stamp edge). */
-.app-shell--home .progress-card {
+.page-home .progress-card {
   --paper-tilt: -0.6deg;
   border-bottom-color: transparent;
   filter: drop-shadow(1px 2px 0 rgba(20,30,60,.10));
 }
-.app-shell--home .progress-card::after {
+.page-home .progress-card::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -13px; height: 14px;
   background: #F7F2E2; /* = .progress-card background */
   clip-path: polygon(0 0, 0% 0%, 4.2% 55%, 8.3% 20%, 12.5% 80%, 16.7% 35%, 20.8% 95%, 25% 10%, 29.2% 60%,
@@ -898,7 +898,7 @@ html, body {
    `round` keeps whole holes only (no half hole at the ends, no slits).
    A mask clips box-shadow, so the shadow moves to the parent section as a
    drop-shadow (which also shades the inside of each hole). */
-.app-shell--home .history-card {
+.page-home .history-card {
   padding-left: 34px;
   box-shadow: none;
   -webkit-mask:
@@ -908,46 +908,46 @@ html, body {
     radial-gradient(circle 5px at 15px 50%, #0000 97%, #000) left top / 30px 24px no-repeat round,
     linear-gradient(#000 0 0) 30px 0 / calc(100% - 30px) 100% no-repeat;
 }
-.app-shell--home .home-activity {
+.page-home .home-activity {
   filter: drop-shadow(2px 3px 0 rgba(20,30,60,.08)) drop-shadow(0 1px 0 rgba(20,30,60,.06));
 }
 
 /* status badges as rubber stamps (single ink border, no pill) */
-.app-shell--home .history-status {
+.page-home .history-status {
   background: transparent; border: 1.5px solid currentColor; border-radius: 2px;
   padding: 1px 7px; font-weight: 700; letter-spacing: .04em;
 }
-.app-shell--home .history-status.is-pending { color: #A2700F; }
-.app-shell--home .history-status.is-rejected { color: var(--sb-red); }
+.page-home .history-status.is-pending { color: #A2700F; }
+.page-home .history-status.is-rejected { color: var(--sb-red); }
 
 /* Scan & launch: less rounded, everything else unchanged */
-.app-shell--home .launch-body { border-radius: 10px; }
-.app-shell--home .launch-body::before { border-radius: 6px; }
+.page-home .launch-body { border-radius: 10px; }
+.page-home .launch-body::before { border-radius: 6px; }
 
 /* report + bell: straight cut-card squares with an ink edge */
-.app-shell--home .dash-header .icon-btn {
+.page-home .dash-header .icon-btn {
   border-radius: 2px;
   border: 1.5px solid rgba(26,31,51,.7);
   box-shadow: 2px 2px 0 rgba(26,31,51,.35);
 }
-.app-shell--home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
+.page-home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
 
 /* Home desktop: header + Launch Pad full width, then Progress | Activity */
 @variant lg {
-  .app-shell--home { --content-max: 960px; }
-  .app-shell--home .dash-scroll {
+  .page-home { --content-max: 960px; }
+  .page-home .dash-scroll {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     column-gap: 28px;
     align-items: start;
   }
-  .app-shell--home .dash-header,
-  .app-shell--home .home-launch { grid-column: 1 / -1; }
+  .page-home .dash-header,
+  .page-home .home-launch { grid-column: 1 / -1; }
 }
 /* very wide screens: enlarge the content (not the sidebar) by 18% so it
    doesn't sit tiny in the middle of the screen */
 @media (min-width: 1600px) {
-  .app-shell--home { --content-max: 1130px; }
-  .app-shell--home .dash-scroll { column-gap: 34px; }
-  .app-shell--home .dash-scroll > * { zoom: 1.18; }
+  .page-home { --content-max: 1130px; }
+  .page-home .dash-scroll { column-gap: 34px; }
+  .page-home .dash-scroll > * { zoom: 1.18; }
 }
