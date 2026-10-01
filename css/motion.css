@@ -28,8 +28,8 @@
 @media (hover: hover) and (pointer: fine) {
   .card { transition: translate 0.2s ease, rotate 0.2s ease, box-shadow 0.2s ease; }
   body:not([data-role="admin"]) .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset; }
-  /* Home paper cards: lift, but keep each card's own tilt and paper shadow */
-  body:not([data-role="admin"]) .page-home .card:hover { rotate: var(--paper-tilt); box-shadow: var(--paper-shadow-lift); }
+  /* Paper cards: lift, but keep each card's own tilt and paper shadow */
+  body:not([data-role="admin"]) .app-shell--home .card:hover { rotate: var(--paper-tilt); box-shadow: var(--paper-shadow-lift); }
   .card > .tape { transition: translate 0.2s ease; }
   body:not([data-role="admin"]) .card:hover > .tape { translate: 0 -2px; }
 }

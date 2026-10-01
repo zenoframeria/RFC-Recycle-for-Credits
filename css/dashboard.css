@@ -160,11 +160,9 @@ html, body {
   margin: 18px 18px 0;
   padding: 0 2px;
 }
-/* Pages without Home's avatar (shop/scan/rank/me) have nothing to balance
-   the header-name-block against, so the default .student-name size (19px)
-   reads too small against the freed-up space — bumped up here to fill it. */
-.hero-tagline { font-size: 15px; }
-.hero-title { font-size: 27px; margin-top: 5px; }
+/* Pages without Home's avatar (shop/scan/rank/me) show a page title
+   (.hero-title) instead — styled as a torn yellow strip, see the
+   "Student pages" block at the end of this file. */
 /* header-name-block has flex:1, which pushes this to the far right on its
    own; align-self keeps it pinned near the top of the row instead of
    centered against the taller polaroid photo. */
@@ -206,18 +204,6 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-thai-serif);
   font-size: 26px; color: var(--sb-cream); font-weight: 700;
-}
-
-/* purely decorative sparkle cluster in the profile card's empty top-right
-   space — same script-font/symbol treatment as "good to see you ✦" and
-   "let's go ★" elsewhere, muted and scattered like a small constellation.
-   Each instance sets its own position/size/color inline (same pattern as
-   the one-off .tape stickers elsewhere), this just holds the shared base. */
-.header-sparkle {
-  position: absolute;
-  font-family: var(--font-script);
-  line-height: 1;
-  pointer-events: none;
 }
 
 .header-name-block { flex: 1; min-width: 0; }
@@ -863,14 +849,16 @@ html, body {
 }
 .history-toggle:active { opacity: 0.7; }
 
-/* ── Home: "real paper" look ──────────────────────────────────────
+/* ── Student pages: "real paper" look ──────────────────────────────────────
    Owner feedback: identical rounded boxes + soft floating shadows read as
-   "AI-made". Colors/gradients stay; only shapes change. Home-only. */
-.page-home {
+   "AI-made". Colors/gradients stay; only shapes change.
+   Shared paper base: .app-shell--home (= every student page);
+   Home-only pieces are scoped to .page-home. */
+.app-shell--home {
   --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
   --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
 }
-.page-home .card {
+.app-shell--home .card {
   --paper-tilt: 0deg;
   border-radius: 3px;
   rotate: var(--paper-tilt);
@@ -921,8 +909,8 @@ html, body {
 .page-home .history-status.is-rejected { color: var(--sb-red); }
 
 /* Scan & launch: less rounded, everything else unchanged */
-.page-home .launch-body { border-radius: 10px; }
-.page-home .launch-body::before { border-radius: 6px; }
+.app-shell--home .launch-body { border-radius: 10px; }
+.app-shell--home .launch-body::before { border-radius: 6px; }
 
 /* report + bell: straight cut-card squares with an ink edge */
 .page-home .dash-header .icon-btn {
@@ -950,4 +938,18 @@ html, body {
   .page-home { --content-max: 1130px; }
   .page-home .dash-scroll { column-gap: 34px; }
   .page-home .dash-scroll > * { zoom: 1.18; }
+}
+
+/* ── Shop/Rank/Me/Scan: page title on a torn yellow paper strip ───
+   (Home has no title — it shows the student's polaroid + name instead.)
+   clip-path tears the left/right edges, so the shadow is a drop-shadow on
+   the parent (clip-path would cut a box-shadow off). */
+.app-shell--home:not(.page-home) .dash-header--home .header-row { align-items: center; }
+.app-shell--home:not(.page-home) .header-name-block { filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
+.app-shell--home .hero-title {
+  display: inline-block; white-space: nowrap; margin: 0;
+  font-family: var(--font-thai); font-weight: 700; font-size: 22px; line-height: 1.15;
+  color: var(--sb-ink); background: var(--sb-yellow-soft);
+  padding: 5px 15px 6px;
+  clip-path: polygon(0 4%, 3% 0, 97% 3%, 100% 0, 98% 22%, 100% 40%, 97% 58%, 100% 76%, 98% 100%, 2% 97%, 0 100%, 2% 80%, 0 62%, 3% 44%, 0 26%);
 }
