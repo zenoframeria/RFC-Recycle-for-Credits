@@ -50,6 +50,10 @@
 /* full-size photo lightbox — reuses .modal-overlay from components/dashboard css */
 .lightbox-img { width: 100%; border-radius: 12px; display: block; }
 
+/* modal widths (were inline styles; moved here so md+ can widen them) */
+#lightbox-overlay .modal-card { max-width: 400px; }
+#shop-item-modal .modal-card { max-width: 360px; }
+
 .price-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .price-row { display: flex; align-items: center; gap: 10px; background: var(--sb-cream2); border-radius: 12px; padding: 10px 12px; }
 .price-row .name { flex: 1; min-width: 0; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
@@ -97,3 +101,38 @@
 .field-box.is-invalid:focus-within { box-shadow: 0 0 0 3px rgba(192,70,58,0.15), inset 0 1px 0 rgba(255,255,255,0.5); }
 
 #shop-item-modal .photo-preview img { max-height: 180px; object-fit: contain; background: var(--sb-cream2); }
+
+/* ── desktop (md+, 768px): Review tab ───────────────────────────
+   Each pending card becomes horizontal: evidence photo on the left
+   (whole photo visible — scale readout, dated sticker and ID card must
+   never be cropped), details + comment + buttons on the right. */
+@variant md {
+  .feed-card {
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    grid-template-areas:
+      "photo top"
+      "photo info"
+      "photo comment"
+      "photo actions"
+      "photo .";
+    column-gap: 18px;
+    align-items: start;
+  }
+  .feed-card-top { grid-area: top; }
+  .feed-card-photo, .feed-card-nophoto { grid-area: photo; }
+  .feed-card-photo {
+    height: auto; min-height: 0;
+    max-height: min(440px, 60dvh);
+    object-fit: contain;
+  }
+  .feed-card-nophoto { margin: 0; }
+  .feed-card-info { grid-area: info; margin-top: 0; }
+  .feed-card-comment { grid-area: comment; }
+  .feed-card-actions { grid-area: actions; }
+
+  /* lightbox: big enough to read the scale digits */
+  #lightbox-overlay .modal-card { max-width: min(900px, 90vw); }
+  #lightbox-overlay .lightbox-img { max-height: calc(100dvh - 120px); object-fit: contain; }
+}

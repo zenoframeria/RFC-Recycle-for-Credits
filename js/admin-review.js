@@ -105,6 +105,7 @@ function suggestedPoints(row) {
 
 function renderFeed() {
   const list = document.getElementById('feed-list');
+  document.getElementById('feed-count').textContent = adminState.feedRows.length.toLocaleString();
 
   if (!adminState.feedRows.length) {
     list.innerHTML = '<div class="coming-soon feed-empty">ไม่มีรายการรอตรวจสอบตอนนี้</div>';
@@ -124,7 +125,7 @@ function renderFeed() {
         </div>
         ${row.signedUrl
           ? `<img class="feed-card-photo" src="${row.signedUrl}" alt="รูปหลักฐาน" data-lightbox="${row.signedUrl}">`
-          : `<div class="coming-soon">ไม่มีรูป</div>`}
+          : `<div class="coming-soon feed-card-nophoto">ไม่มีรูป</div>`}
         <div class="feed-card-info">
           <div class="feed-card-row"><span class="k">หมวด</span><span class="v">${escapeHtml(category.name || '-')}</span></div>
           <div class="feed-card-row"><span class="k">น้ำหนัก</span><span class="v">${Number(row.weight_kg).toFixed(2)} kg</span></div>
