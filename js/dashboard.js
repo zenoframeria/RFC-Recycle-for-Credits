@@ -385,12 +385,15 @@ function wireLightbox() {
 // row (sql/notifications.sql), so they carry across devices. The badge
 // counts reviews after notif_seen_at; the list hides reviews before
 // notif_cleared_at.
-const notifState = { unread: 0 };
+const notifState = { unread: 0, loadId: 0 };
 
 async function loadNotifications(userId) {
   const listEl = document.getElementById('notif-list');
   const toggleEl = document.getElementById('notif-toggle');
   const clearBtn = document.getElementById('notif-clear');
+  // calls can overlap (clear, realtime, page load) — only the newest one
+  // may render, so a slow older response can't bring cleared rows back
+  const loadId = ++notifState.loadId;
 
   const { data: profile, error: profileError } = await supabaseClient
     .from('profiles')
@@ -410,6 +413,7 @@ async function loadNotifications(userId) {
     .order('reviewed_at', { ascending: false });
   if (clearedAt) query = query.gt('reviewed_at', clearedAt);
   const { data, error } = await query;
+  if (loadId !== notifState.loadId) return;
 
   listEl.innerHTML = '';
   toggleEl.hidden = true;
