@@ -60,6 +60,7 @@
 .price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 13px; text-align: right; }
 .price-row .save-btn { border: none; border-radius: 10px; padding: 8px 12px; background: var(--accent); color: var(--sb-cream); font-family: var(--font-body); font-weight: 700; font-size: 11px; cursor: pointer; flex-shrink: 0; }
 .price-row .save-btn:disabled { opacity: 0.55; }
+.price-row .unit { display: none; }
 
 /* ── Shop tab (Phase 7 — admin-managed catalog) ─────────────────── */
 .shop-manage-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
@@ -135,4 +136,19 @@
   /* lightbox: big enough to read the scale digits */
   #lightbox-overlay .modal-card { max-width: min(900px, 90vw); }
   #lightbox-overlay .lightbox-img { max-height: calc(100dvh - 120px); object-fit: contain; }
+}
+
+/* ── desktop (md+): Prices tab — only 4 rows, so keep the card narrow
+   and line the inputs / units / Save buttons up in columns ───────── */
+@variant md {
+  #price-panel .card { max-width: 720px; }
+  .price-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 110px auto auto;
+    gap: 12px; padding: 12px 16px;
+  }
+  .price-row .name { font-size: 14px; }
+  .price-row input { width: 100%; font-size: 14px; }
+  .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); }
+  .price-row .save-btn { padding: 9px 16px; font-size: 12px; }
 }

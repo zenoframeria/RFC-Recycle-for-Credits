@@ -265,6 +265,7 @@ async function loadCategoriesForEditing() {
     <div class="price-row" data-id="${cat.id}">
       <span class="name">${escapeHtml(cat.name)}</span>
       <input type="number" min="0" step="1" value="${cat.point_value}" aria-label="แต้มต่อกิโลกรัม">
+      <span class="unit" aria-hidden="true">แต้ม/กก.</span>
       <button type="button" class="save-btn">Save</button>
     </div>
   `).join('');
