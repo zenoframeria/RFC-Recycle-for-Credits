@@ -322,7 +322,7 @@ Third desktop sub-project, combined with a restyle: the owner felt Home "looked 
 - **Gotcha:** opening `admin-review.html` while logged in as a student signs you out (the admin guard's correct behavior) — don't do it while testing student pages.
 - **Testing status:** Claude checked on Go Live in Chrome (round 2: all 4 pages at ~420, ~1366 and ~1900 wide; cert redeem demo + status; detail popup from the cert text; `#scan-form` hide/show; NOT checked: a real Scan submission, logout click) — Home at phone width (cards, torn edge, holes, stamps in both tabs, header buttons, docked bar), the docked bar + bottom clearance on Shop/Scan/Rank/Me, and Home at ~886 (one column), ~1266 (two columns, bell panel opens) and ~1886 (enlarged). The owner then checked everything on Go Live, the Vercel preview and a real phone — including a real Scan submission with the phone camera and logout — all passing.
 
-## Login pages paper restyle — DONE on branch `login-paper-style`
+## Login pages paper restyle — DONE on branch `login-paper-style`, verified by the owner on Go Live + Vercel preview + a real phone
 
 Last pages left after the student-page restyle; same live-preview process. `js/auth.js` untouched.
 
@@ -331,7 +331,7 @@ Last pages left after the student-page restyle; same live-preview process. `js/a
 - **Removed on purpose:** the `.login-decor` block (2 floating tapes, and on admin the "ADMIN" rubber stamp — owner said don't bring it back), the tape on the logo, the 2 tapes on the card.
 - **Logo:** scales of justice → recycle arrows (both pages). "welcome ★" no longer tilted. Corners 2–3px everywhere, primary button 10px.
 - **Copy:** student "Ready to Join?" / "JOIN THE COMPETITION" → "Ready to Recycle?" / "LET'S RECYCLE" — the app hasn't been a room competition since the product model changed. Admin copy unchanged; signup keeps "CREATE ACCOUNT".
-- **Testing status:** Claude checked both pages on Go Live at ~420, ~800 and ~1366 wide, login + signup tabs (layout only, no submit). Owner check (real login on Go Live → Vercel preview → phone): pending.
+- **Testing status:** Claude checked both pages on Go Live at ~420, ~800 and ~1366 wide, login + signup tabs (layout only, no submit). The owner then logged in for real on Go Live, checked the Vercel preview and a real phone — all passing.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
