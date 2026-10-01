@@ -1,0 +1,17 @@
+# Files Vercel must NOT upload/serve. Without this, outputDirectory "." would
+# make everything in the repo publicly readable on the deployed site.
+# Do not list package.json / package-lock.json / css/ here — the build needs them.
+
+# Internal docs (describe auth / RLS / schema internals)
+*.md
+docs/
+rfc-roadmap.md
+CLAUDE.md
+
+# Hand-run SQL migrations
+sql/
+
+# Local-only stuff
+Screenshot/
+.claude/
+.superpowers/
