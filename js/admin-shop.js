@@ -78,10 +78,10 @@ function renderShopManageList() {
         return `
           <div class="shop-manage-item" data-id="${item.id}">
             ${url
-              ? `<img class="shop-manage-thumb" src="${url}" alt="${item.name}">`
+              ? `<img class="shop-manage-thumb" src="${url}" alt="${escapeHtml(item.name)}">`
               : `<div class="shop-manage-thumb is-empty">ไม่มีรูป</div>`}
             <div class="shop-manage-info">
-              <div class="shop-manage-name">${item.name}</div>
+              <div class="shop-manage-name">${escapeHtml(item.name)}</div>
               <div class="shop-manage-meta">${shopItemMeta(item)}</div>
             </div>
             <div class="shop-manage-actions">

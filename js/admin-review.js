@@ -119,14 +119,14 @@ function renderFeed() {
     return `
       <div class="card feed-card" data-id="${row.id}">
         <div class="feed-card-top">
-          <div class="feed-card-student">${student.name || 'ไม่ทราบชื่อ'}</div>
-          <div class="feed-card-meta">${student.student_id || '-'} · ${student.class_room || '-'}</div>
+          <div class="feed-card-student">${escapeHtml(student.name || 'ไม่ทราบชื่อ')}</div>
+          <div class="feed-card-meta">${escapeHtml(student.student_id || '-')} · ${escapeHtml(student.class_room || '-')}</div>
         </div>
         ${row.signedUrl
           ? `<img class="feed-card-photo" src="${row.signedUrl}" alt="รูปหลักฐาน" data-lightbox="${row.signedUrl}">`
           : `<div class="coming-soon">ไม่มีรูป</div>`}
         <div class="feed-card-info">
-          <div class="feed-card-row"><span class="k">หมวด</span><span class="v">${category.name || '-'}</span></div>
+          <div class="feed-card-row"><span class="k">หมวด</span><span class="v">${escapeHtml(category.name || '-')}</span></div>
           <div class="feed-card-row"><span class="k">น้ำหนัก</span><span class="v">${Number(row.weight_kg).toFixed(2)} kg</span></div>
           <div class="feed-card-row"><span class="k">แต้มที่คาด</span><span class="v points">${suggestedPoints(row).toLocaleString()} pts</span></div>
           <div class="feed-card-row"><span class="k">เวลาส่ง</span><span class="v">${when}</span></div>
@@ -262,7 +262,7 @@ async function loadCategoriesForEditing() {
 
   list.innerHTML = data.map((cat) => `
     <div class="price-row" data-id="${cat.id}">
-      <span class="name">${cat.name}</span>
+      <span class="name">${escapeHtml(cat.name)}</span>
       <input type="number" min="0" step="1" value="${cat.point_value}" aria-label="แต้มต่อกิโลกรัม">
       <button type="button" class="save-btn">Save</button>
     </div>
