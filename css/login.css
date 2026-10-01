@@ -26,14 +26,6 @@
   font-style: normal;
 }
 
-.login-decor {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 140px;
-  z-index: 1;
-  pointer-events: none;
-}
-
 .login-content {
   position: relative;
   z-index: 2;
@@ -181,3 +173,52 @@
 }
 
 .login-spacer { flex: 1; }
+
+/* ── paper restyle (2026-10-01): square-ish corners, card = access ticket ── */
+.app-shell .tagline-script { transform: none; }
+.app-shell .auth-tabs { border-radius: 3px; }
+.app-shell .auth-tab { border-radius: 2px; }
+.app-shell .field-box { border-radius: 3px; }
+.app-shell .btn-primary .body,
+.app-shell .btn-primary .glow { border-radius: 10px; }
+.app-shell .btn-primary .body::before { border-radius: 6px; }
+.app-shell .chip { border-radius: 2px; }
+.app-shell .login-error,
+.app-shell .admin-warning { border-radius: 3px; }
+
+/* the card is a ticket: half-circle notches + a perforation line just under
+   "MISSION ACCESS". A mask clips box-shadow, so the shadow lives on the
+   .login-ticket wrapper (drop-shadow follows the notched shape). */
+.login-ticket {
+  position: relative;
+  filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)) drop-shadow(0 8px 10px rgba(20,30,60,.08));
+}
+.app-shell #login-card {
+  --notch-y: 39px;
+  border-radius: 3px;
+  box-shadow: none;
+  -webkit-mask:
+    radial-gradient(circle 9px at 0 var(--notch-y), #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% var(--notch-y), #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 9px at 0 var(--notch-y), #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% var(--notch-y), #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.app-shell #login-card::after {
+  content: ''; position: absolute; left: 14px; right: 14px; top: var(--notch-y);
+  border-top: 1.5px dashed rgba(26,31,51,.22); pointer-events: none;
+}
+.app-shell #login-card .card-heading { margin-bottom: 18px; }
+.app-shell #login-card .card-heading .line { visibility: hidden; }
+/* one tape holding the ticket to the page (replaces 5 scattered tapes) */
+.login-ticket-tape {
+  position: absolute; left: 50%; top: -10px; width: 84px; height: 20px;
+  translate: -50% 0; rotate: -2deg; background: var(--sb-yellow-soft); opacity: .92;
+  pointer-events: none;
+}
+
+/* desktop: no phone frame — full-bleed background, form centered */
+@variant md {
+  .app-shell { max-width: none; }
+  .login-content { max-width: 460px; margin: 0 auto; justify-content: center; padding-top: 32px; }
+}

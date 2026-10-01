@@ -28,7 +28,7 @@ There is now a CSS build step (Tailwind v4) — see "Desktop layout foundation" 
 - `components.css` holds shared, reusable pieces used across multiple pages (buttons, cards, the decorative "tape"/"stamp" scrapbook motifs, form fields).
 - `dashboard.css` / `login.css` hold styles specific to their respective page(s); `admin.css` the admin console; `layout.css` (responsive sidebar) and `motion.css` (liveliness) are described under "Desktop layout foundation".
 - The visual design language is a "scrapbook/passport stamp" aesthetic (washi tape strips, rotated stamps, polaroid-style avatar frame) — match this style when adding new UI rather than introducing a different visual language.
-- Layout is mobile-first: below 768px (`md`) the `.app-shell` is a centered card with `max-width: clamp(430px, 18vw + 350px, 600px)` (≈430–488px) and the bottom nav docked to the screen's bottom edge; from `md` up on student/admin pages it is uncapped and spans the viewport with a left sidebar (login pages keep the clamp at all widths) (see "Desktop layout foundation").
+- Layout is mobile-first: below 768px (`md`) the `.app-shell` is a centered card with `max-width: clamp(430px, 18vw + 350px, 600px)` (≈430–488px) and the bottom nav docked to the screen's bottom edge; from `md` up on student/admin pages it is uncapped and spans the viewport with a left sidebar (login pages: from `md` the frame is dropped too — full-bleed background with the form centered at max 460px, see "Login pages paper restyle") (see "Desktop layout foundation").
 
 ## Conventions worth following
 
@@ -321,6 +321,17 @@ Third desktop sub-project, combined with a restyle: the owner felt Home "looked 
   - **Tried and rejected (round 2):** cream/ink-bordered title label, cream torn strip (blended in), plain big navy title, rubber-stamp title, tilted title, tape on the title, 26–30px title (fought the cert card), red+blue airmail frame on Limited ("too postal"), student-ID/passport card on Me.
 - **Gotcha:** opening `admin-review.html` while logged in as a student signs you out (the admin guard's correct behavior) — don't do it while testing student pages.
 - **Testing status:** Claude checked on Go Live in Chrome (round 2: all 4 pages at ~420, ~1366 and ~1900 wide; cert redeem demo + status; detail popup from the cert text; `#scan-form` hide/show; NOT checked: a real Scan submission, logout click) — Home at phone width (cards, torn edge, holes, stamps in both tabs, header buttons, docked bar), the docked bar + bottom clearance on Shop/Scan/Rank/Me, and Home at ~886 (one column), ~1266 (two columns, bell panel opens) and ~1886 (enlarged). The owner then checked everything on Go Live, the Vercel preview and a real phone — including a real Scan submission with the phone camera and logout — all passing.
+
+## Login pages paper restyle — DONE on branch `login-paper-style`, verified by the owner on Go Live + Vercel preview + a real phone
+
+Last pages left after the student-page restyle; same live-preview process. `js/auth.js` untouched.
+
+- **Desktop (layout A):** from `md` the phone frame is gone — `.app-shell` is full-bleed and `.login-content` is a centered 460px column. **Rejected:** layout B (blue brand panel on the left with the app name + 3 how-to steps).
+- **Card = access ticket:** `#login-card` sits in a `.login-ticket` wrapper (it carries the drop-shadow, since the card's `mask` would clip a box-shadow); half-circle notches + a dashed perforation line just under "MISSION ACCESS" (`--notch-y: 39px` — re-measure if the heading's size ever changes); one centered `.login-ticket-tape`. Same ticket motif as Shop's balance.
+- **Removed on purpose:** the `.login-decor` block (2 floating tapes, and on admin the "ADMIN" rubber stamp — owner said don't bring it back), the tape on the logo, the 2 tapes on the card.
+- **Logo:** scales of justice → recycle arrows (both pages). "welcome ★" no longer tilted. Corners 2–3px everywhere, primary button 10px.
+- **Copy:** student "Ready to Join?" / "JOIN THE COMPETITION" → "Ready to Recycle?" / "LET'S RECYCLE" — the app hasn't been a room competition since the product model changed. Admin copy unchanged; signup keeps "CREATE ACCOUNT".
+- **Testing status:** Claude checked both pages on Go Live at ~420, ~800 and ~1366 wide, login + signup tabs (layout only, no submit). The owner then logged in for real on Go Live, checked the Vercel preview and a real phone — all passing.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
