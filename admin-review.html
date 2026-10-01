@@ -37,7 +37,7 @@
   <div class="section admin-panel active" id="feed-panel">
     <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
       <span class="title">Pending Submissions</span>
-      <span class="sub">· รอตรวจสอบ</span>
+      <span class="sub">· รอตรวจ <span id="feed-count">-</span> รายการ</span>
     </div>
     <div class="feed-list" id="feed-list">
       <div class="coming-soon">กำลังโหลดรายการ...</div>
@@ -58,13 +58,15 @@
 
   <div class="section admin-panel" id="shop-panel">
     <div class="card">
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
-        <span class="title">Shop Catalog</span>
-        <span class="sub">· จัดการสินค้าและรูปภาพ</span>
+      <div class="shop-head">
+        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+          <span class="title">Shop Catalog</span>
+          <span class="sub">· จัดการสินค้าและรูปภาพ</span>
+        </div>
+        <button type="button" class="btn-secondary" id="shop-add-btn">
+          <span class="label">+ เพิ่มสินค้า</span>
+        </button>
       </div>
-      <button type="button" class="btn-secondary" id="shop-add-btn" style="margin-top:10px;">
-        <span class="label">+ เพิ่มสินค้า</span>
-      </button>
       <div class="shop-manage-list" id="shop-manage-list">
         <div class="coming-soon">กำลังโหลดรายการสินค้า...</div>
       </div>
@@ -73,14 +75,14 @@
 </div>
 
 <div class="modal-overlay" id="lightbox-overlay">
-  <div class="modal-card" style="max-width:400px;">
+  <div class="modal-card">
     <button class="modal-close" id="lightbox-close">&times;</button>
     <img class="lightbox-img" id="lightbox-img" alt="รูปเต็ม">
   </div>
 </div>
 
 <div class="modal-overlay" id="shop-item-modal">
-  <div class="modal-card" style="max-width:360px;">
+  <div class="modal-card">
     <button class="modal-close" id="shop-item-modal-close">&times;</button>
     <div class="section-heading lg" style="padding-left:0;margin-bottom:10px;">
       <span class="title" id="shop-item-modal-title">เพิ่มสินค้า</span>

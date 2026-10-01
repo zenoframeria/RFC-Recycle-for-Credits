@@ -182,16 +182,6 @@ async function refreshPoints(userId) {
   }
 }
 
-// Escapes user/admin-entered free text before it's dropped into innerHTML.
-// Used for row.comment (an admin-typed rejection reason rendered into a
-// different user's — the student's — session) and, defensively, for
-// category, in case waste_categories.name ever includes admin free text.
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
-}
-
 function formatDateTime(dateStr) {
   return new Date(dateStr).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
 }

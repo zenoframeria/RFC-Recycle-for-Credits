@@ -50,12 +50,17 @@
 /* full-size photo lightbox — reuses .modal-overlay from components/dashboard css */
 .lightbox-img { width: 100%; border-radius: 12px; display: block; }
 
+/* modal widths (were inline styles; moved here so md+ can widen them) */
+#lightbox-overlay .modal-card { max-width: 400px; }
+#shop-item-modal .modal-card { max-width: 360px; }
+
 .price-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .price-row { display: flex; align-items: center; gap: 10px; background: var(--sb-cream2); border-radius: 12px; padding: 10px 12px; }
 .price-row .name { flex: 1; min-width: 0; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
 .price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 13px; text-align: right; }
 .price-row .save-btn { border: none; border-radius: 10px; padding: 8px 12px; background: var(--accent); color: var(--sb-cream); font-family: var(--font-body); font-weight: 700; font-size: 11px; cursor: pointer; flex-shrink: 0; }
 .price-row .save-btn:disabled { opacity: 0.55; }
+.price-row .unit { display: none; }
 
 /* ── Shop tab (Phase 7 — admin-managed catalog) ─────────────────── */
 .shop-manage-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
@@ -64,6 +69,8 @@
   color: rgba(26,31,51,0.5); text-transform: uppercase; margin: 14px 0 2px;
 }
 .shop-manage-section-label:first-child { margin-top: 0; }
+.shop-manage-group { display: flex; flex-direction: column; gap: 10px; }
+#shop-add-btn { margin-top: 10px; }
 .shop-manage-item { display: flex; align-items: center; gap: 10px; background: var(--sb-cream2); border-radius: 12px; padding: 8px 10px; }
 .shop-manage-thumb { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: var(--sb-cream); flex-shrink: 0; border: 1.5px solid rgba(26,31,51,0.1); }
 .shop-manage-thumb.is-empty {
@@ -97,3 +104,77 @@
 .field-box.is-invalid:focus-within { box-shadow: 0 0 0 3px rgba(192,70,58,0.15), inset 0 1px 0 rgba(255,255,255,0.5); }
 
 #shop-item-modal .photo-preview img { max-height: 180px; object-fit: contain; background: var(--sb-cream2); }
+
+/* ── desktop (md+, 768px): Review tab ───────────────────────────
+   Each pending card becomes horizontal: evidence photo on the left
+   (whole photo visible — scale readout, dated sticker and ID card must
+   never be cropped), details + comment + buttons on the right. */
+@variant md {
+  .feed-card {
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    grid-template-areas:
+      "photo top"
+      "photo info"
+      "photo comment"
+      "photo actions"
+      "photo .";
+    column-gap: 18px;
+    align-items: start;
+  }
+  .feed-card-top { grid-area: top; }
+  .feed-card-photo, .feed-card-nophoto { grid-area: photo; }
+  .feed-card-photo {
+    height: auto; min-height: 0;
+    max-height: min(440px, 60dvh);
+    object-fit: contain;
+  }
+  .feed-card-nophoto { margin: 0; }
+  .feed-card-info { grid-area: info; margin-top: 0; }
+  .feed-card-comment { grid-area: comment; }
+  .feed-card-actions { grid-area: actions; }
+
+  /* lightbox: big enough to read the scale digits */
+  #lightbox-overlay .modal-card { max-width: min(900px, 90vw); }
+  #lightbox-overlay .lightbox-img { max-height: calc(100dvh - 120px); object-fit: contain; }
+}
+
+/* ── desktop (md+): Prices tab — only 4 rows, so keep the card narrow
+   and line the inputs / units / Save buttons up in columns ───────── */
+@variant md {
+  #price-panel .card { max-width: 720px; }
+  .price-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 110px auto auto;
+    gap: 12px; padding: 12px 16px;
+  }
+  .price-row .name { font-size: 14px; }
+  .price-row input { width: 100%; font-size: 14px; }
+  .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); }
+  .price-row .save-btn { padding: 9px 16px; font-size: 12px; }
+}
+
+/* ── desktop (md+): Shop tab — catalog as a card grid, 3 columns,
+   4 from xl (1280px). Square photo on top; a missing photo is a dashed
+   box so items still needing a photo stand out. ───────────────────── */
+@variant md {
+  .shop-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  #shop-add-btn { width: auto; margin-top: 0; flex-shrink: 0; }
+
+  .shop-manage-group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .shop-manage-item { flex-direction: column; align-items: stretch; padding: 10px; gap: 8px; }
+  .shop-manage-thumb { width: 100%; height: auto; aspect-ratio: 1; border-radius: 10px; }
+  .shop-manage-thumb.is-empty {
+    background: transparent; border: 2px dashed rgba(26,31,51,0.22);
+    font-size: 12px;
+  }
+  .shop-manage-name { font-size: 13.5px; }
+  .shop-manage-actions { width: 100%; }
+  .shop-manage-actions button { flex: 1; padding: 8px 9px; }
+
+  #shop-item-modal .modal-card { max-width: 520px; }
+}
+@variant xl {
+  .shop-manage-group { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

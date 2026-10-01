@@ -5,7 +5,7 @@
    breakpoints are the same ones md:/lg: utilities use.
    Loaded by the student + admin bundles only — login pages never see it. */
 
-:root { --sidebar-w: 0px; }
+:root { --sidebar-w: 0px; --content-max: 640px; }
 
 /* sidebar-only pieces don't exist on phones */
 .side-brand, .side-user, .side-divider, .side-report { display: none; }
@@ -50,12 +50,13 @@
   /* the shell spans the viewport; the sidebar + centered column live inside it */
   .app-shell { max-width: none; }
 
-  /* content column: pushed right of the sidebar, capped at 640px and
-     centered in the remaining space (a holding width until each page gets
-     its own multi-column layout). 100% here = the app-shell's width. */
+  /* content column: pushed right of the sidebar, capped at --content-max
+     (640px students — a holding width until each page gets its own
+     multi-column layout — 1100px admin) and centered in the remaining
+     space. 100% here = the app-shell's width. */
   .dash-scroll {
     margin-left: var(--sidebar-w);
-    padding-inline: max(0px, calc((100% - var(--sidebar-w) - 640px) / 2));
+    padding-inline: max(0px, calc((100% - var(--sidebar-w) - var(--content-max)) / 2));
     padding-bottom: 40px;
   }
 
@@ -117,7 +118,7 @@
    stacked, logout pinned to the bottom. Tabs have text labels only (no
    icons), so admin gets the wide sidebar from md, not an icon strip. */
 @variant md {
-  body[data-role="admin"] { --sidebar-w: 232px; }
+  body[data-role="admin"] { --sidebar-w: 232px; --content-max: 1100px; }
 
   .admin-side {
     position: fixed; top: 14px; bottom: 14px; left: 14px; z-index: 20;

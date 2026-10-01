@@ -17,6 +17,15 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
 }
 
+// Escapes free text (names, comments, category/item names) before it's
+// dropped into innerHTML — shared by dashboard.js, rank.js and the admin
+// console, since all of them render other people's data.
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
 // Thai honorific prefixes that can appear in student_roster.name, with or
 // without a space before the first name (e.g. "เด็กชายปิยะ ใจดี" or "ด.ช. ปิยะ ใจดี").
 const THAI_TITLES = ['เด็กชาย', 'เด็กหญิง', 'ด.ช.', 'ด.ญ.', 'นางสาว', 'นาย', 'นาง'];

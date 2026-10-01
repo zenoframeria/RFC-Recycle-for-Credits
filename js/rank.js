@@ -8,12 +8,6 @@
 // identified via the server-computed `is_you` column, not by comparing
 // my_rank()'s (possibly tied) rank number against list position.
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
