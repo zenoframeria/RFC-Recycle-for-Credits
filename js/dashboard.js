@@ -6,7 +6,8 @@
 // "Product model (current)" section for why levels don't exist here).
 //
 // Recent Activity only ever shows pending/rejected submissions (tabbed);
-// approved submissions moved to the notification bell's history list.
+// the notification bell lists every reviewed submission (approved +
+// rejected) with an unread count, and updates live via Supabase Realtime.
 
 const STATUS_LABEL = {
   approved: 'อนุมัติแล้ว',
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderHeader(currentUser);
   renderPoints(currentUser.pointsTotal);
-  wireNotifications();
+  wireNotifications(currentUser.id);
   wireReportModal();
   wireActivityTabs();
   wireLightbox();
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadNotifications(currentUser.id),
   ]);
   await refreshPoints(currentUser.id);
+  subscribeToReviews(currentUser.id);
 });
 
 function renderHeader(user) {
@@ -217,6 +219,10 @@ async function loadPendingTab(userId) {
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
 
+  // also called again by the realtime refresh — start from an empty list
+  listEl.innerHTML = '';
+  toggleEl.hidden = true;
+
   if (error) {
     listEl.innerHTML = '<div class="history-empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
     console.error('loadPendingTab failed', error);
@@ -268,6 +274,9 @@ async function loadRejectedTab(userId) {
     .eq('status', 'rejected')
     .gte('created_at', cutoff)
     .order('created_at', { ascending: false });
+
+  listEl.innerHTML = '';
+  toggleEl.hidden = true;
 
   if (error) {
     listEl.innerHTML = '<div class="history-empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
@@ -371,17 +380,43 @@ function wireLightbox() {
   });
 }
 
-// ── notification bell: approved submissions history ──────────────────
+// ── notification bell: reviewed submissions (approved + rejected) ────
+// "Seen" and "cleared" are two timestamps on the student's own profiles
+// row (sql/notifications.sql), so they carry across devices. The badge
+// counts reviews after notif_seen_at; the list hides reviews before
+// notif_cleared_at.
+const notifState = { unread: 0, loadId: 0 };
+
 async function loadNotifications(userId) {
   const listEl = document.getElementById('notif-list');
   const toggleEl = document.getElementById('notif-toggle');
+  const clearBtn = document.getElementById('notif-clear');
+  // calls can overlap (clear, realtime, page load) — only the newest one
+  // may render, so a slow older response can't bring cleared rows back
+  const loadId = ++notifState.loadId;
 
-  const { data, error } = await supabaseClient
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('notif_seen_at, notif_cleared_at')
+    .eq('id', userId)
+    .single();
+  if (profileError) console.error('loadNotifications profile failed', profileError);
+  const seenAt = profile?.notif_seen_at ? new Date(profile.notif_seen_at) : null;
+  const clearedAt = profile?.notif_cleared_at || null;
+
+  let query = supabaseClient
     .from('submissions')
-    .select(`id, created_at, points_awarded, waste_categories ( name )`)
+    .select(`id, status, reviewed_at, points_awarded, comment, waste_categories ( name )`)
     .eq('user_id', userId)
-    .eq('status', 'approved')
-    .order('created_at', { ascending: false });
+    .in('status', ['approved', 'rejected'])
+    .not('reviewed_at', 'is', null)
+    .order('reviewed_at', { ascending: false });
+  if (clearedAt) query = query.gt('reviewed_at', clearedAt);
+  const { data, error } = await query;
+  if (loadId !== notifState.loadId) return;
+
+  listEl.innerHTML = '';
+  toggleEl.hidden = true;
 
   if (error) {
     listEl.innerHTML = '<div class="notif-empty">โหลดข้อมูลไม่สำเร็จ</div>';
@@ -390,8 +425,16 @@ async function loadNotifications(userId) {
   }
 
   const rows = data || [];
+  clearBtn.hidden = !rows.length;
+  setUnread(rows.filter((r) => !seenAt || new Date(r.reviewed_at) > seenAt).length);
+
+  // a review arrived while the panel is open — the student is looking at it
+  if (notifState.unread && document.getElementById('notif-panel').classList.contains('open')) {
+    markNotificationsSeen();
+  }
+
   if (!rows.length) {
-    listEl.innerHTML = '<div class="notif-empty">ยังไม่มีรายการที่อนุมัติ</div>';
+    listEl.innerHTML = '<div class="notif-empty">ยังไม่มีการแจ้งเตือน</div>';
     return;
   }
 
@@ -400,11 +443,43 @@ async function loadNotifications(userId) {
   });
 }
 
+function setUnread(count) {
+  notifState.unread = count;
+  const badge = document.getElementById('notif-badge');
+  badge.textContent = count > 9 ? '9+' : String(count);
+  badge.hidden = count === 0;
+  document.getElementById('notif-btn').setAttribute(
+    'aria-label',
+    count ? `Notifications (${count} ใหม่)` : 'Notifications',
+  );
+}
+
+async function markNotificationsSeen() {
+  setUnread(0);
+  const { error } = await supabaseClient.rpc('mark_notifications_seen');
+  if (error) console.error('mark_notifications_seen failed', error);
+}
+
 function renderNotifRow(row) {
   const category = escapeHtml(row.waste_categories?.name || '-');
-  const when = formatDateTime(row.created_at);
-  const points = (row.points_awarded ?? 0).toLocaleString();
+  const when = formatDateTime(row.reviewed_at);
 
+  if (row.status === 'rejected') {
+    const reasonHtml = row.comment
+      ? `<div class="reason">เหตุผล: ${escapeHtml(row.comment)}</div>`
+      : '';
+    return `
+      <div class="notif-item">
+        <div class="content">
+          <div class="text">${category} <span class="notif-rejected">ถูกตีกลับ ❌</span></div>
+          ${reasonHtml}
+          <div class="time">${when}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  const points = (row.points_awarded ?? 0).toLocaleString();
   return `
     <div class="notif-item">
       <div class="content">
@@ -415,9 +490,36 @@ function renderNotifRow(row) {
   `;
 }
 
-function wireNotifications() {
+// Realtime: when an admin approves/rejects one of this student's
+// submissions while Home is open, refresh the bell, both activity tabs and
+// the points. Debounced — approve fires more than one UPDATE (status, then
+// photo cleanup), and an admin may review several in a row.
+function subscribeToReviews(userId) {
+  let timer = null;
+  supabaseClient
+    .channel(`reviews-${userId}`)
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `user_id=eq.${userId}` },
+      (payload) => {
+        const status = payload.new?.status;
+        if (status !== 'approved' && status !== 'rejected') return;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          loadNotifications(userId);
+          loadPendingTab(userId);
+          loadRejectedTab(userId);
+          refreshPoints(userId);
+        }, 400);
+      },
+    )
+    .subscribe();
+}
+
+function wireNotifications(userId) {
   const btn = document.getElementById('notif-btn');
   const panel = document.getElementById('notif-panel');
+  const clearBtn = document.getElementById('notif-clear');
 
   function closePanel() {
     panel.classList.remove('open');
@@ -429,6 +531,19 @@ function wireNotifications() {
     const willOpen = !panel.classList.contains('open');
     panel.classList.toggle('open', willOpen);
     btn.setAttribute('aria-expanded', String(willOpen));
+    if (willOpen && notifState.unread) markNotificationsSeen();
+  });
+
+  clearBtn.addEventListener('click', async () => {
+    clearBtn.disabled = true;
+    const { error } = await supabaseClient.rpc('clear_notifications');
+    clearBtn.disabled = false;
+    if (error) {
+      showToast('ล้างการแจ้งเตือนไม่สำเร็จ');
+      console.error('clear_notifications failed', error);
+      return;
+    }
+    await loadNotifications(userId);
   });
 
   document.addEventListener('click', (e) => {
