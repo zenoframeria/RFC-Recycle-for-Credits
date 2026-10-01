@@ -35,13 +35,21 @@
 }
 
 /* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
-   (sidebar sizes only — the phone bottom nav keeps its plain accent color) */
+   (sidebar sizes only — the phone bar uses 3b below) */
 @variant md {
   .bottom-nav .nav-item.active {
     background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
+}
+
+/* 3b. phone bottom bar: the active tab's label gets a highlighter stripe */
+@media (max-width: 767.98px) {
+  .bottom-nav .nav-item.active .label {
+    padding: 0 4px;
+    background: linear-gradient(transparent 45%, var(--sb-yellow-soft) 45%, var(--sb-yellow-soft) 92%, transparent 92%);
+  }
 }
 
 /* 4. press feedback for the buttons that didn't have any yet */

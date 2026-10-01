@@ -406,15 +406,19 @@ html, body {
 .stat-tile .label { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 1px; }
 
 /* ── bottom nav ───────────────────────────────────────────────── */
+/* docked to the bottom edge like a real app tab bar (not a floating pill);
+   same width as the phone .app-shell (tokens.css) */
 .bottom-nav-wrap {
-  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20; width: 100%; max-width: 402px; padding: 0 14px;
-  bottom: 12px; /* fallback */
-  bottom: calc(12px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20;
+  width: 100%; max-width: clamp(430px, 18vw + 350px, 600px); padding: 0;
+  bottom: 0;
 }
 .bottom-nav {
-  position: relative; background: var(--sb-paper); border: 1px solid rgba(26,31,51,0.1); border-radius: 22px;
-  padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;
-  box-shadow: 0 10px 24px rgba(20,30,60,0.16), inset 0 1px 0 rgba(255,255,255,0.7);
+  position: relative; background: var(--sb-paper); border: none; border-top: 1.5px solid rgba(26,31,51,0.18); border-radius: 0;
+  padding: 8px 18px 10px; /* fallback */
+  padding: 8px 18px calc(10px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 -3px 0 rgba(26,31,51,0.05);
 }
 .nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -432,12 +436,12 @@ html, body {
 .nav-item--fab {
   position: relative;
   width: 54px; height: 54px;
-  margin-top: -24px;
-  border-radius: 999px;
+  margin-top: -26px;
+  border-radius: 12px;
   justify-content: center;
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 10px 22px rgba(30,58,138,0.4), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 5px var(--sb-paper);
+  box-shadow: 0 0 0 4px var(--sb-paper), 3px 4px 0 4px rgba(26,31,51,0.12);
   color: var(--sb-cream);
 }
 .nav-item--fab svg { width: 22px; height: 22px; }
