@@ -931,3 +931,23 @@ html, body {
   box-shadow: 2px 2px 0 rgba(26,31,51,.35);
 }
 .app-shell--home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
+
+/* Home desktop: header + Launch Pad full width, then Progress | Activity */
+@variant lg {
+  .app-shell--home { --content-max: 960px; }
+  .app-shell--home .dash-scroll {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 28px;
+    align-items: start;
+  }
+  .app-shell--home .dash-header,
+  .app-shell--home .home-launch { grid-column: 1 / -1; }
+}
+/* very wide screens: enlarge the content (not the sidebar) by 18% so it
+   doesn't sit tiny in the middle of the screen */
+@media (min-width: 1600px) {
+  .app-shell--home { --content-max: 1130px; }
+  .app-shell--home .dash-scroll { column-gap: 34px; }
+  .app-shell--home .dash-scroll > * { zoom: 1.18; }
+}
