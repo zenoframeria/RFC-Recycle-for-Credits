@@ -909,13 +909,6 @@ html, body {
   .page-home .dash-header,
   .page-home .home-launch { grid-column: 1 / -1; }
 }
-/* very wide screens: enlarge the content (not the sidebar) by 18% so it
-   doesn't sit tiny in the middle of the screen */
-@media (min-width: 1600px) {
-  .page-home { --content-max: 1130px; }
-  .page-home .dash-scroll { column-gap: 34px; }
-  .page-home .dash-scroll > * { zoom: 1.18; }
-}
 
 /* ── Shop/Rank/Me/Scan: page title on a torn yellow paper strip ───
    (Home has no title — it shows the student's polaroid + name instead.)
@@ -1032,4 +1025,14 @@ html, body {
     column-gap: 24px; align-items: start;
   }
   .page-scan .scan-col { min-width: 0; }
+}
+
+/* ── very wide screens (all student pages): enlarge the content column
+   (not the sidebar) by 18% so it doesn't sit tiny in the middle. Kept last
+   so these --content-max values win over the per-page lg/md ones. */
+@media (min-width: 1600px) {
+  .app-shell--home .dash-scroll > * { zoom: 1.18; }
+  .page-home .dash-scroll { column-gap: 34px; }
+  .page-home, .page-shop, .page-scan { --content-max: 1130px; }
+  .page-rank, .page-me { --content-max: 850px; }
 }
