@@ -895,7 +895,24 @@ html, body {
   border: 1.5px solid rgba(26,31,51,.7);
   box-shadow: 2px 2px 0 rgba(26,31,51,.35);
 }
-.page-home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
+/* bell badge: unread count, a small red pill over the top-right corner */
+.page-home .dash-header .icon-btn .badge {
+  top: -7px; right: -7px; width: auto; height: 18px; min-width: 18px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px; box-shadow: 0 0 0 2px var(--sb-paper);
+  font-family: var(--font-display); font-weight: 700; font-size: 11px; line-height: 1; color: #fff;
+}
+.page-home .dash-header .icon-btn .badge[hidden] { display: none; }
+
+/* bell panel: clear-all link + rejected rows */
+.notif-clear {
+  margin-left: auto; padding: 2px 4px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--sb-red);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.notif-clear[hidden] { display: none; }
+.notif-rejected { font-weight: 600; color: var(--sb-red); }
+.notif-item .reason { font-family: var(--font-thai); font-size: 11.5px; color: rgba(26,31,51,0.7); margin-top: 2px; }
 
 /* Home desktop: header + Launch Pad full width, then Progress | Activity */
 @variant lg {
