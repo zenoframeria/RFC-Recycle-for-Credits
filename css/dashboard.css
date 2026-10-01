@@ -907,3 +907,23 @@ html, body {
 .app-shell--home .home-activity {
   filter: drop-shadow(2px 3px 0 rgba(20,30,60,.08)) drop-shadow(0 1px 0 rgba(20,30,60,.06));
 }
+
+/* status badges as rubber stamps (single ink border, no pill) */
+.app-shell--home .history-status {
+  background: transparent; border: 1.5px solid currentColor; border-radius: 2px;
+  padding: 1px 7px; font-weight: 700; letter-spacing: .04em;
+}
+.app-shell--home .history-status.is-pending { color: #A2700F; }
+.app-shell--home .history-status.is-rejected { color: var(--sb-red); }
+
+/* Scan & launch: less rounded, everything else unchanged */
+.app-shell--home .launch-body { border-radius: 10px; }
+.app-shell--home .launch-body::before { border-radius: 6px; }
+
+/* report + bell: straight cut-card squares with an ink edge */
+.app-shell--home .dash-header .icon-btn {
+  border-radius: 2px;
+  border: 1.5px solid rgba(26,31,51,.7);
+  box-shadow: 2px 2px 0 rgba(26,31,51,.35);
+}
+.app-shell--home .dash-header .icon-btn .badge { top: 6px; right: 6px; }
