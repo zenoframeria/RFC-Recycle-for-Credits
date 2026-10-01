@@ -858,3 +858,52 @@ html, body {
   color: var(--accent); border-top: 1px dashed rgba(26,31,51,0.13);
 }
 .history-toggle:active { opacity: 0.7; }
+
+/* ── Home: "real paper" look ──────────────────────────────────────
+   Owner feedback: identical rounded boxes + soft floating shadows read as
+   "AI-made". Colors/gradients stay; only shapes change. Home-only. */
+.app-shell--home {
+  --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
+  --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
+}
+.app-shell--home .card {
+  --paper-tilt: 0deg;
+  border-radius: 3px;
+  rotate: var(--paper-tilt);
+  box-shadow: var(--paper-shadow);
+}
+
+/* Personal Progress: slightly tilted, bottom edge torn out of a notebook.
+   The tear is a strip in the card's own color shaped by an irregular
+   polygon (uneven teeth on purpose, so it doesn't read as a stamp edge). */
+.app-shell--home .progress-card {
+  --paper-tilt: -0.6deg;
+  border-bottom-color: transparent;
+  filter: drop-shadow(1px 2px 0 rgba(20,30,60,.10));
+}
+.app-shell--home .progress-card::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -13px; height: 14px;
+  background: #F7F2E2; /* = .progress-card background */
+  clip-path: polygon(0 0, 0% 0%, 4.2% 55%, 8.3% 20%, 12.5% 80%, 16.7% 35%, 20.8% 95%, 25% 10%, 29.2% 60%,
+    33.3% 40%, 37.5% 100%, 41.7% 25%, 45.8% 70%, 50% 5%, 54.2% 85%, 58.3% 45%, 62.5% 65%, 66.7% 15%,
+    70.8% 90%, 75% 30%, 79.2% 75%, 83.3% 50%, 87.5% 100%, 91.7% 20%, 95.8% 60%, 100% 0%, 100% 0);
+}
+
+/* Recent Activity: a spiral-notebook page — a column of punched holes down
+   the left edge. The mask = holes column (left 30px) + solid everywhere else.
+   `round` keeps whole holes only (no half hole at the ends, no slits).
+   A mask clips box-shadow, so the shadow moves to the parent section as a
+   drop-shadow (which also shades the inside of each hole). */
+.app-shell--home .history-card {
+  padding-left: 34px;
+  box-shadow: none;
+  -webkit-mask:
+    radial-gradient(circle 5px at 15px 50%, #0000 97%, #000) left top / 30px 24px no-repeat round,
+    linear-gradient(#000 0 0) 30px 0 / calc(100% - 30px) 100% no-repeat;
+  mask:
+    radial-gradient(circle 5px at 15px 50%, #0000 97%, #000) left top / 30px 24px no-repeat round,
+    linear-gradient(#000 0 0) 30px 0 / calc(100% - 30px) 100% no-repeat;
+}
+.app-shell--home .home-activity {
+  filter: drop-shadow(2px 3px 0 rgba(20,30,60,.08)) drop-shadow(0 1px 0 rgba(20,30,60,.06));
+}
