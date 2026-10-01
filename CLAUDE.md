@@ -301,7 +301,7 @@ Second desktop sub-project. Phones (< 768px) look the same as before, except the
 - **Not done, deliberately:** no keyboard shortcuts, no bulk approve, no change to approve/reject logic, Storage or SQL.
 - **Testing status:** the project owner checked everything on Go Live — phone 390px unchanged in all three tabs; 768 / 1280 / 1920 layouts as described; approve + reject (counter −1 each), price save, shop add/edit/delete, an item named `<b>test</b>` shows as literal text, and student Home + Rank still render after the `escapeHtml()` move. The owner then also confirmed it on the Vercel preview and on a real phone.
 
-## Home "real paper" restyle + desktop layout — DONE on branch `home-paper-style`
+## Home + student pages "real paper" restyle + desktop layouts — DONE on branch `home-paper-style`, verified by the owner on Go Live + Vercel preview + a real phone
 
 Third desktop sub-project, combined with a restyle: the owner felt Home "looked AI-made" (identical rounded boxes, soft floating shadows, everything perfectly straight). Every change was tried live in Chrome first and approved one by one. **Colors, gradients, glows and the blue hero header are unchanged** — only shapes.
 
@@ -320,7 +320,7 @@ Third desktop sub-project, combined with a restyle: the owner felt Home "looked 
   - **Tapes now:** Home + Shop keep theirs; Rank, Me, Scan have none.
   - **Tried and rejected (round 2):** cream/ink-bordered title label, cream torn strip (blended in), plain big navy title, rubber-stamp title, tilted title, tape on the title, 26–30px title (fought the cert card), red+blue airmail frame on Limited ("too postal"), student-ID/passport card on Me.
 - **Gotcha:** opening `admin-review.html` while logged in as a student signs you out (the admin guard's correct behavior) — don't do it while testing student pages.
-- **Testing status:** Claude checked on Go Live in Chrome (round 2: all 4 pages at ~420, ~1366 and ~1900 wide; cert redeem demo + status; detail popup from the cert text; `#scan-form` hide/show; NOT checked: a real Scan submission, logout click) — Home at phone width (cards, torn edge, holes, stamps in both tabs, header buttons, docked bar), the docked bar + bottom clearance on Shop/Scan/Rank/Me, and Home at ~886 (one column), ~1266 (two columns, bell panel opens) and ~1886 (enlarged). Owner check on Go Live → Vercel preview → real phone: pending.
+- **Testing status:** Claude checked on Go Live in Chrome (round 2: all 4 pages at ~420, ~1366 and ~1900 wide; cert redeem demo + status; detail popup from the cert text; `#scan-form` hide/show; NOT checked: a real Scan submission, logout click) — Home at phone width (cards, torn edge, holes, stamps in both tabs, header buttons, docked bar), the docked bar + bottom clearance on Shop/Scan/Rank/Me, and Home at ~886 (one column), ~1266 (two columns, bell panel opens) and ~1886 (enlarged). The owner then checked everything on Go Live, the Vercel preview and a real phone — including a real Scan submission with the phone camera and logout — all passing.
 
 **Open questions — waiting on the student council president, don't guess these:**
 - Do points reset every round, or accumulate across rounds forever? (Affects whether Rank resets each round too.)
