@@ -1,5 +1,6 @@
 // ขยะแลกแต้ม — login/signup form handling, shared by login-student.html and login-admin.html.
 // Talks to real Supabase Auth + the `profiles` table (see CLAUDE.md Phase 2).
+// Profiles are created only by the server via create_my_profile() (sql/secure-signup.sql).
 //
 // Supabase Auth needs an email, but this app only collects a student/admin ID,
 // so we map id -> a synthetic email under a fake local domain (id@student.kyt.local
@@ -176,9 +177,8 @@ function wireSignupForm(role) {
     setLoading(submitBtn, true);
 
     try {
-      let rosterName = null;
-      let rosterClassroom = null;
-
+      // Roster check before creating the auth account, only for a friendly
+      // error message — the real check runs on the server in create_my_profile().
       if (role === 'student') {
         const { data: rosterData, error: rosterError } = await supabaseClient.rpc('check_roster', {
           p_student_id: id,
@@ -192,9 +192,6 @@ function wireSignupForm(role) {
         if (!roster || !roster.found) {
           throw new Error('ไม่พบรหัสนักเรียนนี้ในทะเบียนโรงเรียน กรุณาติดต่อสภานักเรียน');
         }
-
-        rosterName = roster.name;
-        rosterClassroom = roster.class_room;
       } else {
         const { data: rosterData, error: rosterError } = await supabaseClient.rpc('check_admin_roster', {
           p_student_id: id,
@@ -208,8 +205,6 @@ function wireSignupForm(role) {
         if (!roster || !roster.found) {
           throw new Error('ไม่พบรหัสนักเรียนนี้ในทะเบียนสภานักเรียน กรุณาติดต่อผู้ดูแลระบบ');
         }
-
-        rosterName = roster.name;
       }
 
       const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
@@ -228,16 +223,14 @@ function wireSignupForm(role) {
         throw new Error('สมัครสมาชิกไม่สำเร็จ ลองใหม่อีกครั้ง');
       }
 
-      const profileRow = role === 'student'
-        ? { id: authUser.id, role, student_id: id, name: rosterName, class_room: rosterClassroom }
-        : { id: authUser.id, role, student_id: id, name: rosterName };
-
-      const { error: insertError } = await supabaseClient.from('profiles').insert(profileRow);
-      if (insertError) {
+      // The server builds the profile itself (role, name, class from the
+      // roster) — see sql/secure-signup.sql. The browser can't send any of it.
+      const { data: profile, error: profileError } = await supabaseClient.rpc('create_my_profile');
+      if (profileError || !profile) {
         throw new Error('สร้างบัญชีไม่สำเร็จ ลองใหม่อีกครั้ง');
       }
 
-      saveCurrentUser(role, { ...profileRow, points_total: 0 });
+      saveCurrentUser(role, profile);
       goToRoleHome(role);
     } catch (err) {
       showError(errorEl, err.message);
