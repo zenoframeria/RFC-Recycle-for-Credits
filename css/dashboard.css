@@ -214,6 +214,7 @@ html, body {
 .student-name {
   font-family: var(--font-thai-serif); font-size: 19px; font-weight: 600;
   margin-top: 3px; line-height: 1.1; color: var(--sb-ink);
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .student-fullname {
   font-family: var(--font-thai); font-size: 12px; font-weight: 400;
@@ -645,7 +646,7 @@ html, body {
 
 /* ── rank page ─────────────────────────────────────────────────── */
 .rank-podium { display: flex; align-items: flex-end; gap: 8px; margin-top: 18px; }
-.rank-podium-slot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.rank-podium-slot { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .rank-podium-slot.is-first { flex: 1.15; }
 
 .podium-block {
@@ -693,7 +694,13 @@ html, body {
 .medal-silver { background: linear-gradient(160deg, #E7EAF0 0%, #AEB6C4 100%); color: #454C5C; --medal-ribbon: #9AA3B3; }
 .medal-bronze { background: linear-gradient(160deg, #DA9F6C 0%, #A9683A 100%); color: #55340F; --medal-ribbon: #96602F; }
 
-.rank-podium-slot .name { font-family: var(--font-thai-serif); font-size: 11.5px; color: var(--sb-ink); text-align: center; }
+/* long nicknames (up to 30 chars, maybe with no spaces) must not stretch the podium:
+   break anywhere, max 2 lines, then … */
+.rank-podium-slot .name {
+  font-family: var(--font-thai-serif); font-size: 11.5px; color: var(--sb-ink); text-align: center;
+  max-width: 100%; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 .rank-podium-slot .pts { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--accent); }
 
 .rank-list { display: flex; flex-direction: column; margin-top: 18px; }
@@ -706,14 +713,16 @@ html, body {
   background: var(--sb-cream2);
   transform: rotate(-6deg);
 }
-.rank-row .rank-name { flex: 1; min-width: 0; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
+.rank-row .rank-name { flex: 1; min-width: 0; display: flex; align-items: baseline; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
+/* one line + …, while the "— คุณ" tag beside it always stays visible */
+.rank-row .rank-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rank-row .rank-pts { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--sb-ink); }
 .rank-row.is-you {
   background: rgba(248,226,154,0.4); border-radius: 12px; padding: 10px; margin: 0 -6px;
 }
 .rank-row.is-you .rank-pts { color: var(--sb-blue-deep); }
 .rank-row.is-you .rank-stamp { border: 1.5px solid var(--sb-yellow); background: var(--accent); color: var(--sb-yellow-soft); transform: rotate(-6deg); }
-.rank-row .you-tag { font-family: var(--font-script); font-size: 12px; color: var(--accent); margin-left: 4px; }
+.rank-row .you-tag { flex-shrink: 0; white-space: nowrap; font-family: var(--font-script); font-size: 12px; color: var(--accent); margin-left: 4px; }
 
 .rank-own {
   margin-top: 14px;
