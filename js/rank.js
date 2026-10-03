@@ -75,7 +75,7 @@ function renderList(rest) {
   document.getElementById('rank-list').innerHTML = rest.map((r) => `
     <div class="rank-row${r.isYou ? ' is-you' : ''}">
       <div class="rank-stamp">${r.rank}</div>
-      <div class="rank-name">${escapeHtml(r.name)}${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
+      <div class="rank-name"><span class="rank-name-text">${escapeHtml(r.name)}</span>${r.isYou ? '<span class="you-tag">— คุณ</span>' : ''}</div>
       <div class="rank-pts">${(r.points ?? 0).toLocaleString()}</div>
     </div>
   `).join('');
