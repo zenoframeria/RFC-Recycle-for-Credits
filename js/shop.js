@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!currentUser) return;
 
   shopState.points = currentUser.pointsTotal ?? 0;
+  wireFeedbackButtons(currentUser);
 
   await loadShopItems();
   refreshButtons();

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderHeader(currentUser);
   renderPoints(currentUser.pointsTotal);
   wireNotifications(currentUser.id);
-  wireReportModal();
+  wireFeedbackButtons(currentUser);
   wireActivityTabs();
   wireLightbox();
   wireNicknameEdit(currentUser);
@@ -550,39 +550,5 @@ function wireNotifications(userId) {
     if (!panel.classList.contains('open')) return;
     if (panel.contains(e.target) || btn.contains(e.target)) return;
     closePanel();
-  });
-}
-
-function wireReportModal() {
-  const triggers = document.querySelectorAll('[data-open-report]');
-  const overlay = document.getElementById('report-modal');
-  const closeBtn = document.getElementById('report-close');
-  const submitBtn = document.getElementById('report-submit');
-  const textarea = document.getElementById('report-text');
-
-  function openModal() {
-    overlay.classList.add('open');
-    textarea.focus();
-  }
-  function closeModal() {
-    overlay.classList.remove('open');
-  }
-
-  triggers.forEach((btn) => btn.addEventListener('click', openModal));
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
-
-  submitBtn.addEventListener('click', () => {
-    const message = textarea.value.trim();
-    if (!message) {
-      textarea.focus();
-      return;
-    }
-    console.log('report submitted:', message);
-    textarea.value = '';
-    closeModal();
-    showToast('ส่งแล้ว ✅');
   });
 }

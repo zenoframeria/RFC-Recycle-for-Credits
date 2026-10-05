@@ -133,3 +133,38 @@ function renderSidebarPoints(points) {
   const el = document.getElementById('side-points');
   if (el) countUp(el, points ?? 0);
 }
+
+// Report / feedback goes to a Google Form (owned by the student council),
+// not Supabase — no table, no photo storage. The entry.* ids are the form's
+// field ids; if the council renames a topic option in the form, update
+// FEEDBACK_TOPIC_REWARD too or the Shop button just won't pre-tick it.
+const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSex_du1tVdrBtr6WPr5tttt7ls2yYukcAVNfv6LcZtLyyEtCQ/viewform';
+const FEEDBACK_FIELDS = {
+  studentId: 'entry.7297159',
+  name: 'entry.721026053',
+  classroom: 'entry.1008551516',
+  topic: 'entry.2090703568',
+};
+const FEEDBACK_TOPIC_REWARD = 'มีของรางวัลที่อยากเสนอให้แลกได้';
+
+// Pre-fills ID / name / classroom from the cached currentUser so students
+// only type the topic and details. They can still edit these in the form.
+function feedbackFormUrl(user, topic) {
+  const params = new URLSearchParams({ usp: 'pp_url' });
+  if (user.studentId) params.set(FEEDBACK_FIELDS.studentId, user.studentId);
+  if (user.name) params.set(FEEDBACK_FIELDS.name, user.name);
+  if (user.classroom) params.set(FEEDBACK_FIELDS.classroom, user.classroom);
+  if (topic) params.set(FEEDBACK_FIELDS.topic, topic);
+  return `${FEEDBACK_FORM_URL}?${params}`;
+}
+
+// Any element with data-open-feedback opens the form in a new tab;
+// data-feedback-topic="reward" pre-ticks the reward-suggestion option.
+function wireFeedbackButtons(user) {
+  document.querySelectorAll('[data-open-feedback]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const topic = btn.dataset.feedbackTopic === 'reward' ? FEEDBACK_TOPIC_REWARD : null;
+      window.open(feedbackFormUrl(user, topic), '_blank', 'noopener');
+    });
+  });
+}

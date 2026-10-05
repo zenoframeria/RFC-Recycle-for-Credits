@@ -29,9 +29,9 @@ The project owner is a beginner learning as we go: explain things simply (casual
 |---|---|---|
 | `index.html` | inline | redirects by session |
 | `login-student.html` / `login-admin.html` | `auth.js` | `body[data-role]` picks role + accent colour |
-| `dashboard.html` (Home) | `dashboard.js` | points ring (fills toward a display-only 50,000 cap), Launch Pad, Recent Activity (pending / rejected last 7 days), notification bell, nickname edit, report modal (UI only) |
+| `dashboard.html` (Home) | `dashboard.js` | points ring (fills toward a display-only 50,000 cap), Launch Pad, Recent Activity (pending / rejected last 7 days), notification bell, nickname edit, "แจ้งปัญหา" button → Google Form |
 | `scan.html` | `scan.js` | submit: category, weight, photo, suggested points |
-| `shop.html` | `shop.js` | catalog from `shop_items`; redeem is **demo only** (local state, nothing saved) |
+| `shop.html` | `shop.js` | catalog from `shop_items`; redeem is **demo only** (local state, nothing saved); "Got an idea?" card → same Google Form with the reward topic pre-ticked |
 | `rank.html` | `rank.js` | Top 10 podium + list, `#rank-own` when you're outside the top 10 |
 | `me.html` | `me.js` | account info + logout |
 | `admin-review.html` | `admin-review.js`, `admin-shop.js` | tabs: Review (approve/reject), Prices, Shop (catalog CRUD) |
@@ -39,7 +39,9 @@ The project owner is a beginner learning as we go: explain things simply (casual
 Shared JS:
 - `supabase-client.js` — creates the global `supabaseClient` with the real URL + publishable key. Already wired; don't recreate it or ask for the key.
 - `session-guard.js` → `requireStudentSession()`; `admin-session-guard.js` → `requireAdminSession()` (also confirms `profiles.role` from the DB). Both bounce to the matching login page.
-- `nav-common.js` — `showToast()`, `compressImage()` (max 800px wide, JPEG 0.7 — a **hard requirement** before any upload), `displayName()` (nickname, else first name without Thai title), `escapeHtml()`, `countUp()`, `renderSidebarUser()`/`renderSidebarPoints()`.
+- `nav-common.js` — `showToast()`, `compressImage()` (max 800px wide, JPEG 0.7 — a **hard requirement** before any upload), `displayName()` (nickname, else first name without Thai title), `escapeHtml()`, `countUp()`, `renderSidebarUser()`/`renderSidebarPoints()`, `wireFeedbackButtons()` (any `[data-open-feedback]` opens the feedback form).
+
+Report / feedback = a **Google Form owned by the student council** (responses in their Google Sheet), not Supabase — no `reports` table, no photo storage. The link pre-fills student ID / name / classroom from `currentUser` via the form's `entry.*` field ids (constants in `nav-common.js`). If the council renames the reward option in the form, update `FEEDBACK_TOPIC_REWARD` or the Shop button stops pre-ticking it. The form must stay published as "Anyone with the link" with no email collection / file upload, or students get a Google sign-in wall.
 
 ## Auth
 
@@ -98,7 +100,6 @@ Security notes:
 - Before launch: Supabase auth rate limits are per IP (signup ~30 / 5 min) — raise them (Authentication → Rate Limits) if a class signs up together on school Wi-Fi.
 
 Next up (agreed, not started):
-- Make the Home "แจ้งปัญหา" report real (today it only `console.log`s): a `reports` table + a Reports tab for admins; brainstorm first.
 - Home content: a "next reward" card from `shop_items`, bring back an approved-kg stat, rethink the points ring.
 
 Deferred on purpose — don't build unless asked:

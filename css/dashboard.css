@@ -511,18 +511,6 @@ html, body {
   background: var(--sb-cream2); color: var(--sb-ink);
   font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
 }
-.report-textarea {
-  width: 100%; min-height: 100px; resize: vertical;
-  padding: 10px 12px; border-radius: 12px;
-  background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-  font-family: var(--font-thai); font-size: 13px; color: var(--sb-ink);
-  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
-}
-.report-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(30,58,138,0.13), inset 0 1px 0 rgba(255,255,255,0.5);
-}
 
 /* ── photo lightbox (rejected submission proof) ─────────────────── */
 .modal-card--photo { padding: 18px; max-width: 380px; }
@@ -549,6 +537,9 @@ html, body {
 .redeem-btn--limited:not(:disabled) { background: var(--sb-red); }
 
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); margin: 2px 0 10px; }
+/* Thai label on .btn-secondary: the default label font is the italic Latin
+   display serif, which has no Thai glyphs and renders as a fallback face. */
+.btn-secondary--thai .label { font-family: var(--font-thai); font-style: normal; }
 
 /* icon-in-a-tinted-circle badge — same "medal" language rank.html uses,
    replacing the old flat diagonal-stripe placeholder rectangles so each
