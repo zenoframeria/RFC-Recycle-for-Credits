@@ -35,6 +35,12 @@
           <span class="k">แต้มคงเหลือ</span>
           <span class="v"><span id="shop-points">0</span> <span class="unit">pts</span></span>
         </div>
+        <!-- opens the pickup-ticket pop-up; hidden until the student has redeemed something -->
+        <button type="button" class="tickets-btn" id="tickets-btn" hidden>
+          <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3a2 2 0 0 0 0 4v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a2 2 0 0 0 0-4zM14 6v12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ตั๋วรับของ
+          <span class="count" id="tickets-count" hidden></span>
+        </button>
       </div>
     </div>
   </div>
@@ -72,7 +78,7 @@
         <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6z" fill="none" stroke="var(--sb-red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="title">Limited Edition</span>
       </div>
-      <div class="shop-section-note">ของรางวัลจำกัดจำนวน · ของจริง สต๊อกจำกัดต่อรอบ หมดแล้วรอรอบถัดไป</div>
+      <div class="shop-section-note">ของรางวัลจำกัดจำนวน · คนละ 1 ชิ้น · หมดแล้วรอรอบถัดไป</div>
       <div id="shop-limited"></div>
     </div>
   </div>
@@ -136,6 +142,45 @@
     <div class="item-detail-name" id="item-detail-name"></div>
     <div class="item-detail-cost" id="item-detail-cost"></div>
     <div class="item-detail-desc" id="item-detail-desc" hidden></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tickets-modal">
+  <div class="modal-card tickets-card" role="dialog" aria-modal="true" aria-labelledby="tickets-title">
+    <button class="modal-close" id="tickets-close" aria-label="ปิด">×</button>
+    <div class="tickets-head">
+      <div class="tickets-title" id="tickets-title">My Rewards <span class="sub">· ของที่แลกแล้ว</span></div>
+      <button type="button" class="info-btn" id="tickets-info-btn" aria-label="ตั๋วรับของคืออะไร" aria-expanded="false" aria-controls="tickets-help">i</button>
+    </div>
+    <div class="ticket-help" id="tickets-help" hidden>
+      <div class="q">ตั๋วรับของคืออะไร?</div>
+      <div class="a">ทุกครั้งที่แลกของ ระบบจะออกตั๋ว 1 ใบ มีรหัส เช่น R-0042 เป็นหลักฐานว่าเราแลกของชิ้นนี้แล้ว</div>
+      <div class="q">ใช้ตอนไหน ยังไง?</div>
+      <div class="a">เดินไปหาพี่สภานักเรียน เปิดหน้านี้โชว์ตั๋ว พี่จะเช็กรหัสกับชื่อเรา แล้วให้ของเลย</div>
+      <div class="q">ทำไมต้องมี?</div>
+      <div class="a">กันไม่ให้ใครมารับของแทนเรา และกันการรับของซ้ำ พอรับของแล้วตั๋วจะขึ้นตราประทับ "รับแล้ว" ใช้ซ้ำไม่ได้</div>
+      <div class="q">ควรรู้</div>
+      <div class="a">แลกแล้วยกเลิกหรือคืนแต้มไม่ได้ · ไม่มีตั๋ว = รับของไม่ได้นะ</div>
+    </div>
+    <div class="shop-section-note">โชว์ตั๋วนี้ให้พี่สภานักเรียนเพื่อรับของ</div>
+    <div class="receipt-list" id="tickets-list"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="redeem-confirm">
+  <div class="modal-card redeem-confirm-card" role="dialog" aria-modal="true" aria-labelledby="redeem-confirm-name">
+    <button class="modal-close" id="redeem-confirm-close" aria-label="ปิด">×</button>
+    <div class="redeem-confirm-kicker">ยืนยันการแลก</div>
+    <div class="redeem-confirm-name" id="redeem-confirm-name"></div>
+    <div class="redeem-confirm-points">
+      <div class="row"><span class="k">ใช้</span><span class="v" id="redeem-confirm-cost"></span></div>
+      <div class="row"><span class="k">แต้มคงเหลือ</span><span class="v"><span id="redeem-confirm-before"></span> → <b id="redeem-confirm-after"></b></span></div>
+    </div>
+    <div class="redeem-confirm-warning">⚠️ แลกแล้วยกเลิกหรือคืนแต้มไม่ได้นะ</div>
+    <div class="redeem-confirm-actions">
+      <button type="button" class="redeem-confirm-cancel" id="redeem-confirm-cancel">ยกเลิก</button>
+      <button type="button" class="redeem-confirm-ok" id="redeem-confirm-ok">ยืนยันแลก</button>
+    </div>
   </div>
 </div>
 
