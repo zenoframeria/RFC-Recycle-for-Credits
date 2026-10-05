@@ -78,6 +78,8 @@
           </div>
         </div>
 
+        <div class="captcha-slot" id="login-captcha"></div>
+
         <div class="login-error" id="login-error" hidden>รหัสผู้ดูแลหรือรหัสผ่านไม่ถูกต้อง</div>
 
         <button type="submit" class="btn-primary" style="margin-top:18px;">
@@ -132,6 +134,8 @@
           </div>
         </div>
 
+        <div class="captcha-slot" id="signup-captcha"></div>
+
         <div class="login-error" id="signup-error" hidden></div>
 
         <button type="submit" class="btn-primary" style="margin-top:18px;">
@@ -162,5 +166,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
 </body>
 </html>

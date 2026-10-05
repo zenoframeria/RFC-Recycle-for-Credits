@@ -9,13 +9,31 @@ async function requireStudentSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
 
   if (!currentUser || currentUser.role !== 'student' || !session) {
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login-student.html';
-    return null;
+    return bounceToStudentLogin();
+  }
+
+  // localStorage is editable from devtools, so confirm with the real profiles
+  // row too (same check as requireAdminSession). A query error only bounces.
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .maybeSingle();
+
+  if (error) return bounceToStudentLogin();
+  if (!profile || profile.role !== 'student') {
+    await supabaseClient.auth.signOut();
+    return bounceToStudentLogin();
   }
 
   // every student page has the sidebar, and every one of them passes
   // through here first — so this is the one place to fill it
   try { renderSidebarUser(currentUser); } catch (err) { console.error('renderSidebarUser failed', err); }
   return currentUser;
+}
+
+function bounceToStudentLogin() {
+  localStorage.removeItem('currentUser');
+  window.location.href = 'login-student.html';
+  return null;
 }
