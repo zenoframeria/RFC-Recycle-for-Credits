@@ -99,9 +99,6 @@ Security notes:
 - Anyone who knows a classmate's ID can sign up as them first; fix by deleting that auth user so the real student can sign up.
 - Before launch: Supabase auth rate limits are per IP (signup ~30 / 5 min) — raise them (Authentication → Rate Limits) if a class signs up together on school Wi-Fi.
 
-Next up (agreed, not started):
-- Home content: a "next reward" card from `shop_items`, bring back an approved-kg stat, rethink the points ring.
-
 Deferred on purpose — don't build unless asked:
 - Time-of-day gating (10:00–17:00) and the round-dates banner — waits for `collection_rounds` to be designed. Submissions are allowed any time for now.
 - Audit view (bin weight vs claimed) — the owner reconciles manually.
@@ -110,4 +107,4 @@ Deferred on purpose — don't build unless asked:
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
 
-Decided, not open: no battery-collection box; login stays student ID (not class + seat number).
+Decided, not open: no battery-collection box; login stays student ID (not class + seat number); Home stays as it is — no "next reward" card, no approved-kg stat, no points-ring rework (dropped 2026-10-05).
