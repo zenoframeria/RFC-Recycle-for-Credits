@@ -100,13 +100,8 @@
 .shop-manage-edit { color: var(--accent); border: 1.5px solid var(--accent) !important; }
 .shop-manage-delete { color: var(--sb-red); border: 1.5px solid var(--sb-red) !important; }
 
-/* form helpers reused by the item-form modal — select + side-by-side inputs */
+/* form helper reused by the item-form modal — the zone select */
 .field-select { flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-mono); font-size: 13px; color: var(--sb-ink); }
-.field-row { display: flex; gap: 8px; }
-/* min-width:0 lets both boxes shrink to share the row — without it the
-   number inputs' built-in width pushes the second box past the modal edge */
-.field-row .field-box { flex: 1; min-width: 0; }
-.field-row .field-box input { width: 100%; }
 
 /* item-form modal is taller than a phone screen once a photo is attached —
    cap it to the viewport and let it scroll so the Save button stays reachable */

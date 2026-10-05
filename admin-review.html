@@ -118,11 +118,13 @@
     </div>
 
     <div class="field">
-      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ / ทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></label>
-      <div class="field-row">
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="คงเหลือ" aria-label="จำนวนคงเหลือ"></div>
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="ทั้งหมด" aria-label="จำนวนทั้งหมด"></div>
-      </div>
+      <label class="field-label" for="shop-item-stock-max"><span class="name">จำนวนทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></label>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="เช่น 10"></div>
+    </div>
+
+    <div class="field" id="shop-item-stock-field" hidden>
+      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ</span><span class="sub">แก้เองได้ ถ้ามีคนรับของไปแล้ว</span></label>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="ว่าง = เท่ากับทั้งหมด"></div>
     </div>
 
     <div class="field">

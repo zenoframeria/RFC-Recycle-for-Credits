@@ -167,6 +167,8 @@ function openShopItemModal(item) {
   document.getElementById('shop-item-desc').value = item?.description || '';
   document.getElementById('shop-item-stock').value = item?.stock ?? '';
   document.getElementById('shop-item-stock-max').value = item?.stock_max ?? '';
+  // "คงเหลือ" only shows when editing — a new item starts full (stock = total)
+  document.getElementById('shop-item-stock-field').hidden = !item;
   document.getElementById('shop-item-opens-on').value = item?.opens_on || '';
 
   const preview = document.getElementById('shop-item-photo-preview');
@@ -197,13 +199,17 @@ function readShopItemForm() {
   const stockMaxRaw = document.getElementById('shop-item-stock-max').value.trim();
   const opensOnRaw = document.getElementById('shop-item-opens-on').value;
 
+  const stockMax = stockMaxRaw === '' ? null : parseInt(stockMaxRaw, 10);
+  // blank "คงเหลือ" (always blank for a new item) means "still full"
+  const stock = stockRaw === '' ? stockMax : parseInt(stockRaw, 10);
+
   return {
     name,
     section,
     cost,
     description,
-    stock: stockRaw === '' ? null : parseInt(stockRaw, 10),
-    stock_max: stockMaxRaw === '' ? null : parseInt(stockMaxRaw, 10),
+    stock,
+    stock_max: stockMax,
     opens_on: opensOnRaw || null,
   };
 }
