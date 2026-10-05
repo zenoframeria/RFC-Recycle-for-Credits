@@ -986,13 +986,53 @@ html, body {
 /* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
 .page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
 
-/* My Rewards: each receipt is a paper ticket — notches on both sides (same
-   mask trick as the balance ticket, so the shadow is a drop-shadow on the
-   list) and a rubber stamp for the status */
+/* "ตั๋วรับของ" button under the balance ticket — a cut-card square with an
+   ink edge, same as Home's report/bell buttons; red pill = tickets waiting */
+.page-shop .balance-ticket { display: flex; flex-direction: column; align-items: flex-end; }
+.tickets-btn {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 11px;
+  border: 1.5px solid var(--sb-ink); border-radius: 2px; background: var(--sb-paper);
+  box-shadow: 2px 2px 0 rgba(26,31,51,.3); cursor: pointer;
+  font-family: var(--font-thai); font-weight: 700; font-size: 12px; color: var(--sb-ink);
+}
+.tickets-btn[hidden] { display: none; }
+.tickets-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(26,31,51,.3); }
+.tickets-btn .count {
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--sb-red); color: #fff; font-family: var(--font-display); font-size: 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.tickets-btn .count[hidden] { display: none; }
+
+/* ticket pop-up: list scrolls inside the card so many tickets never push
+   the close button off a phone screen */
+.tickets-card { border-radius: 3px; max-width: 400px; max-height: calc(100dvh - 48px); display: flex; flex-direction: column; }
+.tickets-card .receipt-list { overflow-y: auto; padding: 4px 2px 6px; }
+.tickets-head { display: flex; align-items: center; gap: 6px; padding-right: 34px; }
+.tickets-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--accent); }
+.tickets-title .sub { font-family: var(--font-thai); font-weight: 400; font-size: 11.5px; color: rgba(26,31,51,.55); }
+.tickets-card .shop-section-note { margin-bottom: 6px; }
+.info-btn {
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
+  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; font-style: normal; line-height: 1;
+}
+.info-btn[aria-expanded="true"] { background: var(--accent); color: var(--sb-cream); }
+/* the explanation = a yellow sticky note */
+.ticket-help { margin: 8px 0 4px; padding: 10px 12px; background: var(--sb-yellow-soft); border-radius: 2px; box-shadow: 1px 2px 0 rgba(20,30,60,.10); rotate: -.4deg; }
+.ticket-help[hidden] { display: none; }
+.ticket-help .q { font-family: var(--font-thai); font-weight: 700; font-size: 12.5px; color: var(--sb-ink); margin-top: 8px; }
+.ticket-help .q:first-child { margin-top: 0; }
+.ticket-help .a { font-family: var(--font-thai); font-size: 12px; line-height: 1.5; color: rgba(26,31,51,.78); margin-top: 1px; }
+
+/* each pickup ticket — notches on both sides (same mask trick as the
+   balance ticket, so the shadow is a drop-shadow on the list) and a rubber
+   stamp for the status */
 .receipt-list { display: flex; flex-direction: column; gap: 10px; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)); }
 .receipt {
   position: relative; display: flex; align-items: center; gap: 12px;
-  background: var(--sb-paper); padding: 12px 20px;
+  background: #EFE6CF; padding: 12px 20px;
   -webkit-mask:
     radial-gradient(circle 8px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
     radial-gradient(circle 8px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
@@ -1042,7 +1082,6 @@ html, body {
 
 @variant lg {
   .page-shop { --content-max: 960px; }
-  .page-shop .receipt-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page-shop .stationery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .page-shop #shop-limited { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
 }

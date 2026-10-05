@@ -35,20 +35,14 @@
           <span class="k">แต้มคงเหลือ</span>
           <span class="v"><span id="shop-points">0</span> <span class="unit">pts</span></span>
         </div>
+        <!-- opens the pickup-ticket pop-up; hidden until the student has redeemed something -->
+        <button type="button" class="tickets-btn" id="tickets-btn" hidden>
+          <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3a2 2 0 0 0 0 4v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a2 2 0 0 0 0-4zM14 6v12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ตั๋วรับของ
+          <span class="count" id="tickets-count" hidden></span>
+        </button>
       </div>
     </div>
-  </div>
-
-  <!-- my rewards: the student's receipts, shown to a council member at
-       pickup. Hidden until the student has redeemed something. -->
-  <div class="section" id="my-rewards" hidden>
-    <div class="section-heading">
-      <span class="icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="title">My Rewards</span>
-      <span class="sub">· ของที่แลกแล้ว</span>
-    </div>
-    <div class="shop-section-note">โชว์ใบเสร็จนี้ให้พี่สภานักเรียนเพื่อรับของ</div>
-    <div class="receipt-list" id="my-rewards-list"></div>
   </div>
 
   <!-- certificate CTA -->
@@ -148,6 +142,28 @@
     <div class="item-detail-name" id="item-detail-name"></div>
     <div class="item-detail-cost" id="item-detail-cost"></div>
     <div class="item-detail-desc" id="item-detail-desc" hidden></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tickets-modal">
+  <div class="modal-card tickets-card" role="dialog" aria-modal="true" aria-labelledby="tickets-title">
+    <button class="modal-close" id="tickets-close" aria-label="ปิด">×</button>
+    <div class="tickets-head">
+      <div class="tickets-title" id="tickets-title">My Rewards <span class="sub">· ของที่แลกแล้ว</span></div>
+      <button type="button" class="info-btn" id="tickets-info-btn" aria-label="ตั๋วรับของคืออะไร" aria-expanded="false" aria-controls="tickets-help">i</button>
+    </div>
+    <div class="ticket-help" id="tickets-help" hidden>
+      <div class="q">ตั๋วรับของคืออะไร?</div>
+      <div class="a">ทุกครั้งที่แลกของ ระบบจะออกตั๋ว 1 ใบ มีรหัส เช่น R-0042 เป็นหลักฐานว่าเราแลกของชิ้นนี้แล้ว</div>
+      <div class="q">ใช้ตอนไหน ยังไง?</div>
+      <div class="a">เดินไปหาพี่สภานักเรียน เปิดหน้านี้โชว์ตั๋ว พี่จะเช็กรหัสกับชื่อเรา แล้วให้ของเลย</div>
+      <div class="q">ทำไมต้องมี?</div>
+      <div class="a">กันไม่ให้ใครมารับของแทนเรา และกันการรับของซ้ำ พอรับของแล้วตั๋วจะขึ้นตราประทับ "รับแล้ว" ใช้ซ้ำไม่ได้</div>
+      <div class="q">ควรรู้</div>
+      <div class="a">แลกแล้วยกเลิกหรือคืนแต้มไม่ได้ · ไม่มีตั๋ว = รับของไม่ได้นะ</div>
+    </div>
+    <div class="shop-section-note">โชว์ตั๋วนี้ให้พี่สภานักเรียนเพื่อรับของ</div>
+    <div class="receipt-list" id="tickets-list"></div>
   </div>
 </div>
 

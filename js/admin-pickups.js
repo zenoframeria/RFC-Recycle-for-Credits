@@ -21,7 +21,7 @@ async function lookupReceipt() {
   pickupState.row = null;
 
   if (!id) {
-    result.innerHTML = '<div class="coming-soon">พิมพ์รหัสใบเสร็จก่อน เช่น R-0042</div>';
+    result.innerHTML = '<div class="coming-soon">พิมพ์รหัสตั๋วก่อน เช่น R-0042</div>';
     return;
   }
 
@@ -43,7 +43,7 @@ async function lookupReceipt() {
     return;
   }
   if (!data) {
-    result.innerHTML = `<div class="coming-soon">ไม่พบใบเสร็จ ${receiptCode(id)}</div>`;
+    result.innerHTML = `<div class="coming-soon">ไม่พบตั๋ว ${receiptCode(id)}</div>`;
     return;
   }
 
@@ -104,8 +104,8 @@ async function markPickedUp() {
   }
 
   if (result.success) showToast(`มอบ ${receiptCode(r.id)} แล้ว`);
-  else if (result.message === 'already picked up') showToast('ใบเสร็จนี้มีคนมอบไปแล้ว');
-  else showToast('ไม่พบใบเสร็จนี้');
+  else if (result.message === 'already picked up') showToast('ตั๋วนี้มีคนมอบไปแล้ว');
+  else showToast('ไม่พบตั๋วนี้');
 
   // re-read so the card shows who handed it over and when
   await lookupReceipt();

@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   refreshButtons();
   wireRedeemClicks();
   wireRedeemConfirm();
+  wireTickets();
   wireItemDetail();
 });
 
@@ -338,7 +339,7 @@ async function confirmRedeem() {
   if (!result.success) {
     showToast(REDEEM_ERRORS[result.message] || 'แลกไม่สำเร็จ');
   } else {
-    showToast(`แลกแล้ว ✅ เอาใบเสร็จ ${receiptCode(result.redemption_id)} ไปรับของได้เลย`);
+    showToast(`แลกแล้ว ✅ เอาตั๋ว ${receiptCode(result.redemption_id)} ไปรับของได้เลย`);
   }
 
   // re-read everything — stock / points may have changed under us either way
@@ -346,12 +347,35 @@ async function confirmRedeem() {
   await Promise.all([loadShopItems(), loadRedemptions(), refreshShopPoints()]);
   refreshButtons();
 
-  if (result.success) {
-    document.getElementById('my-rewards').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  // show the new ticket straight away — it's what they take to pickup
+  if (result.success) openTickets();
 }
 
-// ── My Rewards (receipts) ───────────────────────────────────────────
+// ── pickup tickets (pop-up from the button under the balance) ───────
+function openTickets() {
+  document.getElementById('tickets-modal').classList.add('open');
+}
+
+function closeTickets() {
+  document.getElementById('tickets-modal').classList.remove('open');
+}
+
+function wireTickets() {
+  const overlay = document.getElementById('tickets-modal');
+  document.getElementById('tickets-btn').addEventListener('click', openTickets);
+  document.getElementById('tickets-close').addEventListener('click', closeTickets);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeTickets(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeTickets();
+  });
+
+  const infoBtn = document.getElementById('tickets-info-btn');
+  const help = document.getElementById('tickets-help');
+  infoBtn.addEventListener('click', () => {
+    help.hidden = !help.hidden;
+    infoBtn.setAttribute('aria-expanded', String(!help.hidden));
+  });
+}
 async function loadRedemptions() {
   const { data, error } = await supabaseClient
     .from('redemptions')
@@ -372,13 +396,16 @@ async function loadRedemptions() {
 const PICKED_UP_SHOWN = 3;
 
 function renderRedemptions() {
-  const section = document.getElementById('my-rewards');
   const pending = shopState.redemptions.filter((r) => r.status === 'pending');
   const done = shopState.redemptions.filter((r) => r.status === 'picked_up').slice(0, PICKED_UP_SHOWN);
   const rows = [...pending, ...done];
 
-  section.hidden = rows.length === 0;
-  document.getElementById('my-rewards-list').innerHTML = rows.map((r) => {
+  document.getElementById('tickets-btn').hidden = rows.length === 0;
+  const count = document.getElementById('tickets-count');
+  count.hidden = pending.length === 0;
+  count.textContent = pending.length;
+
+  document.getElementById('tickets-list').innerHTML = rows.map((r) => {
     const pickedUp = r.status === 'picked_up';
     return `
       <div class="receipt${pickedUp ? ' is-picked-up' : ''}">
