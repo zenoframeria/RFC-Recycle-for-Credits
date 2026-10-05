@@ -13,6 +13,46 @@ function initPickupsTab() {
     e.preventDefault();
     lookupReceipt();
   });
+  // re-count whenever the tab is opened — students may have redeemed since
+  document.querySelector('.admin-tab[data-panel="pickup-panel"]').addEventListener('click', loadPickupSummary);
+  loadPickupSummary();
+}
+
+// ── "ของที่รอแจก" — pending tickets counted per item ─────────────────
+async function loadPickupSummary() {
+  const list = document.getElementById('pickup-summary-list');
+
+  const { data, error } = await supabaseClient
+    .from('redemptions')
+    .select('item_name, item_section')
+    .eq('status', 'pending');
+
+  if (error) {
+    console.error('loadPickupSummary failed', error);
+    list.innerHTML = '<div class="coming-soon">โหลดสรุปไม่สำเร็จ</div>';
+    return;
+  }
+
+  const counts = new Map();
+  (data || []).forEach((r) => {
+    const row = counts.get(r.item_name) || { name: r.item_name, section: r.item_section, n: 0 };
+    row.n += 1;
+    counts.set(r.item_name, row);
+  });
+
+  if (!counts.size) {
+    list.innerHTML = '<div class="coming-soon">ไม่มีของค้างแจก</div>';
+    return;
+  }
+
+  list.innerHTML = [...counts.values()]
+    .sort((a, b) => b.n - a.n)
+    .map((row) => `
+      <div class="pickup-summary-row">
+        <span class="name">${escapeHtml(row.name)}</span>
+        <span class="n">${row.n} ${row.section === 'cert' ? 'ใบ' : 'ชิ้น'}</span>
+      </div>
+    `).join('');
 }
 
 async function lookupReceipt() {
@@ -108,5 +148,5 @@ async function markPickedUp() {
   else showToast('ไม่พบตั๋วนี้');
 
   // re-read so the card shows who handed it over and when
-  await lookupReceipt();
+  await Promise.all([lookupReceipt(), loadPickupSummary()]);
 }

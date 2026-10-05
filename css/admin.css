@@ -127,6 +127,12 @@
   background: rgba(192,70,58,0.08); border: 1px dashed rgba(192,70,58,0.4);
   font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: #8C2E26;
 }
+.pickup-summary { margin-top: 18px; padding-top: 12px; border-top: 1.5px dashed rgba(26,31,51,0.15); }
+.pickup-summary-head { font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--sb-ink); margin-bottom: 4px; }
+.pickup-summary-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 7px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
+.pickup-summary-row:last-child { border-bottom: none; }
+.pickup-summary-row .name { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink); min-width: 0; }
+.pickup-summary-row .n { font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--accent); white-space: nowrap; }
 @variant md {
   #pickup-panel .card { max-width: 560px; }
 }
