@@ -986,8 +986,63 @@ html, body {
 /* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
 .page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
 
+/* My Rewards: each receipt is a paper ticket — notches on both sides (same
+   mask trick as the balance ticket, so the shadow is a drop-shadow on the
+   list) and a rubber stamp for the status */
+.receipt-list { display: flex; flex-direction: column; gap: 10px; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)); }
+.receipt {
+  position: relative; display: flex; align-items: center; gap: 12px;
+  background: var(--sb-paper); padding: 12px 20px;
+  -webkit-mask:
+    radial-gradient(circle 8px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 8px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 8px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 8px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.receipt::before { content: ''; position: absolute; inset: 5px 14px; border: 1px dashed rgba(26,31,51,.22); pointer-events: none; }
+.receipt-main { flex: 1; min-width: 0; }
+.receipt-code { font-family: var(--font-mono); font-weight: 700; font-size: 20px; letter-spacing: .06em; color: var(--accent); line-height: 1.1; }
+.receipt-name { font-family: var(--font-thai); font-weight: 600; font-size: 13px; color: var(--sb-ink); margin-top: 3px; }
+.receipt-meta { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 2px; }
+.receipt-stamp {
+  flex-shrink: 0; padding: 4px 9px; rotate: -8deg;
+  border: 2px solid currentColor; border-radius: 2px;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px; letter-spacing: .04em;
+  color: #A2700F; mix-blend-mode: multiply;
+}
+.receipt.is-picked-up .receipt-stamp { color: var(--sb-green); rotate: 6deg; }
+.receipt.is-picked-up .receipt-code,
+.receipt.is-picked-up .receipt-name { opacity: .55; }
+
+/* redeem confirm pop-up */
+.redeem-confirm-card { border-radius: 3px; }
+.redeem-confirm-kicker { font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--accent); }
+.redeem-confirm-name { font-family: var(--font-thai); font-weight: 700; font-size: 18px; color: var(--sb-ink); line-height: 1.3; margin-top: 2px; padding-right: 30px; }
+.redeem-confirm-points { margin-top: 12px; border-top: 1.5px dashed rgba(26,31,51,0.15); border-bottom: 1.5px dashed rgba(26,31,51,0.15); padding: 6px 0; }
+.redeem-confirm-points .row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+.redeem-confirm-points .k { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.6); }
+.redeem-confirm-points .v { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--sb-ink); }
+.redeem-confirm-points .v b { color: var(--accent); }
+.redeem-confirm-warning {
+  margin-top: 12px; padding: 8px 10px; border-radius: 2px;
+  background: rgba(192,70,58,0.08); border: 1px dashed rgba(192,70,58,0.45);
+  font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: #8C2E26;
+}
+.redeem-confirm-actions { display: flex; gap: 8px; margin-top: 14px; }
+.redeem-confirm-actions button {
+  flex: 1; padding: 11px 10px; border-radius: 3px; cursor: pointer;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+.redeem-confirm-actions button:active { transform: scale(0.96); }
+.redeem-confirm-cancel { background: transparent; border: 1.5px solid rgba(26,31,51,0.3); color: var(--sb-ink); }
+.redeem-confirm-ok { background: var(--accent); border: 1.5px solid var(--accent); color: var(--sb-cream); }
+.redeem-confirm-ok:disabled { opacity: .55; cursor: default; }
+
 @variant lg {
   .page-shop { --content-max: 960px; }
+  .page-shop .receipt-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page-shop .stationery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .page-shop #shop-limited { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
 }

@@ -117,6 +117,18 @@ function countUp(el, target, duration = 800) {
   el.dataset.countFrame = String(requestAnimationFrame(step));
 }
 
+// Shop receipt code = the redemptions row id, e.g. 42 -> "R-0042". The
+// student shows it at pickup; the admin Pickups tab types it back in.
+function receiptCode(id) {
+  return `R-${String(id).padStart(4, '0')}`;
+}
+
+// "R-0042", "r42", "0042", "42" -> 42. Anything without digits -> null.
+function parseReceiptCode(text) {
+  const digits = String(text || '').replace(/\D/g, '');
+  return digits ? Number(digits) : null;
+}
+
 // Fills the sidebar's user block (only visible at lg / 1024px+). Pages
 // without the sidebar markup (admin, login) have no #side-name, so this
 // quietly does nothing there.

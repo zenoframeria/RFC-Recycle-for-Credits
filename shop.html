@@ -39,6 +39,18 @@
     </div>
   </div>
 
+  <!-- my rewards: the student's receipts, shown to a council member at
+       pickup. Hidden until the student has redeemed something. -->
+  <div class="section" id="my-rewards" hidden>
+    <div class="section-heading">
+      <span class="icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="title">My Rewards</span>
+      <span class="sub">· ของที่แลกแล้ว</span>
+    </div>
+    <div class="shop-section-note">โชว์ใบเสร็จนี้ให้พี่สภานักเรียนเพื่อรับของ</div>
+    <div class="receipt-list" id="my-rewards-list"></div>
+  </div>
+
   <!-- certificate CTA -->
   <div class="section">
     <div class="section-heading">
@@ -72,7 +84,7 @@
         <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6z" fill="none" stroke="var(--sb-red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="title">Limited Edition</span>
       </div>
-      <div class="shop-section-note">ของรางวัลจำกัดจำนวน · ของจริง สต๊อกจำกัดต่อรอบ หมดแล้วรอรอบถัดไป</div>
+      <div class="shop-section-note">ของรางวัลจำกัดจำนวน · คนละ 1 ชิ้น · หมดแล้วรอรอบถัดไป</div>
       <div id="shop-limited"></div>
     </div>
   </div>
@@ -136,6 +148,23 @@
     <div class="item-detail-name" id="item-detail-name"></div>
     <div class="item-detail-cost" id="item-detail-cost"></div>
     <div class="item-detail-desc" id="item-detail-desc" hidden></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="redeem-confirm">
+  <div class="modal-card redeem-confirm-card" role="dialog" aria-modal="true" aria-labelledby="redeem-confirm-name">
+    <button class="modal-close" id="redeem-confirm-close" aria-label="ปิด">×</button>
+    <div class="redeem-confirm-kicker">ยืนยันการแลก</div>
+    <div class="redeem-confirm-name" id="redeem-confirm-name"></div>
+    <div class="redeem-confirm-points">
+      <div class="row"><span class="k">ใช้</span><span class="v" id="redeem-confirm-cost"></span></div>
+      <div class="row"><span class="k">แต้มคงเหลือ</span><span class="v"><span id="redeem-confirm-before"></span> → <b id="redeem-confirm-after"></b></span></div>
+    </div>
+    <div class="redeem-confirm-warning">⚠️ แลกแล้วยกเลิกหรือคืนแต้มไม่ได้นะ</div>
+    <div class="redeem-confirm-actions">
+      <button type="button" class="redeem-confirm-cancel" id="redeem-confirm-cancel">ยกเลิก</button>
+      <button type="button" class="redeem-confirm-ok" id="redeem-confirm-ok">ยืนยันแลก</button>
+    </div>
   </div>
 </div>
 

@@ -31,6 +31,7 @@
       <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
       <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
       <button type="button" class="admin-tab" data-panel="shop-panel">Shop</button>
+      <button type="button" class="admin-tab" data-panel="pickup-panel">Pickups</button>
     </div>
   </aside>
 
@@ -70,6 +71,20 @@
       <div class="shop-manage-list" id="shop-manage-list">
         <div class="coming-soon">กำลังโหลดรายการสินค้า...</div>
       </div>
+    </div>
+  </div>
+
+  <div class="section admin-panel" id="pickup-panel">
+    <div class="card">
+      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="title">Pickups</span>
+        <span class="sub">· ตรวจใบเสร็จก่อนมอบของ</span>
+      </div>
+      <form class="pickup-search" id="pickup-search">
+        <div class="field-box"><input type="text" id="pickup-code" placeholder="รหัสใบเสร็จ เช่น R-0042" autocomplete="off" aria-label="รหัสใบเสร็จ"></div>
+        <button type="submit" class="pickup-search-btn">ค้นหา</button>
+      </form>
+      <div id="pickup-result"></div>
     </div>
   </div>
 </div>
@@ -123,7 +138,7 @@
     </div>
 
     <div class="field" id="shop-item-stock-field" hidden>
-      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ</span><span class="sub">แก้เองได้ ถ้ามีคนรับของไปแล้ว</span></label>
+      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ</span><span class="sub">กรณีที่มีคนอยากคืนของหรือว่ากดผิด</span></label>
       <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="ว่าง = เท่ากับทั้งหมด"></div>
     </div>
 
@@ -159,6 +174,7 @@
 <script src="js/admin-session-guard.js"></script>
 <script src="js/nav-common.js"></script>
 <script src="js/admin-shop.js"></script>
+<script src="js/admin-pickups.js"></script>
 <script src="js/admin-review.js"></script>
 </body>
 </html>

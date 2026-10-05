@@ -1,27 +1,62 @@
-// ขยะแลกแต้ม — Shop tab (Phase 7). Points balance is real (currentUser.pointsTotal,
-// same profiles.points_total source me.html reads). The reward catalog is now
-// real too — shop_items table, managed by admins via the new Shop tab in
-// admin-review.html (see sql/phase7-shop-catalog.sql) — replacing the old
-// SHOP_ITEMS mock array. The redeem action itself is still local/mock-only:
-// there is no redemptions table in Supabase yet, so "redeeming" here only
-// updates local page state for the demo and resets on reload — nothing is
-// written back to the account. This mirrors the same "UI-only scaffolding"
-// pattern already used for the report modal (Phase 3 Round 3a).
+// ขยะแลกแต้ม — Shop tab. Catalog = shop_items (managed in the admin Shop
+// tab). Redeeming is real: one call to redeem_item() (sql/shop-redemption.sql)
+// checks points/stock/rules, deducts points, drops stock and writes a
+// receipt to `redemptions` — all on the server. Redeeming is final (no
+// refund), so a confirm pop-up comes first. The student's receipts show in
+// "My Rewards"; a council member marks them picked up in the admin
+// Pickups tab.
 
-const shopState = { points: 0, redeemed: new Set(), items: [] };
+const shopState = {
+  userId: null,
+  points: 0,
+  items: [],
+  redemptions: [],
+  pendingItem: null, // item waiting in the confirm pop-up
+};
+
+// cert + limited: one per student (enforced again in redeem_item())
+const ONE_PER_STUDENT_SECTIONS = ['cert', 'limited'];
 
 document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
+  shopState.userId = currentUser.id;
   shopState.points = currentUser.pointsTotal ?? 0;
   wireFeedbackButtons(currentUser);
 
-  await loadShopItems();
+  await Promise.all([loadShopItems(), loadRedemptions(), refreshShopPoints()]);
   refreshButtons();
   wireRedeemClicks();
+  wireRedeemConfirm();
   wireItemDetail();
 });
+
+// The cached currentUser.pointsTotal can be stale (it's set at login), and
+// here it decides what the student can afford — so read the live value.
+async function refreshShopPoints() {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('points_total')
+    .eq('id', shopState.userId)
+    .single();
+
+  if (error) {
+    console.error('refreshShopPoints failed', error);
+    return;
+  }
+  setShopPoints(data.points_total ?? 0);
+}
+
+function setShopPoints(points) {
+  shopState.points = points;
+  renderSidebarPoints(points);
+  const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  if (cached) {
+    cached.pointsTotal = points;
+    localStorage.setItem('currentUser', JSON.stringify(cached));
+  }
+}
 
 async function loadShopItems() {
   const { data, error } = await supabaseClient
@@ -73,8 +108,13 @@ function isNotYetOpen(item) {
   return new Date(item.opens_on) > new Date();
 }
 
+function alreadyRedeemed(item) {
+  return ONE_PER_STUDENT_SECTIONS.includes(item.section)
+    && shopState.redemptions.some((r) => r.shop_item_id === item.id);
+}
+
 function itemStatus(item) {
-  if (shopState.redeemed.has(item.id)) return { disabled: true, label: 'แลกแล้ว ✓' };
+  if (alreadyRedeemed(item)) return { disabled: true, label: 'แลกแล้ว ✓' };
   if (isNotYetOpen(item)) return { disabled: true, label: 'ยังไม่เปิด' };
   if (item.stock !== null && item.stock !== undefined && item.stock <= 0) return { disabled: true, label: 'ของหมด' };
   if (shopState.points < item.cost) return { disabled: true, label: 'แต้มไม่พอ' };
@@ -234,20 +274,126 @@ function wireRedeemClicks() {
     if (!btn || btn.disabled) return;
 
     const item = shopState.items.find((i) => String(i.id) === btn.dataset.item);
-    if (!item) return;
-
-    shopState.points -= item.cost;
-    shopState.redeemed.add(item.id);
-    if (item.stock !== null && item.stock !== undefined) item.stock -= 1;
-
-    if (item.section === 'limited') {
-      const row = document.querySelector(`[data-limited="${item.id}"] [data-meta]`);
-      if (row) row.textContent = limitedMeta(item);
-      const fill = document.querySelector(`[data-limited="${item.id}"] [data-fill]`);
-      if (fill) fill.style.width = `${(item.stock / (item.stock_max || 1)) * 100}%`;
-    }
-
-    refreshButtons();
-    showToast('แลกแล้ว ✅ · เดโม (ยังไม่หักแต้มจริง)');
+    if (item) openRedeemConfirm(item);
   });
+}
+
+// ── confirm pop-up (redeeming can't be undone) ──────────────────────
+function openRedeemConfirm(item) {
+  shopState.pendingItem = item;
+  document.getElementById('redeem-confirm-name').textContent = item.name;
+  document.getElementById('redeem-confirm-cost').textContent = `${item.cost.toLocaleString()} pts`;
+  document.getElementById('redeem-confirm-before').textContent = shopState.points.toLocaleString();
+  document.getElementById('redeem-confirm-after').textContent = (shopState.points - item.cost).toLocaleString();
+  document.getElementById('redeem-confirm-ok').disabled = false;
+  document.getElementById('redeem-confirm-ok').textContent = 'ยืนยันแลก';
+  document.getElementById('redeem-confirm').classList.add('open');
+}
+
+function closeRedeemConfirm() {
+  shopState.pendingItem = null;
+  document.getElementById('redeem-confirm').classList.remove('open');
+}
+
+function wireRedeemConfirm() {
+  const overlay = document.getElementById('redeem-confirm');
+  document.getElementById('redeem-confirm-close').addEventListener('click', closeRedeemConfirm);
+  document.getElementById('redeem-confirm-cancel').addEventListener('click', closeRedeemConfirm);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeRedeemConfirm(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeRedeemConfirm();
+  });
+  document.getElementById('redeem-confirm-ok').addEventListener('click', confirmRedeem);
+}
+
+const REDEEM_ERRORS = {
+  'not enough points': 'แต้มไม่พอ',
+  'sold out': 'ของหมดแล้ว',
+  'already redeemed': 'แลกชิ้นนี้ไปแล้ว (คนละ 1 ชิ้น)',
+  'not open': 'ยังไม่เปิดให้แลก',
+  'not found': 'ไม่พบสินค้านี้แล้ว',
+};
+
+async function confirmRedeem() {
+  const item = shopState.pendingItem;
+  if (!item) return;
+
+  const okBtn = document.getElementById('redeem-confirm-ok');
+  okBtn.disabled = true; // a double-tap must not send two redeems
+  okBtn.textContent = 'กำลังแลก...';
+
+  const { data, error } = await supabaseClient.rpc('redeem_item', { p_item_id: item.id });
+  const result = data && data[0];
+
+  if (error || !result) {
+    console.error('redeem_item failed', error);
+    okBtn.disabled = false;
+    okBtn.textContent = 'ยืนยันแลก';
+    showToast('แลกไม่สำเร็จ ลองใหม่อีกครั้ง');
+    return;
+  }
+
+  closeRedeemConfirm();
+
+  if (!result.success) {
+    showToast(REDEEM_ERRORS[result.message] || 'แลกไม่สำเร็จ');
+  } else {
+    showToast(`แลกแล้ว ✅ เอาใบเสร็จ ${receiptCode(result.redemption_id)} ไปรับของได้เลย`);
+  }
+
+  // re-read everything — stock / points may have changed under us either way
+  if (result.points_left !== null && result.points_left !== undefined) setShopPoints(result.points_left);
+  await Promise.all([loadShopItems(), loadRedemptions(), refreshShopPoints()]);
+  refreshButtons();
+
+  if (result.success) {
+    document.getElementById('my-rewards').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// ── My Rewards (receipts) ───────────────────────────────────────────
+async function loadRedemptions() {
+  const { data, error } = await supabaseClient
+    .from('redemptions')
+    .select('id, created_at, shop_item_id, item_name, cost, status, picked_up_at')
+    .eq('user_id', shopState.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('loadRedemptions failed', error);
+    return;
+  }
+  shopState.redemptions = data || [];
+  renderRedemptions();
+}
+
+// waiting-for-pickup receipts first (those are the ones to show), then the
+// most recent few already picked up
+const PICKED_UP_SHOWN = 3;
+
+function renderRedemptions() {
+  const section = document.getElementById('my-rewards');
+  const pending = shopState.redemptions.filter((r) => r.status === 'pending');
+  const done = shopState.redemptions.filter((r) => r.status === 'picked_up').slice(0, PICKED_UP_SHOWN);
+  const rows = [...pending, ...done];
+
+  section.hidden = rows.length === 0;
+  document.getElementById('my-rewards-list').innerHTML = rows.map((r) => {
+    const pickedUp = r.status === 'picked_up';
+    return `
+      <div class="receipt${pickedUp ? ' is-picked-up' : ''}">
+        <div class="receipt-main">
+          <div class="receipt-code">${receiptCode(r.id)}</div>
+          <div class="receipt-name">${escapeHtml(r.item_name)}</div>
+          <div class="receipt-meta">${r.cost.toLocaleString()} pts · แลกเมื่อ ${formatReceiptTime(r.created_at)}</div>
+          ${pickedUp ? `<div class="receipt-meta">รับของเมื่อ ${formatReceiptTime(r.picked_up_at)}</div>` : ''}
+        </div>
+        <div class="receipt-stamp">${pickedUp ? 'รับแล้ว' : 'รอรับ'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatReceiptTime(dateStr) {
+  return new Date(dateStr).toLocaleString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }

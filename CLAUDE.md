@@ -31,10 +31,10 @@ The project owner is a beginner learning as we go: explain things simply (casual
 | `login-student.html` / `login-admin.html` | `auth.js` | `body[data-role]` picks role + accent colour |
 | `dashboard.html` (Home) | `dashboard.js` | points ring (fills toward a display-only 50,000 cap), Launch Pad, Recent Activity (pending / rejected last 7 days), notification bell, nickname edit, "แจ้งปัญหา" button → Google Form |
 | `scan.html` | `scan.js` | submit: category, weight, photo, suggested points |
-| `shop.html` | `shop.js` | catalog from `shop_items`; redeem is **demo only** (local state, nothing saved); "Got an idea?" card → same Google Form with the reward topic pre-ticked |
-| `rank.html` | `rank.js` | Top 10 podium + list, `#rank-own` when you're outside the top 10 |
+| `shop.html` | `shop.js` | catalog from `shop_items`; real redeem via `redeem_item()` after a confirm pop-up (final — no refund); "My Rewards" receipts (`R-0042` = `redemptions.id`); "Got an idea?" card → same Google Form with the reward topic pre-ticked |
+| `rank.html` | `rank.js` | Top 10 podium + list, `#rank-own` when you're outside the top 10. Ranks by points **earned** (sum of approved submissions), so redeeming never drops rank |
 | `me.html` | `me.js` | account info + logout |
-| `admin-review.html` | `admin-review.js`, `admin-shop.js` | tabs: Review (approve/reject), Prices, Shop (catalog CRUD) |
+| `admin-review.html` | `admin-review.js`, `admin-shop.js`, `admin-pickups.js` | tabs: Review (approve/reject), Prices, Shop (catalog CRUD), Pickups (type a receipt code → "มอบแล้ว") |
 
 Shared JS:
 - `supabase-client.js` — creates the global `supabaseClient` with the real URL + publishable key. Already wired; don't recreate it or ask for the key.
@@ -56,9 +56,10 @@ Report / feedback = a **Google Form owned by the student council** (responses in
 - `profiles` — `id` (= `auth.users.id`), `student_id`, `name`, `role` ('student'|'admin'), `class_room`, `points_total`, `nickname` (≤ 30 chars, DB check constraint), `notif_seen_at`, `notif_cleared_at`. Students can SELECT their own row and UPDATE **only** `nickname` (column-level grant).
 - `waste_categories` — `name`, `point_value` (points per kg). Names are shown as-is from the DB; admins edit prices in the Prices tab.
 - `submissions` — `user_id`, `waste_category_id`, `weight_kg`, `photo_url` (Storage path), `status` ('pending'|'approved'|'rejected'), `point_value_snapshot`, `points_awarded`, `reviewed_by`, `reviewed_at`, `comment`. Students INSERT their own rows only with `status = 'pending'` and read their own; admins read/update all. In the Realtime publication.
-- `shop_items` — `name`, `section` (cert/stationery/limited), `cost`, `description`, `stock`, `stock_max`, `opens_on`, `image_path`. Everyone logged in reads; admins write.
+- `shop_items` — `name`, `section` (cert/stationery/limited), `cost`, `description`, `stock`, `stock_max`, `opens_on`, `image_path`. Everyone logged in reads; admins write. The admin form asks only for the total when adding (stock starts = total); "remaining" shows only when editing.
+- `redemptions` (`sql/shop-redemption.sql`) — `user_id`, `shop_item_id`, `item_name`/`item_section`/`cost` (copied at redeem time), `status` ('pending'|'picked_up'), `picked_up_by`, `picked_up_at`. SELECT only from the browser (own rows / admins all); every write goes through the two functions below. Rules: cert + limited one per student, stationery unlimited; points + stock drop on redeem; no cancel/refund.
 
-Functions: `is_admin()`, `is_student()` (SECURITY DEFINER role checks — use these in policies, never an inline subquery on `profiles`), `check_roster()`, `check_admin_roster()`, `create_my_profile()`, `approve_submission(id)` (locks the row, checks `pending`, awards points atomically), `leaderboard_top10()`, `my_rank()`, `mark_notifications_seen()`, `clear_notifications()`.
+Functions: `is_admin()`, `is_student()` (SECURITY DEFINER role checks — use these in policies, never an inline subquery on `profiles`), `check_roster()`, `check_admin_roster()`, `create_my_profile()`, `approve_submission(id)` (locks the row, checks `pending`, awards points atomically), `redeem_item(item_id)` (locks item then profile, checks every rule, deducts + writes the receipt), `mark_redemption_picked_up(id)` (only flips `pending`), `leaderboard_top10()` / `my_rank()` (rank by sum of approved `points_awarded`, not `points_total`), `mark_notifications_seen()`, `clear_notifications()`.
 
 Storage:
 - `submissions` bucket — **private**, 5MB, jpeg/png. Path `{user_id}/{submission_id}.jpg` (id from `crypto.randomUUID()`). Upload needs a student profile; admins read via signed URLs. **Photo is deleted on approve, kept on reject** (for disputes).
@@ -102,7 +103,7 @@ Security notes:
 Deferred on purpose — don't build unless asked:
 - Time-of-day gating (10:00–17:00) and the round-dates banner — waits for `collection_rounds` to be designed. Submissions are allowed any time for now.
 - Audit view (bin weight vs claimed) — the owner reconciles manually.
-- Real redemption / point deduction, bulk approve, cleanup of old rejected photos.
+- Bulk approve, cleanup of old rejected photos, expiring receipts nobody picked up.
 - Minimum weight 0.05 kg is enforced client-side only.
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
