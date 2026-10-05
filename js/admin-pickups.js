@@ -41,7 +41,7 @@ async function loadPickupSummary() {
   });
 
   if (!counts.size) {
-    list.innerHTML = '<div class="coming-soon">ไม่มีของค้างแจก</div>';
+    list.innerHTML = '<div class="coming-soon">ยังไม่มีของที่ต้องรอแจก</div>';
     return;
   }
 
