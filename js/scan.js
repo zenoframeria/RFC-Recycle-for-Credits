@@ -50,7 +50,6 @@ async function loadCategories() {
   list.innerHTML = data.map((cat) => `
     <button type="button" class="category-item" data-category="${cat.id}">
       <div class="category-name">${cat.name}</div>
-      <div class="category-rate">${cat.point_value} pts/kg</div>
     </button>
   `).join('');
 
@@ -61,7 +60,6 @@ async function loadCategories() {
     list.querySelectorAll('.category-item').forEach((el) => {
       el.classList.toggle('is-selected', el === btn);
     });
-    updateSuggestedPoints();
     refreshConfirmState();
   });
 }
@@ -69,7 +67,6 @@ async function loadCategories() {
 // ── weight ──────────────────────────────────────────────────────────
 function wireWeightInput() {
   document.getElementById('weight-input').addEventListener('input', () => {
-    updateSuggestedPoints();
     validateWeight();
     refreshConfirmState();
   });
@@ -93,15 +90,6 @@ function validateWeight() {
   trigger.disabled = !(weight >= MIN_WEIGHT_KG);
 
   return weight >= MIN_WEIGHT_KG;
-}
-
-function updateSuggestedPoints() {
-  const weight = parseFloat(document.getElementById('weight-input').value);
-  const cat = scanState.categories.find((c) => c.id === scanState.selectedCategoryId);
-  const pointsEl = document.getElementById('suggested-points');
-  pointsEl.textContent = (!cat || !weight || weight <= 0)
-    ? '0'
-    : Math.round(weight * cat.point_value).toLocaleString();
 }
 
 // ── photo (compress client-side before it ever touches state; compressImage
@@ -207,8 +195,6 @@ function setSubmitLoading(loading) {
 function showSuccess(cat, weight) {
   document.getElementById('success-category').textContent = cat.name;
   document.getElementById('success-weight').textContent = `${weight.toFixed(2)} kg`;
-  document.getElementById('success-points').textContent =
-    `${Math.round(weight * cat.point_value).toLocaleString()} pts (คาดการณ์)`;
 
   document.getElementById('scan-form').hidden = true;
   document.getElementById('scan-success').hidden = false;
@@ -233,7 +219,6 @@ function resetForm() {
   document.getElementById('photo-trigger').querySelector('.label').textContent = 'แนบรูปถ่าย';
   document.querySelectorAll('.category-item').forEach((el) => el.classList.remove('is-selected'));
 
-  updateSuggestedPoints();
   validateWeight();
   refreshConfirmState();
 
