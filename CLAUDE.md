@@ -104,6 +104,7 @@ Deferred on purpose — don't build unless asked:
 - Time-of-day gating (10:00–17:00) and the round-dates banner — waits for `collection_rounds` to be designed. Submissions are allowed any time for now.
 - Audit view (bin weight vs claimed) — the owner reconciles manually.
 - Bulk approve, cleanup of old rejected photos, expiring receipts nobody picked up.
+- More Realtime. Only Home subscribes today; free tier = 200 concurrent connections. If ever needed, the one worth doing is the admin Review feed (a "N new — tap to load" bar + drop cards other admins already handled) — not Shop/Rank/Pickups.
 - Minimum weight 0.05 kg is enforced client-side only.
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
