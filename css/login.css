@@ -1,15 +1,9 @@
 /* ขยะแลกแต้ม — login page layout (student + admin share this) */
 
-/* Same treatment as the Home page (css/dashboard.css): Poppins for English
-   text, the navy-tinting-toward-cream background gradient. Scoped to
-   .app-shell so it only affects pages loading this stylesheet (the two
-   login pages) — admin-review.html uses css/admin.css instead and is
-   unaffected. */
+/* Same treatment as the Home page (css/dashboard.css): the
+   navy-tinting-toward-cream background gradient. Scoped to .app-shell so it
+   only affects pages loading this stylesheet (the two login pages). */
 .app-shell {
-  --font-display: 'Poppins', system-ui, sans-serif;
-  --font-script: 'Poppins', system-ui, sans-serif;
-  --font-body: 'Poppins', system-ui, sans-serif;
-  --font-mono: 'Poppins', system-ui, sans-serif;
   background:
     radial-gradient(ellipse at 80% -10%, rgba(30,58,138,0.18) 0%, transparent 55%),
     linear-gradient(180deg, #F5EFDB 0%, #FBF7EC 55%, #FEFAEF 100%);

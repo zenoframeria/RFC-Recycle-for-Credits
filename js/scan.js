@@ -196,7 +196,7 @@ function showSuccess(cat, weight) {
 
   document.getElementById('scan-form').hidden = true;
   document.getElementById('scan-success').hidden = false;
-  showToast('ส่งข้อมูลแล้ว ✅ รอแอดมินตรวจสอบ');
+  showToast('ส่งข้อมูลแล้ว · รอแอดมินตรวจสอบ', { success: true });
 }
 
 function wireSubmitAnother() {

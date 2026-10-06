@@ -18,13 +18,15 @@
   --sb-tape: #E8DDB8;
   --sb-page-bg: #EFE7D2;
 
-  /* fonts */
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-script: 'Caveat', 'Kalam', cursive;
-  --font-body: 'Nunito', 'Quicksand', system-ui, sans-serif;
+  /* fonts — the site loads only two: Poppins for English/numbers, Sarabun
+     for Thai. Poppins has no Thai glyphs, so Sarabun sits right behind it:
+     Thai text on a Poppins token lands on Sarabun, not the OS's Thai font. */
+  --font-display: 'Poppins', 'Sarabun', system-ui, sans-serif;
+  --font-script: 'Poppins', 'Sarabun', system-ui, sans-serif;
+  --font-body: 'Poppins', 'Sarabun', system-ui, sans-serif;
   --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
   --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'Poppins', 'Sarabun', system-ui, sans-serif;
 
   /* role accent: blue by default, red on the admin login */
   --accent: var(--sb-blue);

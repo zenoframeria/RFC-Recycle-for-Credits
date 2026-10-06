@@ -339,7 +339,7 @@ async function confirmRedeem() {
   if (!result.success) {
     showToast(REDEEM_ERRORS[result.message] || 'แลกไม่สำเร็จ');
   } else {
-    showToast(`แลกแล้ว ✅ เอาตั๋ว ${receiptCode(result.redemption_id)} ไปรับของได้เลย`);
+    showToast(`แลกแล้ว · เอาตั๋ว ${receiptCode(result.redemption_id)} ไปรับของได้เลย`, { success: true });
   }
 
   // re-read everything — stock / points may have changed under us either way

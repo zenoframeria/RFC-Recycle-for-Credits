@@ -113,7 +113,7 @@
   outline: none;
   background: transparent;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 16px; /* under 16px, iPhone Safari zooms the page on focus */
   color: var(--sb-ink);
 }
 .field-box input[type="password"] { letter-spacing: 0.18em; }

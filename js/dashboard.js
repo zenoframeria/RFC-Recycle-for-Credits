@@ -416,7 +416,7 @@ async function confirmClearRejected(userId) {
   document.getElementById('clear-rejected-confirm').classList.remove('open');
   // the bell lists rejected rows too
   await Promise.all([loadRejectedTab(userId), loadNotifications(userId)]);
-  showToast(failed ? 'ลบได้ไม่ครบ ลองกดล้างอีกครั้ง' : 'ล้างรายการที่ถูกปฏิเสธแล้ว 🧹');
+  showToast(failed ? 'ลบได้ไม่ครบ ลองกดล้างอีกครั้ง' : 'ล้างรายการที่ถูกปฏิเสธแล้ว', { success: !failed });
 }
 
 // Returns the photo paths that are now gone from Storage: removed just
@@ -582,7 +582,7 @@ function renderNotifRow(row) {
     return `
       <div class="notif-item">
         <div class="content">
-          <div class="text">${category} <span class="notif-rejected">ถูกตีกลับ ❌</span></div>
+          <div class="text">${category} <span class="notif-rejected">ถูกตีกลับ</span></div>
           ${reasonHtml}
           <div class="time">${when}</div>
         </div>
@@ -594,7 +594,7 @@ function renderNotifRow(row) {
   return `
     <div class="notif-item">
       <div class="content">
-        <div class="text">${category} ได้รับการอนุมัติแล้ว ✅ <span class="notif-points">+${points} pts</span></div>
+        <div class="text">${category} ได้รับการอนุมัติแล้ว <span class="notif-points">+${points} pts</span></div>
         <div class="time">${when}</div>
       </div>
     </div>

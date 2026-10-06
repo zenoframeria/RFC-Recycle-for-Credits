@@ -10,25 +10,13 @@ html, body {
   background-color: #2B438E; /* matches the theme-color meta tag on these 5 pages — a touch lighter than --sb-blue-deep so the status-bar seam isn't too dark */
 }
 
-/* Poppins for English numbers/headline text, Sarabun for all Thai text
-   (both --font-thai and --font-thai-serif resolve to Sarabun now — Bai
-   Jamjuree was dropped site-wide so every page reads as one Thai font).
-   Overriding the shared font tokens here, scoped to .app-shell — which
-   every page loading this stylesheet already has — remaps every existing
-   class that references them. */
-.app-shell {
-  --font-display: 'Poppins', system-ui, sans-serif;
-  --font-script: 'Poppins', system-ui, sans-serif;
-  --font-body: 'Poppins', system-ui, sans-serif;
-  --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-mono: 'Poppins', system-ui, sans-serif;
-  font-family: var(--font-thai);
-}
+/* Font tokens live in tokens.css. Student pages default to the Thai face. */
+.app-shell { font-family: var(--font-thai); }
 
 /* Thai content still slips through a couple of --font-display / nav spots —
    pin those back to the Thai face explicitly. */
-.app-shell .btn-primary .label {
+.app-shell .btn-primary .label,
+.app-shell .btn-secondary .label {
   font-family: var(--font-thai);
   font-style: normal;
 }
@@ -225,13 +213,14 @@ html, body {
 .student-name-row[hidden], .nickname-edit-row[hidden] { display: none; }
 .nickname-edit-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; flex-shrink: 0;
+  /* 44px touch target; the negative margin keeps the 20px layout footprint */
+  width: 44px; height: 44px; margin: -12px; flex-shrink: 0;
   border: none; background: transparent; cursor: pointer; padding: 0;
   color: rgba(26,31,51,0.4);
 }
 .nickname-edit-btn:active { color: var(--accent); }
 
-.nickname-edit-row { display: flex; align-items: center; gap: 6px; }
+.nickname-edit-row { display: flex; align-items: center; gap: 12px; }
 .nickname-input {
   flex: 1; min-width: 0;
   font-family: var(--font-thai-serif); font-size: 19px; font-weight: 600; color: var(--sb-ink);
@@ -240,8 +229,13 @@ html, body {
 }
 .nickname-save-btn, .nickname-cancel-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
+  position: relative;
+  width: 32px; height: 32px; flex-shrink: 0; border-radius: 999px;
   border: none; cursor: pointer; padding: 0;
+}
+/* invisible padding grows the touch target to 44px without a bigger circle */
+.nickname-save-btn::after, .nickname-cancel-btn::after, .modal-close::after {
+  content: ''; position: absolute; inset: -6px;
 }
 .nickname-save-btn { background: var(--sb-green); color: var(--sb-cream); }
 .nickname-cancel-btn { background: rgba(26,31,51,0.1); color: var(--sb-ink); }
@@ -258,7 +252,7 @@ html, body {
 }
 .section-heading .icon { flex-shrink: 0; display: flex; }
 .section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; }
-.section-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); }
+.section-heading .sub { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); }
 .section-heading.lg .title { font-size: 18px; }
 
 .launch-btn {
@@ -456,6 +450,7 @@ html, body {
   z-index: 30; white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast-icon { vertical-align: -2px; margin-right: 6px; color: #A9D18E; }
 
 /* ── notification dropdown ─────────────────────────────────────── */
 .notif-wrap { position: relative; }
@@ -506,8 +501,8 @@ html, body {
 }
 .modal-overlay.open .modal-card { transform: translateY(0) scale(1); }
 .modal-close {
-  position: absolute; top: 12px; right: 12px;
-  width: 26px; height: 26px; border-radius: 999px; border: none; cursor: pointer;
+  position: absolute; top: 8px; right: 8px;
+  width: 32px; height: 32px; border-radius: 999px; border: none; cursor: pointer;
   background: var(--sb-cream2); color: var(--sb-ink);
   font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
 }
@@ -537,9 +532,6 @@ html, body {
 .redeem-btn--limited:not(:disabled) { background: var(--sb-red); }
 
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); margin: 2px 0 10px; }
-/* Thai label on .btn-secondary: the default label font is the italic Latin
-   display serif, which has no Thai glyphs and renders as a fallback face. */
-.btn-secondary--thai .label { font-family: var(--font-thai); font-style: normal; }
 
 /* icon-in-a-tinted-circle badge — same "medal" language rank.html uses,
    replacing the old flat diagonal-stripe placeholder rectangles so each
@@ -752,7 +744,10 @@ html, body {
   font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink);
   background: var(--sb-cream2); border-radius: 10px; padding: 8px 10px;
 }
-.photo-note { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin: 8px 0 12px; }
+/* small line icon in front of a line of text (replaces colour emoji) */
+.inline-icon { vertical-align: -3px; margin-right: 6px; flex-shrink: 0; }
+.photo-checklist-item .inline-icon { color: var(--accent); }
+.photo-note { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); margin: 8px 0 12px; }
 
 .photo-preview { margin-top: 12px; }
 .photo-preview img { width: 100%; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }

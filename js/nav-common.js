@@ -9,9 +9,12 @@
 // longer needs its own click handler here.
 
 let toastTimer = null;
-function showToast(message) {
+// SVG instead of a ✅ emoji, which looks different on every phone/OS.
+const TOAST_CHECK_SVG = '<svg class="toast-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+function showToast(message, { success = false } = {}) {
   const toast = document.getElementById('toast');
-  toast.textContent = message;
+  toast.innerHTML = success ? TOAST_CHECK_SVG : '';
+  toast.append(message);
   toast.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);

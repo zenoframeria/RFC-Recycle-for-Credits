@@ -1,19 +1,8 @@
 /* ขยะแลกแต้ม — admin console (admin-review.html) styles only */
 
-/* Same fonts as the student pages: Poppins for English/numbers, Sarabun for
-   Thai. Poppins has no Thai glyphs, so Sarabun sits right behind it in every
-   Poppins stack — Thai text on a Poppins token (shop section labels, item
-   meta, form inputs, the zone dropdown) lands on Sarabun instead of the
-   OS's own Thai font. */
-.app-shell {
-  --font-display: 'Poppins', 'Sarabun', system-ui, sans-serif;
-  --font-script: 'Poppins', 'Sarabun', system-ui, sans-serif;
-  --font-body: 'Poppins', 'Sarabun', system-ui, sans-serif;
-  --font-mono: 'Poppins', 'Sarabun', system-ui, sans-serif;
-}
-/* Thai labels that still carried the old italic display style */
-.app-shell .field-label .name,
-.app-shell .btn-secondary .label { font-family: var(--font-thai); font-style: normal; }
+/* Font tokens live in tokens.css. Thai labels that still carried the old
+   italic display style: */
+.app-shell .field-label .name { font-family: var(--font-thai); font-style: normal; }
 
 .admin-header { padding: 30px 18px 0; position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .admin-header .hello-script { font-family: var(--font-script); font-size: 14px; color: var(--accent); }
@@ -72,7 +61,7 @@
 .price-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .price-row { display: flex; align-items: center; gap: 10px; background: var(--sb-cream2); border-radius: 12px; padding: 10px 12px; }
 .price-row .name { flex: 1; min-width: 0; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
-.price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 16px; text-align: right; }
 .price-row .save-btn { border: none; border-radius: 10px; padding: 8px 12px; background: var(--accent); color: var(--sb-cream); font-family: var(--font-body); font-weight: 700; font-size: 11px; cursor: pointer; flex-shrink: 0; }
 .price-row .save-btn:disabled { opacity: 0.55; }
 .price-row .unit { display: none; }
@@ -138,7 +127,7 @@
 }
 
 /* form helper reused by the item-form modal — the zone select */
-.field-select { flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-mono); font-size: 13px; color: var(--sb-ink); }
+.field-select { flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-mono); font-size: 16px; color: var(--sb-ink); }
 
 /* item-form modal is taller than a phone screen once a photo is attached —
    cap it to the viewport and let it scroll so the Save button stays reachable */
@@ -197,7 +186,7 @@
     gap: 12px; padding: 12px 16px;
   }
   .price-row .name { font-size: 14px; }
-  .price-row input { width: 100%; font-size: 14px; }
+  .price-row input { width: 100%; }
   .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); }
   .price-row .save-btn { padding: 9px 16px; font-size: 12px; }
 }
