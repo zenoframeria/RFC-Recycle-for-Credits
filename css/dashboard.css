@@ -259,46 +259,39 @@ html, body {
   display: block; width: 100%; border: none; background: transparent; cursor: pointer; padding: 0; position: relative;
   text-decoration: none;
 }
-.launch-btn .launch-body { transition: transform 0.15s ease, filter 0.15s ease; }
-.launch-btn:active .launch-body { transform: scale(0.97); filter: brightness(0.9); }
-.launch-glow {
-  position: absolute; inset: -4px; border-radius: 24px;
-  background: radial-gradient(ellipse at 50% 60%, rgba(242,200,75,0.33) 0%, transparent 70%);
-  filter: blur(6px);
-  animation: sbglow 3s ease-in-out infinite;
-}
+/* same "printed ticket" look as .btn-primary: flat fill, hard shadow, no glow */
+.launch-btn .launch-body { transition: transform 0.1s ease, box-shadow 0.1s ease; }
+.launch-btn:active .launch-body { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--accent-deep); }
 .launch-body {
   position: relative;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
+  background: var(--accent);
   border-radius: 18px; padding: 16px 18px;
   display: flex; align-items: center; gap: 14px;
-  box-shadow: 0 6px 18px rgba(30,58,138,0.33), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.18);
+  box-shadow: 3px 4px 0 var(--accent-deep);
   overflow: hidden;
 }
 .launch-body::before {
   content: ''; position: absolute; inset: 6px; border-radius: 14px;
-  border: 1px dashed rgba(242,200,75,0.4); pointer-events: none;
+  border: 1px dashed rgba(242,200,75,0.55); pointer-events: none;
 }
 .camera-disc {
   position: relative; flex-shrink: 0;
   width: 56px; height: 56px; border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, var(--sb-yellow-soft), var(--sb-yellow));
+  background: var(--sb-yellow);
   border: 2px solid var(--sb-cream);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 0 2px var(--accent), 0 0 14px rgba(242,200,75,0.6);
+  box-shadow: 0 0 0 2px var(--accent-deep);
 }
 .launch-text { flex: 1; min-width: 0; text-align: left; }
 .launch-text .lets-go { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow); transform: rotate(-2deg); display: inline-block; }
 .launch-text .headline {
   font-family: var(--font-display); font-weight: 700; font-style: italic;
   font-size: 24px; color: var(--sb-cream); line-height: 1.05; margin-top: 2px;
-  text-shadow: 0 0 14px rgba(242,200,75,0.4);
 }
 .launch-text .sub { font-family: var(--font-thai); font-size: 11px; color: var(--sb-blue-mist); margin-top: 3px; }
 .launch-arrow {
   width: 32px; height: 32px; border-radius: 999px; background: var(--sb-yellow);
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(245,239,224,0.4);
 }
 
 /* ── personal progress card ──────────────────────────────────── */
@@ -839,6 +832,9 @@ html, body {
 /* Personal Progress: slightly tilted, bottom edge torn out of a notebook.
    The tear is a strip in the card's own color shaped by an irregular
    polygon (uneven teeth on purpose, so it doesn't read as a stamp edge). */
+/* room between the launch button's hard shadow and the washi tape that
+   pokes up above the next card */
+.page-home .home-launch { margin-bottom: 10px; }
 .page-home .progress-card {
   --paper-tilt: -0.6deg;
   border-bottom-color: transparent;
@@ -956,6 +952,7 @@ html, body {
 /* certificate = Home's launch button; the Thai name must not use Poppins
    (no Thai glyphs → random system fallback) */
 .page-shop .shop-cert { margin-top: 14px; }
+.page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
 .page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
 .page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
 .page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
@@ -1095,7 +1092,6 @@ html, body {
   display: flex; width: auto; margin: 16px auto 0;
   border: 1.5px solid var(--sb-red); border-radius: 3px; background: transparent;
 }
-.page-me #logout-btn .glow,
 .page-me #logout-btn .body::before { display: none; }
 .page-me #logout-btn .body { padding: 9px 22px; border-radius: 3px; background: transparent; box-shadow: none; }
 .page-me #logout-btn .label { font-size: 14px; color: var(--sb-red); text-shadow: none; }
@@ -1119,8 +1115,7 @@ html, body {
   border-radius: 0; background: transparent; padding-left: 2px;
   border-bottom: 1px dashed rgba(26,31,51,.18);
 }
-.page-scan .btn-primary .body,
-.page-scan .btn-primary .glow { border-radius: 10px; }
+.page-scan .btn-primary .body { border-radius: 10px; }
 .page-scan .btn-primary .body::before { border-radius: 6px; }
 
 @variant lg {

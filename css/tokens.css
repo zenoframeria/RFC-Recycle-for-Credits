@@ -30,11 +30,13 @@
 
   /* role accent: blue by default, red on the admin login */
   --accent: var(--sb-blue);
+  --accent-deep: var(--sb-blue-deep); /* hard "printed" shadow under accent buttons */
   --bg-tint2: var(--sb-blue-mist);
 }
 
 body[data-role="admin"] {
   --accent: var(--sb-red);
+  --accent-deep: #8C2E26;
   --bg-tint2: #E8C4BF;
 }
 
@@ -57,13 +59,8 @@ body {
   color: var(--sb-ink);
 }
 
-@keyframes sbglow {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.06); }
-}
-
-/* respect the OS "reduce motion" setting: stop the looping sbglow pulses
-   and make hover/tap transitions effectively instant */
+/* respect the OS "reduce motion" setting: stop animations and make
+   hover/tap transitions effectively instant */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;

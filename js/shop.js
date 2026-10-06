@@ -128,7 +128,6 @@ function renderCert() {
   // exact match), star instead of camera; the yellow arrow is the redeem button.
   document.getElementById('shop-cert').innerHTML = items.map((item) => `
     <div class="launch-btn shop-cert">
-      <div class="launch-glow"></div>
       <div class="launch-body">
         <div class="camera-disc" aria-hidden="true">
           <svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 3l2.4 5.5 6 .5-4.5 4 1.4 6-5.3-3.2L6.7 19l1.4-6L3.6 9l6-.5z" fill="none" stroke="var(--sb-ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>

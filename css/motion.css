@@ -53,12 +53,12 @@
 }
 
 /* 4. press feedback for the buttons that didn't have any yet */
-.btn-primary:not(:disabled):active,
+/* (.btn-primary has its own "sink into the shadow" press in components.css) */
 .icon-btn:active,
 .admin-tab:active,
 .activity-tab:active,
 .side-report:active { scale: 0.96; }
-.btn-primary, .icon-btn, .side-report { transition: scale 0.12s ease; }
+.icon-btn, .side-report { transition: scale 0.12s ease; }
 /* these two already animate colors: keep those, add scale */
 .admin-tab { transition: border-color 0.15s, background 0.15s, scale 0.12s ease; }
 .activity-tab { transition: color 0.15s ease, border-color 0.15s ease, scale 0.12s ease; }

@@ -126,7 +126,9 @@
   color: rgba(26,31,51,0.55);
 }
 
-/* primary call-to-action button (login submit / scan button) */
+/* primary call-to-action button (login submit / scan button).
+   "Printed ticket" look: flat ink fill + a hard offset shadow, no glow —
+   pressing sinks the body into its shadow. */
 .btn-primary {
   width: 100%;
   border: none;
@@ -135,33 +137,29 @@
   padding: 0;
   background: transparent;
 }
-.btn-primary .glow {
-  position: absolute;
-  inset: -3px;
-  border-radius: 18px;
-  background: radial-gradient(ellipse, rgba(242,200,75,0.35) 0%, transparent 70%);
-  filter: blur(6px);
-  animation: sbglow 3s ease-in-out infinite;
-  pointer-events: none;
-}
 .btn-primary .body {
   position: relative;
   padding: 14px 16px;
   border-radius: 16px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 6px 18px rgba(30,58,138,0.35), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -3px 0 rgba(0,0,0,0.18);
+  background: var(--accent);
+  box-shadow: 3px 4px 0 var(--accent-deep);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-primary:not(:disabled):active .body {
+  transform: translate(2px, 3px);
+  box-shadow: 1px 1px 0 var(--accent-deep);
 }
 .btn-primary .body::before {
   content: '';
   position: absolute;
   inset: 5px;
   border-radius: 12px;
-  border: 1px dashed rgba(242,200,75,0.35);
+  border: 1px dashed rgba(242,200,75,0.55);
   pointer-events: none;
 }
 .btn-primary .label {
@@ -171,10 +169,8 @@
   font-size: 18px;
   color: var(--sb-cream);
   letter-spacing: 0.04em;
-  text-shadow: 0 0 10px rgba(242,200,75,0.35);
 }
 .btn-primary:disabled { cursor: default; opacity: 0.55; }
-.btn-primary:disabled .glow { display: none; }
 
 /* secondary/outline button (e.g. attach-photo) */
 .btn-secondary {

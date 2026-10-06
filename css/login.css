@@ -34,12 +34,6 @@
 .logo-block { text-align: center; margin-top: 20px; margin-bottom: 28px; }
 
 .logo-wrap { position: relative; width: 96px; height: 96px; margin: 0 auto; }
-.logo-glow {
-  position: absolute; inset: -10px; border-radius: 999px;
-  background: radial-gradient(circle, rgba(242,200,75,0.35) 0%, transparent 70%);
-  filter: blur(8px);
-  animation: sbglow 2.6s ease-in-out infinite;
-}
 .logo-ring {
   position: absolute; inset: -4px; border-radius: 999px;
   border: 1px dashed var(--accent);
@@ -48,10 +42,10 @@
 .logo-body {
   position: relative;
   width: 96px; height: 96px; border-radius: 999px;
-  background: linear-gradient(180deg, var(--accent), var(--sb-blue-deep));
+  background: var(--accent);
   border: 2px solid var(--sb-cream);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 22px rgba(30,58,138,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 3px 4px 0 var(--accent-deep);
 }
 
 .tagline-script {
@@ -173,8 +167,7 @@
 .app-shell .auth-tabs { border-radius: 3px; }
 .app-shell .auth-tab { border-radius: 2px; }
 .app-shell .field-box { border-radius: 3px; }
-.app-shell .btn-primary .body,
-.app-shell .btn-primary .glow { border-radius: 10px; }
+.app-shell .btn-primary .body { border-radius: 10px; }
 .app-shell .btn-primary .body::before { border-radius: 6px; }
 .app-shell .chip { border-radius: 2px; }
 .app-shell .login-error,
