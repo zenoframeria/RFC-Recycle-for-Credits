@@ -393,3 +393,23 @@ Found while reviewing "can a friend get in without logging in?". Reading data wi
 ---
 
 This uses fake data in `data.js` (no real backend yet, migrating per the plan above); the admin dashboard is still an intentional 'coming soon' placeholder, but Shop/Rank/Me/Scan are all real pages now (see Phase 3 and Phase 4 notes above) — and I'm a beginner learning as we go — explain things simply in future sessions, and don't skip ahead to code I haven't asked for yet.
+## UI review follow-ups (2026-10-06 → 10-07) — friend's UI review + "looks AI-made" pass
+
+**Shipped to `main`:** 44px touch targets; colour emoji → SVG; every input 16px (iPhone zoom); Thai notes 11 → 12.5px, reject reason 13px; `.btn-secondary` labels in the Thai face; "printed ticket" buttons (flat fill + hard `--accent-deep` shadow, no glow, press sinks); Thai font Sarabun → **Prompt** (English stays Poppins; every token is `'Poppins', 'Prompt'`); Home: "let's go ★" no longer tilted, Personal Progress card straight with a **handmade-paper (deckle) edge on all four sides** (polygon generated once from a fixed seed; the shadow is a drop-shadow on `.home-progress`).
+
+**Declined from the review (don't re-propose):** weight quick-add buttons (+0.5/+1 kg) — students must type the scale's exact reading to match the photo; yellow-on-navy contrast (it's ~7:1, fine); widening desktop pages.
+
+**Tried live and rejected (don't re-add):**
+- Plain background without the blue/yellow glow blobs — the owner's friend likes the current background; keep it.
+- Removing the "Title · Thai sub" headings / "let's go ★" / "The Launch Pad" — not the core problem.
+- Trimming decorations (no tapes / no notebook holes / no torn edge).
+- A "no boxes" Home (big left-aligned number + straight progress bar, ruled list) — lost the scrapbook feel; the ring stays.
+- A scrapbook remix (ring as a round sticker on the right, Scan as a notched ticket, lined notebook sheet) — "weird".
+- A compact (smaller) Launch button — too small; the cramped feel was the next card's tape, fixed with spacing.
+- Torn edge on the bottom only (any style) — looks fake; all four sides is what reads as real paper.
+- Washi tape: plain translucent, light-blue, masking, printed "♻ ขยะแลกแต้ม" text (ugly), bold gingham (off-theme).
+
+**Parked — the owner liked these, build only when asked:**
+- **Tape "G":** graph-paper washi — same thin grid as the page background — with hand-stuck shapes (one end wider, wobbly edges, torn ends, each piece different). Recipe: `background-color: rgba(248,226,154,.8)` (yellow) / `rgba(169,196,232,.85)` (the navy tape becomes light blue); `background-image: linear-gradient(rgba(30,58,138,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(30,58,138,.22) 1px, transparent 1px); background-size: 6px 6px; mix-blend-mode: multiply; box-shadow: none; filter: drop-shadow(0 1px 0 rgba(0,0,0,.07))`; shape = an irregular `clip-path: polygon(...)` with ~15 points (2–6% jitter on the ends, slight wobble top/bottom), a different one per tape; sizes ~52–60 × 17–18px.
+- **Direction A, "recycled-paper stationery":** keep the background and layout; paper surfaces (Home progress card paper, history card, polaroid frame) become recycled paper — same cream `#F3EDDF` plus two SVG-noise layers: sparse brown specks (`feTurbulence fractalNoise baseFrequency .9 numOctaves 2`, colour matrix to brown `.40 .32 .22`, alpha `-2.6 1.55`, then `feFuncA discrete` keeping only the top ~10%, max alpha .45; tile 240px) and faint horizontal fibres (`baseFrequency .012 .18 numOctaves 3`, alpha `.22 -.06`; tile 300px). The first try was far too strong (read as sandpaper/wood) — keep it subtle. Pairs with tape G. Yellow = the Thai recyclable-bin colour, so it can carry meaning. A kraft variant (`#E9DCC2`) was heavier and clashed with the cream ring centre.
+- **Direction B (not previewed):** one colour per waste category (paper = kraft, PET = clear blue, can = silver, glass = green) used consistently on Scan chips, activity rows and tapes. Revisit when reworking Scan.

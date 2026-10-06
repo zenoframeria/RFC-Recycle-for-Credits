@@ -79,6 +79,7 @@ Storage:
 ## Styling
 
 - Each page links one built bundle: `css/build/student.css` (Home/Shop/Rank/Scan/Me), `admin.css`, `login.css`, built from `css/entry-*.css`. Edit the sources in `css/`: `tokens.css` (colours, fonts, `--accent` blue → red under `body[data-role="admin"]`, reduced-motion rule), `components.css`, `dashboard.css` (all student pages), `admin.css`, `login.css`, `layout.css` (sidebar shell), `motion.css`. Cascade layers: tokens → base; legacy CSS → components; Tailwind utilities win. No Tailwind preflight.
+- Fonts: Poppins (English/numbers) + Prompt (Thai) — every font token is `'Poppins', 'Prompt'`, so Latin always comes from Poppins.
 - Look: **"real paper" scrapbook** — 3px corners, flat paper shadows, washi tape, rubber stamps, torn edges, ticket notches. Match it; don't introduce a new visual language. Many motifs were tried and rejected — check `docs/history.md` before re-adding one.
 - Mobile-first: < 768px a centred phone card with the bottom nav docked; from `md` (768) a left sidebar (icon-only at md, labels from `lg` 1024); page classes `page-home/shop/rank/scan/me`; ≥ 1600px content zooms 1.18. Login pages: full-bleed from `md`, form centred at 460px.
 - Copy is bilingual on purpose: English headings/game words, Thai descriptions/instructions.
@@ -106,6 +107,7 @@ Deferred on purpose — don't build unless asked:
 - Bulk approve, cleanup of old rejected photos, expiring receipts nobody picked up.
 - More Realtime. Only Home subscribes today; free tier = 200 concurrent connections. If ever needed, the one worth doing is the admin Review feed (a "N new — tap to load" bar + drop cards other admins already handled) — not Shop/Rank/Pickups.
 - Minimum weight 0.05 kg is enforced client-side only.
+- Parked looks the owner liked but said "not yet": graph-paper washi tape ("G") and a recycled-paper texture for paper surfaces ("direction A"). Recipes + the list of rejected UI experiments are in `docs/history.md` → "UI review follow-ups". Build only when asked.
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
 
