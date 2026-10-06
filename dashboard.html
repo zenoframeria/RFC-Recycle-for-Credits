@@ -142,6 +142,9 @@
         <button class="history-toggle" id="pending-toggle" hidden>แสดงเพิ่มเติม</button>
       </div>
       <div class="activity-panel" id="panel-rejected" hidden>
+        <div class="rejected-actions" id="rejected-actions" hidden>
+          <button type="button" class="notif-clear" id="rejected-clear">ล้างทั้งหมด</button>
+        </div>
         <div class="history-list" id="rejected-list"></div>
         <button class="history-toggle" id="rejected-toggle" hidden>แสดงเพิ่มเติม</button>
       </div>
@@ -194,6 +197,19 @@
   <div class="modal-card modal-card--photo">
     <button class="modal-close" id="lightbox-close" aria-label="ปิด">×</button>
     <img id="lightbox-img" class="lightbox-img" alt="รูปหลักฐานที่ถูกปฏิเสธ" src="">
+  </div>
+</div>
+
+<div class="modal-overlay" id="clear-rejected-confirm">
+  <div class="modal-card redeem-confirm-card" role="dialog" aria-modal="true" aria-labelledby="clear-rejected-title">
+    <button class="modal-close" id="clear-rejected-close" aria-label="ปิด">×</button>
+    <div class="redeem-confirm-kicker">ยืนยันการล้าง</div>
+    <div class="redeem-confirm-name" id="clear-rejected-title">ลบรายการที่ถูกปฏิเสธทั้งหมด <span id="clear-rejected-count">0</span> รายการ?</div>
+    <div class="redeem-confirm-warning">⚠️ รวมรายการที่เก่ากว่า 7 วันด้วย ลบแล้วรูปหลักฐานหายถาวร กู้คืนไม่ได้ และใช้โต้แย้งกับแอดมินไม่ได้อีก</div>
+    <div class="redeem-confirm-actions">
+      <button type="button" class="redeem-confirm-cancel" id="clear-rejected-cancel">ยกเลิก</button>
+      <button type="button" class="redeem-confirm-ok is-danger" id="clear-rejected-ok">ลบทั้งหมด</button>
+    </div>
   </div>
 </div>
 

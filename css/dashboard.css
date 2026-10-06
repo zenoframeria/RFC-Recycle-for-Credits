@@ -786,6 +786,8 @@ html, body {
 .activity-tab:active { opacity: 0.7; }
 
 .activity-panel[hidden] { display: none; }
+.rejected-actions { display: flex; justify-content: flex-end; padding-top: 6px; }
+.rejected-actions[hidden] { display: none; }
 
 .history-list { display: flex; flex-direction: column; }
 .history-row { padding: 12px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
@@ -1076,6 +1078,8 @@ html, body {
 .redeem-confirm-cancel { background: transparent; border: 1.5px solid rgba(26,31,51,0.3); color: var(--sb-ink); }
 .redeem-confirm-ok { background: var(--accent); border: 1.5px solid var(--accent); color: var(--sb-cream); }
 .redeem-confirm-ok:disabled { opacity: .55; cursor: default; }
+/* same pop-up reused on Home for "clear rejected" — red, since it deletes */
+.redeem-confirm-ok.is-danger { background: var(--sb-red); border-color: var(--sb-red); }
 
 @variant lg {
   .page-shop { --content-max: 960px; }

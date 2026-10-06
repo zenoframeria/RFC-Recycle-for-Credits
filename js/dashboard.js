@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireFeedbackButtons(currentUser);
   wireActivityTabs();
   wireLightbox();
+  wireClearRejected(currentUser.id);
   wireNicknameEdit(currentUser);
 
   await Promise.all([
@@ -260,23 +261,24 @@ function renderPendingRow(row) {
 
 // ── recent activity: rejected tab ────────────────────────────────────
 // Rejected submissions keep their photo (per CLAUDE.md's photo-lifecycle
-// rule), and only stay visible in this tab for 7 days — the row itself is
-// untouched in the DB, this is a display-only cutoff enforced at query time.
+// rule) until the student presses "ล้างทั้งหมด". The list only shows the
+// last 7 days (display-only cutoff), but every rejected row is loaded so the
+// clear button also appears — and clears — when only older ones are left.
 async function loadRejectedTab(userId) {
   const listEl = document.getElementById('rejected-list');
   const toggleEl = document.getElementById('rejected-toggle');
+  const actionsEl = document.getElementById('rejected-actions');
 
-  const cutoff = new Date(Date.now() - REJECTED_VISIBLE_DAYS * 24 * 60 * 60 * 1000).toISOString();
   const { data, error } = await supabaseClient
     .from('submissions')
     .select(`id, created_at, weight_kg, comment, photo_url, waste_categories ( name )`)
     .eq('user_id', userId)
     .eq('status', 'rejected')
-    .gte('created_at', cutoff)
     .order('created_at', { ascending: false });
 
   listEl.innerHTML = '';
   toggleEl.hidden = true;
+  actionsEl.hidden = true;
 
   if (error) {
     listEl.innerHTML = '<div class="history-empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
@@ -284,7 +286,11 @@ async function loadRejectedTab(userId) {
     return;
   }
 
-  const rows = data || [];
+  const allRows = data || [];
+  actionsEl.hidden = !allRows.length;
+
+  const cutoff = Date.now() - REJECTED_VISIBLE_DAYS * 24 * 60 * 60 * 1000;
+  const rows = allRows.filter((r) => new Date(r.created_at).getTime() >= cutoff);
   if (!rows.length) {
     listEl.innerHTML = '<div class="history-empty">ไม่มีรายการที่ถูกปฏิเสธในช่วง 7 วันที่ผ่านมา</div>';
     return;
@@ -335,6 +341,111 @@ function renderRejectedRow(row) {
       </div>
     </div>
   `;
+}
+
+// ── rejected tab: "ล้างทั้งหมด" ──────────────────────────────────────
+// Deletes every rejected submission of this student (old ones too) —
+// photo first through the Storage API, then the rows via
+// clear_my_rejected() (sql/clear-rejected.sql). A row is only deleted once
+// its photo is really gone, so a failed photo delete never leaves an
+// orphaned file nobody can find.
+const clearRejectedState = { rows: [] };
+
+function wireClearRejected(userId) {
+  const overlay = document.getElementById('clear-rejected-confirm');
+  const close = () => overlay.classList.remove('open');
+
+  document.getElementById('rejected-clear').addEventListener('click', () => openClearRejected(userId));
+  document.getElementById('clear-rejected-close').addEventListener('click', close);
+  document.getElementById('clear-rejected-cancel').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
+  document.getElementById('clear-rejected-ok').addEventListener('click', () => confirmClearRejected(userId));
+}
+
+async function openClearRejected(userId) {
+  // fresh list at click time — the tab may be stale
+  const { data, error } = await supabaseClient
+    .from('submissions')
+    .select('id, photo_url')
+    .eq('user_id', userId)
+    .eq('status', 'rejected');
+
+  if (error) {
+    console.error('openClearRejected failed', error);
+    showToast('โหลดข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง');
+    return;
+  }
+
+  clearRejectedState.rows = data || [];
+  if (!clearRejectedState.rows.length) {
+    loadRejectedTab(userId);
+    return;
+  }
+
+  const okBtn = document.getElementById('clear-rejected-ok');
+  okBtn.disabled = false;
+  okBtn.textContent = 'ลบทั้งหมด';
+  document.getElementById('clear-rejected-count').textContent = clearRejectedState.rows.length;
+  document.getElementById('clear-rejected-confirm').classList.add('open');
+}
+
+async function confirmClearRejected(userId) {
+  const rows = clearRejectedState.rows;
+  if (!rows.length) return;
+
+  const okBtn = document.getElementById('clear-rejected-ok');
+  okBtn.disabled = true; // a double-tap must not run the delete twice
+  okBtn.textContent = 'กำลังลบ...';
+
+  const gone = await removeRejectedPhotos(userId, rows);
+  const ids = rows.filter((r) => !r.photo_url || gone.has(r.photo_url)).map((r) => r.id);
+
+  let failed = ids.length < rows.length;
+  if (ids.length) {
+    const { error } = await supabaseClient.rpc('clear_my_rejected', { p_ids: ids });
+    if (error) {
+      console.error('clear_my_rejected failed', error);
+      failed = true;
+    }
+  }
+
+  clearRejectedState.rows = [];
+  document.getElementById('clear-rejected-confirm').classList.remove('open');
+  // the bell lists rejected rows too
+  await Promise.all([loadRejectedTab(userId), loadNotifications(userId)]);
+  showToast(failed ? 'ลบได้ไม่ครบ ลองกดล้างอีกครั้ง' : 'ล้างรายการที่ถูกปฏิเสธแล้ว 🧹');
+}
+
+// Returns the photo paths that are now gone from Storage: removed just
+// now, or already missing (an earlier clear removed the photo but failed
+// before deleting its row).
+async function removeRejectedPhotos(userId, rows) {
+  const gone = new Set();
+  const paths = rows.map((r) => r.photo_url).filter(Boolean);
+  if (!paths.length) return gone;
+
+  const { data, error } = await supabaseClient.storage.from('submissions').remove(paths);
+  if (error) console.error('remove rejected photos failed', error);
+  (data || []).forEach((file) => gone.add(file.name));
+
+  const leftover = paths.filter((p) => !gone.has(p));
+  if (!leftover.length) return gone;
+
+  // Storage reports a blocked delete and an already-missing file the same
+  // way (just absent from `data`), so check which leftovers still exist.
+  const { data: files, error: listError } = await supabaseClient
+    .storage.from('submissions')
+    .list(userId, { limit: 1000 });
+  if (listError) {
+    console.error('list submission photos failed', listError);
+    return gone;
+  }
+  const existing = new Set((files || []).map((f) => `${userId}/${f.name}`));
+  leftover.filter((p) => !existing.has(p)).forEach((p) => gone.add(p));
+  return gone;
 }
 
 function wireActivityTabs() {
