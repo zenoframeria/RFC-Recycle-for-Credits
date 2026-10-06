@@ -75,19 +75,17 @@ function wireWeightInput() {
 // Enforces a flat minimum weight per submission across all categories, so
 // splitting one weighing into several tiny submissions can't out-earn
 // submitting it as one (points round per-submission, see CLAUDE.md).
-// Also gates the photo trigger so a student can't attach/upload a photo
-// for a submission that's about to be rejected anyway.
+// The three fields can be filled in any order — only the submit button
+// waits for all of them (refreshConfirmState).
 function validateWeight() {
   const weight = parseFloat(document.getElementById('weight-input').value);
   const errorEl = document.getElementById('weight-error');
-  const trigger = document.getElementById('photo-trigger');
   const belowMin = weight > 0 && weight < MIN_WEIGHT_KG;
 
   errorEl.textContent = belowMin
     ? `น้ำหนักต้องอย่างน้อย ${MIN_WEIGHT_KG} กก. (${Math.round(MIN_WEIGHT_KG * 1000)} กรัม) ต่อการส่งหนึ่งครั้ง`
     : '';
   errorEl.hidden = !belowMin;
-  trigger.disabled = !(weight >= MIN_WEIGHT_KG);
 
   return weight >= MIN_WEIGHT_KG;
 }
@@ -125,7 +123,7 @@ function wirePhotoInput() {
       scanState.photoBlob = null;
       showToast('แนบรูปไม่สำเร็จ ลองใหม่อีกครั้ง');
     } finally {
-      validateWeight();
+      trigger.disabled = false;
       triggerLabel.textContent = scanState.photoBlob ? 'เปลี่ยนรูป' : 'แนบรูปถ่าย';
       refreshConfirmState();
     }
