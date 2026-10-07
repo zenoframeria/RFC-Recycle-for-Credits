@@ -251,7 +251,7 @@ html, body {
   display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-left: 4px;
 }
 .section-heading .icon { flex-shrink: 0; display: flex; }
-.section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; }
+.section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 .section-heading .sub { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); }
 .section-heading.lg .title { font-size: 18px; }
 
@@ -449,7 +449,7 @@ html, body {
 .notif-wrap { position: relative; }
 .notif-panel {
   position: absolute; top: calc(100% + 10px); right: -6px; z-index: 40;
-  width: 260px; max-width: 78vw;
+  width: 300px; max-width: calc(100vw - 32px);
   background: var(--sb-paper); border-radius: 16px;
   border: 1px solid rgba(26,31,51,0.12);
   box-shadow: 0 14px 30px rgba(20,30,60,0.22), inset 0 1px 0 rgba(255,255,255,0.7);
@@ -462,7 +462,7 @@ html, body {
 .notif-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .notif-panel-heading { display: flex; align-items: baseline; gap: 5px; padding: 0 2px 10px; }
 .notif-panel-heading .title { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 14px; color: var(--accent); }
-.notif-panel-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.5); }
+.notif-panel-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.5); white-space: nowrap; }
 .notif-list { display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; }
 .notif-item { display: flex; gap: 8px; padding: 8px; border-radius: 10px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.07); }
 .notif-item .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 5px var(--accent); }
@@ -570,13 +570,14 @@ html, body {
   white-space: pre-line;
 }
 
-.stationery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* minmax(0, …): with plain 1fr the columns grew past the card on a 360px phone */
+.stationery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; }
 .stationery-top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .stationery-top .item-medallion { width: 44px; height: 44px; }
 .stationery-top .item-medallion svg { width: 20px; height: 20px; }
 .stationery-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.stationery-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.stationery-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
 
 /* price pill — same shape language as .redeem-btn / .balance-chip, replacing
    the old circular .price-badge (a 4-digit cost like "3,200 pts" wrapped
@@ -927,7 +928,7 @@ html, body {
 .notif-clear {
   margin-left: auto; padding: 2px 4px; border: none; background: none; cursor: pointer;
   font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--sb-red);
-  text-decoration: underline; text-underline-offset: 2px;
+  text-decoration: underline; text-underline-offset: 2px; white-space: nowrap;
 }
 .notif-clear[hidden] { display: none; }
 .notif-rejected { font-weight: 600; color: var(--sb-red); }
@@ -982,7 +983,8 @@ html, body {
    (no Thai glyphs → random system fallback) */
 .page-shop .shop-cert { margin-top: 14px; }
 .page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
-.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
+/* Prompt is wide: shrink a little on small phones so "แลกเกียรติบัตร" stays one word */
+.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; font-size: clamp(18px, 5.6vw, 24px); white-space: nowrap; }
 .page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
 .page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
 
