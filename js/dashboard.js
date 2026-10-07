@@ -7,7 +7,9 @@
 //
 // Recent Activity only ever shows pending/rejected submissions (tabbed);
 // the notification bell lists every reviewed submission (approved +
-// rejected) with an unread count, and updates live via Supabase Realtime.
+// rejected) plus every Shop reward an admin has handed over, with an unread
+// count. Reviews update live via Supabase Realtime; handed-over rewards show
+// on the next Home load (redemptions isn't in the Realtime publication).
 
 const STATUS_LABEL = {
   approved: 'อนุมัติแล้ว',
@@ -516,10 +518,11 @@ function wireLightbox() {
   });
 }
 
-// ── notification bell: reviewed submissions (approved + rejected) ────
+// ── notification bell: reviewed submissions (approved + rejected) and
+//    handed-over Shop rewards ───────────────────────────────────────────
 // "Seen" and "cleared" are two timestamps on the student's own profiles
 // row (sql/notifications.sql), so they carry across devices. The badge
-// counts reviews after notif_seen_at; the list hides reviews before
+// counts items after notif_seen_at; the list hides items before
 // notif_cleared_at.
 const notifState = { unread: 0, loadId: 0 };
 
@@ -548,8 +551,26 @@ async function loadNotifications(userId) {
     .not('reviewed_at', 'is', null)
     .order('reviewed_at', { ascending: false });
   if (clearedAt) query = query.gt('reviewed_at', clearedAt);
-  const { data, error } = await query;
+
+  // Shop rewards an admin has handed over (Pickups tab → "มอบแล้ว")
+  let pickupQuery = supabaseClient
+    .from('redemptions')
+    .select('id, item_name, picked_up_at')
+    .eq('user_id', userId)
+    .eq('status', 'picked_up')
+    .not('picked_up_at', 'is', null);
+  if (clearedAt) pickupQuery = pickupQuery.gt('picked_up_at', clearedAt);
+
+  const [{ data: reviews, error }, { data: pickups, error: pickupError }] =
+    await Promise.all([query, pickupQuery]);
   if (loadId !== notifState.loadId) return;
+  if (pickupError) console.error('loadNotifications pickups failed', pickupError);
+
+  // one list, newest first; `at` is when it happened
+  const data = reviews && [
+    ...reviews.map((r) => ({ ...r, kind: 'review', at: r.reviewed_at })),
+    ...(pickups || []).map((p) => ({ ...p, kind: 'pickup', at: p.picked_up_at })),
+  ].sort((a, b) => new Date(b.at) - new Date(a.at));
 
   listEl.innerHTML = '';
   toggleEl.hidden = true;
@@ -562,7 +583,7 @@ async function loadNotifications(userId) {
 
   const rows = data || [];
   clearBtn.hidden = !rows.length;
-  setUnread(rows.filter((r) => !seenAt || new Date(r.reviewed_at) > seenAt).length);
+  setUnread(rows.filter((r) => !seenAt || new Date(r.at) > seenAt).length);
 
   // a review arrived while the panel is open — the student is looking at it
   if (notifState.unread && document.getElementById('notif-panel').classList.contains('open')) {
@@ -597,6 +618,17 @@ async function markNotificationsSeen() {
 }
 
 function renderNotifRow(row) {
+  if (row.kind === 'pickup') {
+    return `
+      <div class="notif-item">
+        <div class="content">
+          <div class="text">มอบ${escapeHtml(row.item_name || '-')}ให้แล้ว <span class="notif-points">${receiptCode(row.id)}</span></div>
+          <div class="time">${formatDateTime(row.picked_up_at)}</div>
+        </div>
+      </div>
+    `;
+  }
+
   const category = escapeHtml(row.waste_categories?.name || '-');
   const when = formatDateTime(row.reviewed_at);
 
