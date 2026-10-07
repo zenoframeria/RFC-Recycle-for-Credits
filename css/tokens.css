@@ -4,7 +4,8 @@
   /* colors (from the Claude Design "SB" palette) */
   --sb-cream: #F5EFE0;
   --sb-cream2: #EDE3CC;
-  --sb-paper: #FBF7EC;
+  --sb-white: #FEFAEF; /* "floral white" — the site's only white; never use pure #fff */
+  --sb-paper: var(--sb-white); /* cards / panels / inputs — was #FBF7EC, now the same floral white */
   --sb-blue: #1E3A8A;
   --sb-blue-deep: #0F2461;
   --sb-blue-soft: #A9C4E8;

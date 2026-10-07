@@ -9,14 +9,39 @@
 .admin-header .admin-name { font-family: var(--font-thai-serif); font-size: 19px; font-weight: 600; margin-top: 2px; }
 .admin-logout-btn { flex-shrink: 0; margin-top: 4px; }
 
-.admin-tabs { display: flex; gap: 8px; padding: 16px 18px 0; }
+/* Tabs (2026-10-07): same look as the student nav — icon + label, active =
+   filled icon + bold label in the accent red, the rest grey outlines, no
+   animation. Phones: a floating pill at the bottom (4 even tabs, no centre
+   ball). md+: rows in the sidebar (layout.css). */
+.admin-tabs { display: flex; }
 .admin-tab {
-  flex: 1; border: 1.5px solid rgba(26,31,51,0.12); border-radius: 12px; padding: 9px 10px;
-  background: var(--sb-cream2); cursor: pointer; text-align: center;
-  font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink);
-  transition: border-color 0.15s, background 0.15s;
+  flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border: none; background: none; padding: 4px 2px; cursor: pointer;
+  color: rgba(26,31,51,0.42);
 }
-.admin-tab.active { border-color: var(--accent); background: var(--sb-paper); color: var(--accent); }
+.admin-tab .label { font-family: var(--font-display); font-size: 11.5px; font-weight: 500; }
+.admin-tab.active { color: var(--accent); }
+.admin-tab.active .label { font-weight: 700; }
+/* filled icon on the active tab; inner details drawn in the panel colour */
+.admin-tab.active[data-panel="feed-panel"] svg :is(rect, path:nth-child(2)),
+.admin-tab.active[data-panel="price-panel"] svg path,
+.admin-tab.active[data-panel="shop-panel"] svg :is(path:nth-child(1), path:nth-child(2), path:nth-child(5)),
+.admin-tab.active[data-panel="pickup-panel"] svg path:nth-child(2) { fill: currentColor; }
+.admin-tab.active[data-panel="feed-panel"] svg path:nth-child(3),
+.admin-tab.active[data-panel="shop-panel"] svg :is(path:nth-child(3), path:nth-child(4)),
+.admin-tab.active[data-panel="pickup-panel"] svg :is(path:nth-child(3), polyline, line) { stroke: var(--sb-white); }
+.admin-tab.active[data-panel="price-panel"] svg circle { fill: var(--sb-white); stroke: var(--sb-white); }
+
+@media (max-width: 767.98px) {
+  .admin-tabs {
+    position: fixed; z-index: 20; left: 50%; transform: translateX(-50%);
+    bottom: calc(26px + env(safe-area-inset-bottom));
+    width: calc(100% - 32px); max-width: 420px;
+    padding: 9px 14px; min-height: 70px; border-radius: 999px;
+    background: var(--sb-white);
+    box-shadow: 0 14px 34px rgba(20,30,60,0.16), 0 2px 6px rgba(20,30,60,0.06);
+  }
+}
 
 .admin-panel { display: none; }
 .admin-panel.active { display: block; }
@@ -27,7 +52,7 @@
 .feed-card-student { font-family: var(--font-thai-serif); font-weight: 600; font-size: 14px; color: var(--sb-ink); }
 .feed-card-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.5); text-align: right; }
 
-.feed-card-photo { width: 100%; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; cursor: zoom-in; background: var(--sb-cream2); min-height: 140px; object-fit: cover; }
+.feed-card-photo { width: 100%; border-radius: 12px; border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; cursor: zoom-in; background: var(--sb-cream2); min-height: 140px; object-fit: cover; }
 
 .feed-card-info { display: flex; flex-direction: column; margin-top: 10px; }
 .feed-card-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }

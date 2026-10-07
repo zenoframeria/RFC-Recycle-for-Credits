@@ -62,20 +62,19 @@
 
   .toast { left: calc(50% + var(--sidebar-w) / 2); }
 
+  /* the column stays --sidebar-w wide; the panel floats 16px in from the
+     top, left and bottom edges (same floating look as the phone pill) */
   .bottom-nav-wrap {
     top: 0; bottom: 0; left: 0;
     transform: none;
     width: var(--sidebar-w); max-width: none;
-    padding: 0;
+    padding: 16px 0 calc(16px + env(safe-area-inset-bottom)) 16px;
   }
-  /* docked to the left edge (not a floating panel), same idea as the phone bar */
   .bottom-nav {
     height: 100%;
     flex-direction: column; align-items: center; justify-content: flex-start;
     gap: 4px; padding: 16px 8px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    border-top: none; border-right: 1.5px solid rgba(26,31,51,0.18);
-    box-shadow: 3px 0 0 rgba(26,31,51,0.05);
+    border-radius: 28px;
     overflow-y: auto;
   }
   .side-brand, .side-divider { display: flex; }
@@ -87,7 +86,7 @@
   .side-brand-text { display: inline; position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
   /* Scan: no longer raised above a bar — sits after "me" as the big CTA */
-  .bottom-nav .nav-item--fab { order: 1; width: 54px; margin-top: 10px; padding: 0; }
+  .bottom-nav .nav-item--fab { order: 1; width: 54px; height: 54px; margin-top: 10px; padding: 0; border-radius: 999px; }
 }
 
 @variant lg {
@@ -104,7 +103,8 @@
 
   .bottom-nav .nav-item--fab {
     width: auto; height: auto; padding: 14px 16px; margin-top: 12px;
-    border-radius: 10px; justify-content: flex-start;
+    justify-content: flex-start;
+    background: linear-gradient(180deg, #3453B4 0%, var(--sb-blue) 55%, var(--sb-blue-deep) 100%);
   }
   .bottom-nav .nav-item--fab .label { color: var(--sb-cream); font-weight: 700; }
 
@@ -117,26 +117,32 @@
 .header-report { align-self: flex-start; flex-shrink: 0; color: var(--sb-red); margin-right: -6px; }
 
 /* ── admin console (admin-review.html) ───────────────────────────
-   Phones: header + tabs across the top, unchanged. md+: the same
-   elements become a fixed sidebar — name at top, Review/Prices/Shop
-   stacked, logout pinned to the bottom. Tabs have text labels only (no
-   icons), so admin gets the wide sidebar from md, not an icon strip. */
+   Phones: header at the top, tabs in a floating pill at the bottom
+   (admin.css). md+: the same elements become a floating sidebar styled
+   like the student one — name at top, a dashed line, the 4 tabs as
+   icon + label rows, logout pinned to the bottom. Wide from md (labels
+   always shown), not an icon strip. */
 @variant md {
   body[data-role="admin"] { --sidebar-w: 232px; --content-max: 1100px; }
 
   .admin-side {
-    position: fixed; top: 14px; bottom: 14px; left: 14px; z-index: 20;
-    width: calc(var(--sidebar-w) - 14px);
+    position: fixed; top: 16px; bottom: 16px; left: 16px; z-index: 20;
+    width: calc(var(--sidebar-w) - 16px);
     display: flex; flex-direction: column;
     padding: 22px 14px 16px;
-    background: var(--sb-paper); border: 1px solid rgba(26,31,51,0.1); border-radius: 22px;
-    box-shadow: 0 10px 24px rgba(20,30,60,0.16), inset 0 1px 0 rgba(255,255,255,0.7);
+    background: var(--sb-white); border-radius: 28px;
+    box-shadow: 0 14px 34px rgba(20,30,60,0.16), 0 2px 6px rgba(20,30,60,0.06);
     overflow-y: auto;
   }
   /* let the header's two children (name block, logout) become direct
      flex items of the sidebar so logout can be pushed to the bottom */
   .admin-side .admin-header { display: contents; }
-  .admin-side .admin-tabs { order: 1; flex-direction: column; gap: 6px; padding: 18px 0 0; }
-  .admin-side .admin-tab { flex: none; text-align: left; padding: 11px 14px; }
+  .admin-side .admin-tabs {
+    order: 1; flex-direction: column; gap: 4px;
+    margin: 16px 4px 0; padding-top: 12px;
+    border-top: 1.5px dashed rgba(26,31,51,0.15); /* same divider as the student sidebar */
+  }
+  .admin-side .admin-tab { flex: none; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 14px; }
+  .admin-side .admin-tab .label { font-size: 14px; }
   .admin-side .admin-logout-btn { order: 2; margin-top: auto; align-self: flex-start; }
 }

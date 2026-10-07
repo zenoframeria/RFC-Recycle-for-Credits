@@ -34,18 +34,29 @@
 .logo-block { text-align: center; margin-top: 20px; margin-bottom: 28px; }
 
 .logo-wrap { position: relative; width: 96px; height: 96px; margin: 0 auto; }
-.logo-ring {
-  position: absolute; inset: -4px; border-radius: 999px;
-  border: 1px dashed var(--accent);
-  opacity: 0.35;
+/* Depth on the accent pieces (logo + submit button): a light→dark fill, a
+   thin top highlight, inner shade at the bottom, and a soft drop shadow
+   under the usual hard "printed" one. Light/dark shades per role. */
+body {
+  --accent-light: #3453B4;
+  --accent-dark: #172F72;
+  --accent-soft-shadow: rgba(15,36,97,0.28);
 }
+body[data-role="admin"] {
+  --accent-light: #D96455;
+  --accent-dark: #9E3328;
+  --accent-soft-shadow: rgba(140,46,38,0.28);
+}
+
 .logo-body {
   position: relative;
   width: 96px; height: 96px; border-radius: 999px;
-  background: var(--accent);
+  background: radial-gradient(circle at 32% 28%, var(--accent-light) 0%, var(--accent) 48%, var(--accent-dark) 100%);
   border: 2px solid var(--sb-cream);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 3px 4px 0 var(--accent-deep);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -6px 12px rgba(0,0,0,0.2),
+    3px 4px 0 var(--accent-deep), 0 10px 22px var(--accent-soft-shadow);
 }
 
 .tagline-script {
@@ -126,6 +137,9 @@
   color: #8C2E26;
   line-height: 1.4;
 }
+/* login tab: the banner sits under the password, where the student page has
+   "ลืมรหัส?", sized so ENTER CONSOLE lines up with LET'S RECYCLE */
+#login-form .admin-warning { margin-top: 8px; padding: 8px 12px; font-size: 13px; }
 
 .forgot-link {
   background: transparent; border: none; cursor: pointer;
@@ -174,6 +188,20 @@
 .app-shell .field-box { border-radius: 3px; }
 .app-shell .btn-primary .body { border-radius: 10px; }
 .app-shell .btn-primary .body::before { border-radius: 6px; }
+
+/* submit button: same depth as the logo; pressing still sinks into the hard shadow */
+.app-shell .btn-primary .body {
+  background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.25), inset 0 -3px 6px rgba(0,0,0,0.18),
+    3px 4px 0 var(--accent-deep), 0 10px 22px var(--accent-soft-shadow);
+}
+.app-shell .btn-primary:not(:disabled):active .body {
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.25), inset 0 -3px 6px rgba(0,0,0,0.18),
+    1px 1px 0 var(--accent-deep), 0 4px 10px var(--accent-soft-shadow);
+}
+.app-shell .btn-primary .label { color: var(--sb-white); font-weight: 800; text-shadow: 1px 1.5px 0 var(--accent-deep); }
 .app-shell .chip { border-radius: 2px; }
 .app-shell .login-error,
 .app-shell .admin-warning { border-radius: 3px; }

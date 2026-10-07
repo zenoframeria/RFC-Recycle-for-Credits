@@ -74,7 +74,7 @@
     position: absolute; bottom: calc(100% + 9px); left: 50%; z-index: 60;
     translate: -50% 4px; width: max-content; max-width: 210px;
     padding: 7px 10px; border-radius: 6px;
-    background: var(--sb-blue-deep); color: #fff; box-shadow: 0 6px 14px rgba(15,36,97,0.25);
+    background: var(--sb-blue-deep); color: var(--sb-white); box-shadow: 0 6px 14px rgba(15,36,97,0.25);
     font-family: var(--font-thai); font-weight: 400; font-style: normal; font-size: 11.5px; line-height: 1.45;
     letter-spacing: 0; text-transform: none; text-align: center; white-space: pre-line;
     opacity: 0; pointer-events: none; transition: opacity 0.2s ease, translate 0.2s ease;
@@ -170,76 +170,18 @@
   .page-shop .idea-card .arrow { transition: translate 0.28s ease; }
   .page-shop .idea-card:hover .label { translate: 0 -1px; }
   .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
-
-  /* nav: pointing at a tab "hovers the pen" — a faint highlighter stroke
-     draws in left → right under it (same shape as .nav-ind, see 3). No
-     jump. The Scan FAB is a button, not a tab: it keeps a small lift. */
-  .bottom-nav .nav-item:not(.nav-item--fab)::before {
-    content: ''; position: absolute; z-index: -1; pointer-events: none;
-    background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
-    left: 0; right: 0; bottom: 6px; height: 13px;
-    opacity: 0; scale: 0 1; transform-origin: left center;
-    transition: scale 0.28s cubic-bezier(0.5, 0, 0.3, 1), opacity 0.2s ease;
-  }
-  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover::before { opacity: 0.45; scale: 1 1; }
-  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover { color: rgba(26,31,51,0.8); }
-  .nav-item--fab { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick); }
-  .nav-item--fab:hover { translate: 0 -3px; }
-  @variant md {
-    .bottom-nav .nav-item:not(.nav-item--fab)::before { inset: 0; height: auto; rotate: none; border-radius: 3px; }
-  }
 }
 
-/* 3. "you are here" highlighter (.nav-ind, made + moved by
-   initNavIndicator() in nav-common.js, which sets its box and the mark's
-   top/height/radius/tilt inline). Each tab is its own page, so it starts
-   where you came from and glides to the new spot when the page opens.
-   Phone bar: a stroke under the tab's label. Sidebar (md+): a swipe across
-   the row + a notebook-tab edge. On the Scan page: a yellow frame around
-   the Scan button (.on-fab). The Scan button sits above it, so the
-   highlighter passes under it when crossing the middle of the phone bar. */
-.bottom-nav .nav-item:not(.nav-item--fab) { position: relative; z-index: 1; transition: color 0.35s ease, transform 0.12s ease, opacity 0.12s ease; }
-.bottom-nav .nav-item--fab { z-index: 1; }
-.nav-ind { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
-.nav-ind[hidden] { display: none; }
-.nav-ind i {
-  position: absolute; display: block;
-  left: 0; right: 0; top: calc(100% - 19px); height: 13px;
-  background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
-}
-@variant md {
-  .nav-ind i {
-    top: 0; height: 100%; rotate: none; border-radius: 3px;
-    background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
-    box-shadow: inset 3px 0 0 var(--accent);
-  }
-  .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
-}
-/* on the Scan button: a solid yellow frame (out-specifies the md swipe) */
-.nav-ind.on-fab i { background: var(--sb-yellow-soft); box-shadow: none; }
-/* fallback if the script didn't run: the old static highlighter */
-@variant md {
-  .bottom-nav:not(.has-ind) .nav-item.active {
-    background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
-    box-shadow: inset 3px 0 0 var(--accent);
-  }
-}
-@media (max-width: 767.98px) {
-  .bottom-nav:not(.has-ind) .nav-item.active .label {
-    padding: 0 4px;
-    background: linear-gradient(transparent 45%, var(--sb-yellow-soft) 45%, var(--sb-yellow-soft) 92%, transparent 92%);
-  }
-}
+/* 3. nav (student bar/sidebar + admin tabs): no highlighter, hover or tap
+   animation — the active tab is a filled icon (dashboard.css / admin.css). */
 
 /* 4. press feedback for the buttons that didn't have any yet */
 /* (.btn-primary has its own "sink into the shadow" press in components.css) */
 .icon-btn:active,
-.admin-tab:active,
 .activity-tab:active,
 .side-report:active { scale: 0.96; }
 .icon-btn, .side-report { transition: scale 0.12s ease; }
-/* these two already animate colors: keep those, add scale */
-.admin-tab { transition: border-color 0.15s, background 0.15s, scale 0.12s ease; }
+/* already animates colors: keep those, add scale */
 .activity-tab { transition: color 0.15s ease, border-color 0.15s ease, scale 0.12s ease; }
 
 /* 5. tap feedback for everything else (phones have no hover): while the

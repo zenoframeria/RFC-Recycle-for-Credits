@@ -22,7 +22,6 @@
 
     <div class="logo-block">
       <div class="logo-wrap">
-        <div class="logo-ring"></div>
         <div class="logo-body">
           <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--sb-yellow)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>
         </div>
@@ -77,21 +76,21 @@
           </div>
         </div>
 
+        <div class="admin-warning">
+          <svg width="16" height="16" style="flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="var(--sb-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+          สำหรับสภานักเรียนเท่านั้น
+        </div>
+
         <div class="captcha-slot" id="login-captcha"></div>
 
         <div class="login-error" id="login-error" hidden>รหัสผู้ดูแลหรือรหัสผ่านไม่ถูกต้อง</div>
 
-        <button type="submit" class="btn-primary" style="margin-top:18px;">
+        <button type="submit" class="btn-primary" style="margin-top:6px;">
           <div class="body">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sb-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /></svg>
             <span class="label">ENTER CONSOLE</span>
           </div>
         </button>
-
-        <div class="admin-warning">
-          <svg width="16" height="16" style="flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="var(--sb-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
-          สำหรับสภานักเรียนเท่านั้น
-        </div>
       </form>
 
       <form id="signup-form" novalidate hidden>

@@ -13,14 +13,10 @@ html, body {
 /* Font tokens live in tokens.css. Student pages default to the Thai face. */
 .app-shell { font-family: var(--font-thai); }
 
-/* Thai content still slips through a couple of --font-display / nav spots —
+/* Thai content still slips through a couple of --font-display spots —
    pin those back to the Thai face explicitly. */
 .app-shell .btn-primary .label,
 .app-shell .btn-secondary .label {
-  font-family: var(--font-thai);
-  font-style: normal;
-}
-.app-shell .nav-item .label {
   font-family: var(--font-thai);
   font-style: normal;
 }
@@ -65,8 +61,8 @@ html, body {
 .dash-scroll {
   position: relative;
   z-index: 2;
-  padding-bottom: 110px; /* fallback */
-  padding-bottom: calc(110px + env(safe-area-inset-bottom)); /* keep last card clear of the nav, which itself shifts up for the home-indicator bar */
+  padding-bottom: 130px; /* fallback */
+  padding-bottom: calc(130px + env(safe-area-inset-bottom)); /* keep last card clear of the floating nav (70px tall, 26px up), which itself shifts up for the home-indicator bar */
 }
 
 /* ── hero glow ────────────────────────────────────────────────────
@@ -181,7 +177,7 @@ html, body {
 .avatar-wrap { position: relative; flex-shrink: 0; }
 .polaroid {
   width: 68px; padding: 6px 6px 14px;
-  background: #F7F2E2;
+  background: var(--sb-white);
   box-shadow: 0 4px 10px rgba(20,30,60,0.15), 0 1px 0 rgba(0,0,0,0.05);
   transform: rotate(-4deg);
   position: relative;
@@ -300,7 +296,7 @@ html, body {
    (matching the avatar's tape elsewhere on the page) — nothing else changed */
 .progress-card {
   text-align: center;
-  background: #F7F2E2;
+  background: var(--sb-white);
   box-shadow: 0 16px 32px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset;
 }
 .progress-card .tape {
@@ -350,7 +346,7 @@ html, body {
   width: 156px;
   height: 156px;
   border-radius: 50%;
-  background: #F7F2E2; /* matches .progress-card's own background */
+  background: var(--sb-white); /* matches the progress card's paper (.progress-card::before) */
   transform: translate(-50%, -50%);
 }
 /* rounded "stroke-linecap" effect at each end of the fill — both sit on the
@@ -383,48 +379,65 @@ html, body {
 .stat-tile .unit { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.45); margin-left: 2px; }
 .stat-tile .label { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 1px; }
 
-/* ── bottom nav ───────────────────────────────────────────────── */
-/* docked to the bottom edge like a real app tab bar (not a floating pill);
-   same width as the phone .app-shell (tokens.css) */
+/* ── student nav ──────────────────────────────────────────────── */
+/* (2026-10-07) Same look on the phone bar and the md+ sidebar: a floating
+   near-white panel with a soft shadow. Active tab = filled blue icon + bold
+   label, the rest grey outlines; Scan is a lit blue ball. No highlighter,
+   hover or tap animation. Phone placement is below; the sidebar's is in
+   layout.css. */
 .bottom-nav-wrap {
   position: fixed; left: 50%; transform: translateX(-50%); z-index: 20;
   width: 100%; max-width: clamp(430px, 18vw + 350px, 600px); padding: 0;
   bottom: 0;
 }
 .bottom-nav {
-  position: relative; background: var(--sb-paper); border: none; border-top: 1.5px solid rgba(26,31,51,0.18); border-radius: 0;
-  padding: 8px 18px 10px; /* fallback */
-  padding: 8px 18px calc(10px + env(safe-area-inset-bottom)); /* clear the iPhone home-indicator bar */
+  position: relative; background: var(--sb-white); border: none;
   display: flex; align-items: center; justify-content: space-between;
-  box-shadow: 0 -3px 0 rgba(26,31,51,0.05);
+  box-shadow: 0 14px 34px rgba(20,30,60,0.16), 0 2px 6px rgba(20,30,60,0.06);
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  background: transparent; border: none; cursor: pointer; padding: 4px 2px; min-width: 44px;
-  color: rgba(26,31,51,0.55);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: transparent; border: none; cursor: pointer; padding: 4px 2px; min-width: 52px;
+  color: rgba(26,31,51,0.42);
   text-decoration: none;
-  transition: transform 0.12s ease, opacity 0.12s ease;
 }
-.nav-item:active { transform: scale(0.88); opacity: 0.7; }
-.nav-item .label { font-family: var(--font-display); font-style: italic; font-size: 11px; font-weight: 500; }
-.nav-item.active { color: var(--accent); }
-.nav-item.active .label { font-weight: 700; }
+.nav-item:not(.nav-item--fab) svg { width: 23px; height: 23px; stroke-width: 1.8; }
+.app-shell .nav-item .label {
+  font-family: var(--font-display); font-style: normal;
+  font-size: 11.5px; font-weight: 500; text-transform: capitalize;
+}
+.nav-item.active { color: var(--sb-blue); }
+.app-shell .nav-item.active .label { font-weight: 700; }
+/* filled icon on the active tab; inner details drawn in the panel colour
+   (the house's door path comes after its body in the HTML for this) */
+.nav-item.active[data-tab="home"] svg :first-child,
+.nav-item.active[data-tab="shop"] svg :first-child,
+.nav-item.active[data-tab="rank"] svg :last-child,
+.nav-item.active[data-tab="me"] svg > * { fill: currentColor; }
+.nav-item.active[data-tab="home"] svg :last-child,
+.nav-item.active[data-tab="shop"] svg :not(:first-child) { stroke: var(--sb-white); }
 
-/* center FAB (Scan) — raised + highlighted, sits above the bar */
-.nav-item--fab {
+/* Scan: a lit blue ball (a lit pill with a label from lg, layout.css) */
+.nav-item--fab,
+.nav-item--fab.active {
   position: relative;
-  width: 54px; height: 54px;
-  margin-top: -26px;
-  border-radius: 12px;
+  width: 60px; height: 60px; border-radius: 999px;
   justify-content: center;
   flex-shrink: 0;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
-  box-shadow: 0 0 0 4px var(--sb-paper), 3px 4px 0 4px rgba(26,31,51,0.12);
+  background: radial-gradient(circle at 34% 28%, #3453B4 0%, var(--sb-blue) 50%, var(--sb-blue-deep) 100%);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -6px 12px rgba(0,0,0,0.22), 0 8px 18px rgba(15,36,97,0.30);
   color: var(--sb-cream);
 }
-.nav-item--fab svg { width: 22px; height: 22px; }
+.nav-item--fab svg { width: 24px; height: 24px; }
+.nav-item--fab svg path { fill: currentColor; }
+.nav-item--fab svg circle { fill: var(--sb-blue); stroke: var(--sb-blue); }
 .nav-item--fab .label { display: none; }
-.nav-item--fab:active { transform: scale(0.9); opacity: 1; }
+
+/* phone: a pill floating 26px above the bottom edge (clear of the iPhone home bar) */
+@media (max-width: 767.98px) {
+  .bottom-nav-wrap { bottom: calc(26px + env(safe-area-inset-bottom)); padding: 0 16px; }
+  .bottom-nav { border-radius: 999px; padding: 9px 22px; min-height: 70px; }
+}
 
 /* ── "me" profile info rows ───────────────────────────────────── */
 .me-info { margin-top: 4px; }
@@ -542,7 +555,7 @@ html, body {
   background:
     radial-gradient(circle at 32% 28%, rgba(255,255,255,0.65) 0%, transparent 55%),
     var(--tint);
-  border: 2px solid #fff;
+  border: 2px solid var(--sb-white);
   box-shadow: 0 3px 8px rgba(20,30,60,0.14), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .item-medallion svg { color: var(--sb-ink); opacity: 0.72; }
@@ -552,7 +565,7 @@ html, body {
 .item-zoom-hint {
   position: absolute; right: -4px; bottom: -4px;
   width: 18px; height: 18px; border-radius: 50%;
-  background: var(--accent); color: var(--sb-cream); border: 1.5px solid #fff;
+  background: var(--accent); color: var(--sb-cream); border: 1.5px solid var(--sb-white);
   display: flex; align-items: center; justify-content: center;
 }
 .item-medallion .item-zoom-hint svg { width: 10px; height: 10px; color: var(--sb-cream); opacity: 1; }
@@ -564,7 +577,7 @@ html, body {
 /* item detail popup — capped to the viewport and scrollable, same as the
    admin item-form fix, so a tall photo never pushes the text off a phone screen */
 .item-detail-card { max-height: calc(100dvh - 48px); overflow-y: auto; }
-.item-detail-img { max-height: 55dvh; object-fit: contain; background: var(--sb-cream2); margin-top: 22px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.item-detail-img { max-height: 55dvh; object-fit: contain; background: var(--sb-cream2); margin-top: 22px; border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
 .item-detail-name { font-family: var(--font-thai-serif); font-weight: 700; font-size: 17px; color: var(--sb-ink); line-height: 1.3; margin-top: 14px; padding-right: 30px; }
 .item-detail-img[hidden] + .item-detail-name { margin-top: 2px; }
 .item-detail-cost { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-top: 4px; }
@@ -748,7 +761,7 @@ html, body {
 .photo-note { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); margin: 8px 0 12px; }
 
 .photo-preview { margin-top: 12px; }
-.photo-preview img { width: 100%; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }
+.photo-preview img { width: 100%; border-radius: 12px; border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }
 .photo-size-note { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.5); text-align: center; margin-top: 6px; }
 
 .submit-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.6); margin-top: 4px; }
@@ -854,7 +867,7 @@ html, body {
 .page-home .progress-card { background: transparent; box-shadow: none; border-color: transparent; }
 .page-home .progress-card::before {
   content: ''; position: absolute; inset: 0; z-index: 0;
-  background: #F7F2E2;
+  background: var(--sb-white);
   clip-path: polygon(
       0% 2.2px, 2.5% 3.4px, 5% 3.5px, 7.5% 4.4px, 10% 4.6px, 12.5% 4.2px,
       15% 2.8px, 17.5% 1.7px, 20% 3.2px, 22.5% 3px, 25% 1.9px, 27.5% 2.6px,
@@ -896,6 +909,7 @@ html, body {
    A mask clips box-shadow, so the shadow moves to the parent section as a
    drop-shadow (which also shades the inside of each hole). */
 .page-home .history-card {
+  background: var(--sb-white);
   padding-left: 34px;
   box-shadow: none;
   -webkit-mask:
@@ -932,7 +946,7 @@ html, body {
   top: -7px; right: -7px; width: auto; height: 18px; min-width: 18px; padding: 0 5px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 999px; box-shadow: 0 0 0 2px var(--sb-paper);
-  font-family: var(--font-display); font-weight: 700; font-size: 11px; line-height: 1; color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 11px; line-height: 1; color: var(--sb-white);
 }
 .page-home .dash-header .icon-btn .badge[hidden] { display: none; }
 
@@ -1049,7 +1063,7 @@ html, body {
 .tickets-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(26,31,51,.3); }
 .tickets-btn .count {
   min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
-  background: var(--sb-red); color: #fff; font-family: var(--font-display); font-size: 11px;
+  background: var(--sb-red); color: var(--sb-white); font-family: var(--font-display); font-size: 11px;
   display: inline-flex; align-items: center; justify-content: center;
 }
 .tickets-btn .count[hidden] { display: none; }
