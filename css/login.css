@@ -160,6 +160,10 @@
   text-align: center;
 }
 
+/* Cloudflare Turnstile box (js/auth.js renders it). Empty until the widget
+   loads, so no margin then — avoids a gap if Cloudflare is slow/blocked. */
+.captcha-slot:not(:empty) { margin-top: 14px; }
+
 .login-spacer { flex: 1; }
 
 /* ── paper restyle (2026-10-01): square-ish corners, card = access ticket ── */

@@ -16,6 +16,64 @@ document.addEventListener('DOMContentLoaded', () => {
   wireSignupForm(role);
 });
 
+// ── CAPTCHA (Cloudflare Turnstile) ─────────────────────────────────────
+// Every sign-in/sign-up sends a one-time token from the Turnstile box, so a
+// script calling supabaseClient.auth directly (no real page) can't get one.
+// Supabase checks the token only once CAPTCHA is switched on in Dashboard →
+// Authentication → Bot and Abuse Protection; until then it's ignored.
+// The site key is public by design (the secret key lives only in Supabase).
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFP8b5DAbnsWVzkY';
+const captchaWidgets = {}; // slot id -> Turnstile widget id
+
+// Called by the Turnstile script (onload=onTurnstileLoad in the login pages).
+window.onTurnstileLoad = () => {
+  ['login-captcha', 'signup-captcha'].forEach((slotId) => {
+    captchaWidgets[slotId] = turnstile.render(`#${slotId}`, {
+      sitekey: TURNSTILE_SITE_KEY,
+      size: 'flexible',
+      language: 'th',
+      // Hidden unless Cloudflare wants a click (Managed mode's checkbox).
+      appearance: 'interaction-only',
+    });
+  });
+};
+
+// Returns the token, '' if the box is still checking, or undefined if the
+// Turnstile script never loaded (then we send nothing and let Supabase decide).
+function getCaptchaToken(slotId) {
+  if (!window.turnstile || captchaWidgets[slotId] === undefined) return undefined;
+  return turnstile.getResponse(captchaWidgets[slotId]) || '';
+}
+
+// The hidden check takes a second or two after the page loads (and after every
+// reset), so a fast tap waits for it here instead of asking the student to tap
+// again. Polls until a token arrives or the time runs out — long enough for
+// someone to click the checkbox if Managed mode shows one.
+const CAPTCHA_WAIT_MS = 15000;
+
+async function waitForCaptchaToken(slotId) {
+  const deadline = Date.now() + CAPTCHA_WAIT_MS;
+  let token = getCaptchaToken(slotId);
+  while (!token && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    token = getCaptchaToken(slotId);
+  }
+  return token;
+}
+
+// Tokens are single-use, so get a fresh one after every attempt.
+function resetCaptcha(slotId) {
+  if (window.turnstile && captchaWidgets[slotId] !== undefined) {
+    turnstile.reset(captchaWidgets[slotId]);
+  }
+}
+
+const CAPTCHA_WAIT_MSG = 'ระบบตรวจว่าไม่ใช่บอทยังไม่เสร็จ ลองรีเฟรชหน้าแล้วกดอีกครั้ง';
+
+function isCaptchaError(error) {
+  return /captcha/i.test(error?.message || '');
+}
+
 function idToEmail(id, role) {
   return `${id.trim().toLowerCase()}@${role}.kyt.local`;
 }
@@ -32,6 +90,14 @@ function hideError(el) {
 function setLoading(button, loading) {
   button.disabled = loading;
   button.style.opacity = loading ? '0.6' : '';
+}
+
+// Swaps the button's label while waiting on the CAPTCHA; pass null to restore it.
+function setButtonLabel(button, text) {
+  const label = button.querySelector('.label');
+  if (!label) return;
+  if (!label.dataset.original) label.dataset.original = label.textContent;
+  label.textContent = text ?? label.dataset.original;
 }
 
 function saveCurrentUser(role, profile) {
@@ -111,15 +177,26 @@ function wireLoginForm(role) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideError(errorEl);
+
     setLoading(submitBtn, true);
+    setButtonLabel(submitBtn, 'CHECKING…');
+    const captchaToken = await waitForCaptchaToken('login-captcha');
+    setButtonLabel(submitBtn, null);
+    if (captchaToken === '') {
+      setLoading(submitBtn, false);
+      showError(errorEl, CAPTCHA_WAIT_MSG);
+      return;
+    }
 
     try {
       const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
         email: idToEmail(idInput.value, role),
         password: pwInput.value,
+        options: { captchaToken },
       });
 
       if (signInError) {
+        if (isCaptchaError(signInError)) throw new Error('ตรวจว่าไม่ใช่บอทไม่ผ่าน ลองใหม่อีกครั้ง');
         throw new Error(role === 'student'
           ? 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง'
           : 'รหัสผู้ดูแลหรือรหัสผ่านไม่ถูกต้อง');
@@ -141,6 +218,7 @@ function wireLoginForm(role) {
       showError(errorEl, err.message);
     } finally {
       setLoading(submitBtn, false);
+      resetCaptcha('login-captcha');
     }
   });
 }
@@ -175,6 +253,14 @@ function wireSignupForm(role) {
     }
 
     setLoading(submitBtn, true);
+    setButtonLabel(submitBtn, 'CHECKING…');
+    const captchaToken = await waitForCaptchaToken('signup-captcha');
+    setButtonLabel(submitBtn, null);
+    if (captchaToken === '') {
+      setLoading(submitBtn, false);
+      showError(errorEl, CAPTCHA_WAIT_MSG);
+      return;
+    }
 
     try {
       // Roster check before creating the auth account, only for a friendly
@@ -210,9 +296,11 @@ function wireSignupForm(role) {
       const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
         email: idToEmail(id, role),
         password,
+        options: { captchaToken },
       });
 
       if (signUpError) {
+        if (isCaptchaError(signUpError)) throw new Error('ตรวจว่าไม่ใช่บอทไม่ผ่าน ลองใหม่อีกครั้ง');
         throw new Error(/already registered/i.test(signUpError.message)
           ? 'มีบัญชีนี้อยู่แล้ว ลองเข้าสู่ระบบแทน'
           : 'สมัครสมาชิกไม่สำเร็จ ลองใหม่อีกครั้ง');
@@ -236,6 +324,7 @@ function wireSignupForm(role) {
       showError(errorEl, err.message);
     } finally {
       setLoading(submitBtn, false);
+      resetCaptcha('signup-captcha');
     }
   });
 }
