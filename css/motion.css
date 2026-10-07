@@ -190,28 +190,33 @@
   }
 }
 
-/* 3. the active tab's highlighter (.nav-ind, made by initNavIndicator()
-   in nav-common.js). One stroke that moves between tabs: it stretches over
-   both tabs, then shrinks onto the new one, like dragging a highlighter
-   pen. Each tab is its own page, so the stroke starts on the tab you came
-   from and moves when the new page opens. Phone bar: a stroke under the
-   label. Sidebar (md+): a swipe across the whole row + a notebook-tab edge. */
+/* 3. "you are here" highlighter (.nav-ind, made + moved by
+   initNavIndicator() in nav-common.js, which sets its box and the mark's
+   top/height/radius/tilt inline). Each tab is its own page, so it starts
+   where you came from and glides to the new spot when the page opens.
+   Phone bar: a stroke under the tab's label. Sidebar (md+): a swipe across
+   the row + a notebook-tab edge. On the Scan page: a yellow frame around
+   the Scan button (.on-fab). The Scan button sits above it, so the
+   highlighter passes under it when crossing the middle of the phone bar. */
 .bottom-nav .nav-item:not(.nav-item--fab) { position: relative; z-index: 1; transition: color 0.35s ease, transform 0.12s ease, opacity 0.12s ease; }
+.bottom-nav .nav-item--fab { z-index: 1; }
 .nav-ind { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
 .nav-ind[hidden] { display: none; }
 .nav-ind i {
   position: absolute; display: block;
-  left: 0; right: 0; bottom: 6px; height: 13px;
+  left: 0; right: 0; top: calc(100% - 19px); height: 13px;
   background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
 }
 @variant md {
   .nav-ind i {
-    inset: 0; height: auto; rotate: none; border-radius: 3px;
+    top: 0; height: 100%; rotate: none; border-radius: 3px;
     background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
 }
+/* on the Scan button: a solid yellow frame (out-specifies the md swipe) */
+.nav-ind.on-fab i { background: var(--sb-yellow-soft); box-shadow: none; }
 /* fallback if the script didn't run: the old static highlighter */
 @variant md {
   .bottom-nav:not(.has-ind) .nav-item.active {

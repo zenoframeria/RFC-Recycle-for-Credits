@@ -185,82 +185,101 @@ function wireFeedbackButtons(user) {
 }
 
 // ── nav highlighter (.nav-ind, styled in motion.css §3) ─────────────
-// One highlighter stroke sits behind the active tab. Every tab is its own
-// page, so on a nav click we remember which tab we're leaving (session
-// storage, this browser tab only); the next page draws the stroke on that
-// old tab first, then stretches it over both tabs and shrinks it onto the
-// new one. Storage can be blocked (private mode) — then it just appears.
+// One highlighter sits behind where you are: a stroke under a tab's label
+// (phone bar) or a swipe across the row (sidebar), and a yellow frame
+// around the Scan button on the Scan page. Every tab is its own page, so on
+// a nav click we remember where we're leaving (session storage, this browser
+// tab only); the next page draws the highlighter there first, then glides it
+// to the new spot in one move — position, size and shape together (a stroke
+// grows into the Scan frame and back). It passes under the Scan button when
+// crossing the middle. Storage can be blocked (private mode) — then it just
+// appears in place.
 const NAV_FROM_KEY = 'navFrom';
-const NAV_EASE = 'cubic-bezier(0.5, 0, 0.3, 1)';
+const NAV_MOVE = '460ms cubic-bezier(0.65, 0, 0.35, 1)';
+const NAV_FAB_PAD = 8; // how far the Scan frame sticks out around the button
 
 function initNavIndicator() {
   const nav = document.querySelector('.bottom-nav');
   if (!nav) return;
-  const tabs = [...nav.querySelectorAll('.nav-item:not(.nav-item--fab)')];
-  const target = tabs.find((t) => t.classList.contains('active'));
+  const fab = nav.querySelector('.nav-item--fab');
+  const spots = [...nav.querySelectorAll('.nav-item')];
+  const onThisPage = (a) => new URL(a.href).pathname === location.pathname;
+  const target = spots.find((a) => a.classList.contains('active')) || (fab && onThisPage(fab) ? fab : null);
 
   const ind = document.createElement('div');
   ind.className = 'nav-ind';
   ind.setAttribute('aria-hidden', 'true');
   ind.innerHTML = '<i></i>';
+  const mark = ind.firstChild;
   nav.prepend(ind);
   nav.classList.add('has-ind');
 
-  // leaving: remember the tab we're on (Scan's page has none active)
+  // leaving: remember where we are
   nav.querySelectorAll('a[href]').forEach((link) => {
     link.addEventListener('click', () => {
       try { sessionStorage.setItem(NAV_FROM_KEY, target ? target.dataset.tab : ''); } catch (e) { /* storage blocked */ }
     });
   });
 
-  if (!target) { ind.hidden = true; return; } // Scan page: no tab to mark
+  if (!target) { ind.hidden = true; return; }
 
-  function setBox(left, top, width, height, ms) {
-    ind.style.transition = ms
-      ? `translate ${ms}ms ${NAV_EASE}, width ${ms}ms ${NAV_EASE}, height ${ms}ms ${NAV_EASE}`
-      : 'none';
-    ind.style.translate = `${left}px ${top}px`;
-    ind.style.width = `${width}px`;
-    ind.style.height = `${height}px`;
+  // the box + mark shape for a spot, all in px so every part can animate
+  // together (an "auto" in any of them would make that part jump)
+  function layout(el) {
+    if (el === fab) {
+      const radius = parseFloat(getComputedStyle(fab).borderTopLeftRadius) + NAV_FAB_PAD;
+      const box = { l: fab.offsetLeft - NAV_FAB_PAD, t: fab.offsetTop - NAV_FAB_PAD, w: fab.offsetWidth + NAV_FAB_PAD * 2, h: fab.offsetHeight + NAV_FAB_PAD * 2 };
+      return { box, mark: { top: 0, h: box.h, r: `${radius}px`, rot: '0deg' }, fab: true };
+    }
+    const box = { l: el.offsetLeft, t: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+    const sidebar = matchMedia('(min-width: 768px)').matches;
+    const mark = sidebar
+      ? { top: 0, h: box.h, r: '3px', rot: '0deg' }                          // swipe across the row
+      : { top: box.h - 19, h: 13, r: '3px 6px 4px 7px', rot: '-1.5deg' };    // stroke under the label
+    return { box, mark, fab: false };
   }
-  const placeOn = (el, ms = 0) => setBox(el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight, ms);
 
-  let fromTab = null;
+  function moveTo(el, animate) {
+    const { box, mark: m, fab: onFab } = layout(el);
+    ind.style.transition = animate ? ['translate', 'width', 'height'].map((p) => `${p} ${NAV_MOVE}`).join(', ') : 'none';
+    mark.style.transition = animate ? ['top', 'height', 'border-radius', 'rotate'].map((p) => `${p} ${NAV_MOVE}`).join(', ') : 'none';
+    ind.classList.toggle('on-fab', onFab);
+    ind.style.translate = `${box.l}px ${box.t}px`;
+    ind.style.width = `${box.w}px`;
+    ind.style.height = `${box.h}px`;
+    Object.assign(mark.style, { top: `${m.top}px`, height: `${m.h}px`, borderRadius: m.r, rotate: m.rot });
+  }
+
+  let from = null;
   try {
-    const from = sessionStorage.getItem(NAV_FROM_KEY);
+    const fromName = sessionStorage.getItem(NAV_FROM_KEY);
     sessionStorage.removeItem(NAV_FROM_KEY);
-    fromTab = tabs.find((t) => t.dataset.tab === from && t !== target) || null;
+    from = spots.find((a) => a.dataset.tab === fromName && a !== target) || null;
   } catch (e) { /* storage blocked */ }
 
-  if (!fromTab) {
-    placeOn(target);
+  // tab colours fade with the move (the Scan button keeps its own colours)
+  const isTab = (el) => el !== fab;
+  if (!from) {
+    moveTo(target, false);
   } else {
-    // start on the old tab (its colours too), then move once the page shows
-    placeOn(fromTab);
-    target.classList.remove('active');
-    fromTab.classList.add('active');
+    moveTo(from, false);
+    if (isTab(target)) target.classList.remove('active');
+    if (isTab(from)) from.classList.add('active');
     setTimeout(() => {
-      fromTab.classList.remove('active');
-      target.classList.add('active');
-      // 1) stretch over both tabs (row on the phone bar, column in the sidebar)
-      const left = Math.min(fromTab.offsetLeft, target.offsetLeft);
-      const top = Math.min(fromTab.offsetTop, target.offsetTop);
-      const right = Math.max(fromTab.offsetLeft + fromTab.offsetWidth, target.offsetLeft + target.offsetWidth);
-      const bottom = Math.max(fromTab.offsetTop + fromTab.offsetHeight, target.offsetTop + target.offsetHeight);
-      setBox(left, top, right - left, bottom - top, 180);
-      // 2) shrink onto the new tab
-      setTimeout(() => placeOn(target, 240), 180);
+      if (isTab(from)) from.classList.remove('active');
+      if (isTab(target)) target.classList.add('active');
+      moveTo(target, true);
     }, 120);
   }
 
-  // keep it on the tab when the layout changes (rotate, resize across the
+  // keep it in place when the layout changes (rotate, resize across the
   // phone/sidebar breakpoint, web fonts finishing loading)
   let raf = 0;
   window.addEventListener('resize', () => {
     cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => placeOn(target));
+    raf = requestAnimationFrame(() => moveTo(target, false));
   });
-  if (document.fonts) document.fonts.ready.then(() => { if (!fromTab) placeOn(target); });
+  if (document.fonts) document.fonts.ready.then(() => { if (!from) moveTo(target, false); });
 }
 
 document.addEventListener('DOMContentLoaded', initNavIndicator);
