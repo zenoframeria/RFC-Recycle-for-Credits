@@ -79,7 +79,7 @@
   .notif-clear:hover { background-color: rgba(192,70,58,0.1); color: #9E3328; }
 
   /* Home header: the button stays put, only the icon inside reacts —
-     pencil tilts like it's about to write, bell rings, report flag glows */
+     pencil tilts like it's about to write, bell rings, report ladybug glows */
   .nickname-edit-btn svg { transition: scale 0.22s ease, rotate 0.22s ease; }
   .nickname-edit-btn:hover svg { scale: 1.15; rotate: -15deg; }
   .icon-btn svg, .side-report svg { transition: scale 0.22s ease, filter 0.22s ease; }
