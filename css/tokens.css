@@ -18,21 +18,27 @@
   --sb-tape: #E8DDB8;
   --sb-page-bg: #EFE7D2;
 
-  /* fonts */
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-script: 'Caveat', 'Kalam', cursive;
-  --font-body: 'Nunito', 'Quicksand', system-ui, sans-serif;
-  --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* fonts — the site loads only two: Poppins for English/numbers, Prompt
+     for Thai. Poppins has no Thai glyphs, so every stack is Poppins then
+     Prompt: Latin letters always come from Poppins, Thai from Prompt. Prompt
+     was drawn to sit next to geometric Latin, so mixed lines like
+     "Scan & launch แลกเกียรติบัตร" share one weight and height. */
+  --font-display: 'Poppins', 'Prompt', system-ui, sans-serif;
+  --font-script: 'Poppins', 'Prompt', system-ui, sans-serif;
+  --font-body: 'Poppins', 'Prompt', system-ui, sans-serif;
+  --font-thai: 'Poppins', 'Prompt', system-ui, sans-serif;
+  --font-thai-serif: 'Poppins', 'Prompt', system-ui, sans-serif;
+  --font-mono: 'Poppins', 'Prompt', system-ui, sans-serif;
 
   /* role accent: blue by default, red on the admin login */
   --accent: var(--sb-blue);
+  --accent-deep: var(--sb-blue-deep); /* hard "printed" shadow under accent buttons */
   --bg-tint2: var(--sb-blue-mist);
 }
 
 body[data-role="admin"] {
   --accent: var(--sb-red);
+  --accent-deep: #8C2E26;
   --bg-tint2: #E8C4BF;
 }
 
@@ -55,13 +61,8 @@ body {
   color: var(--sb-ink);
 }
 
-@keyframes sbglow {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.06); }
-}
-
-/* respect the OS "reduce motion" setting: stop the looping sbglow pulses
-   and make hover/tap transitions effectively instant */
+/* respect the OS "reduce motion" setting: stop animations and make
+   hover/tap transitions effectively instant */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;

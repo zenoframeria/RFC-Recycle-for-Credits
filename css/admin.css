@@ -1,5 +1,9 @@
 /* ขยะแลกแต้ม — admin console (admin-review.html) styles only */
 
+/* Font tokens live in tokens.css. Thai labels that still carried the old
+   italic display style: */
+.app-shell .field-label .name { font-family: var(--font-thai); font-style: normal; }
+
 .admin-header { padding: 30px 18px 0; position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .admin-header .hello-script { font-family: var(--font-script); font-size: 14px; color: var(--accent); }
 .admin-header .admin-name { font-family: var(--font-thai-serif); font-size: 19px; font-weight: 600; margin-top: 2px; }
@@ -32,7 +36,7 @@
 .feed-card-row .v { font-family: var(--font-thai-serif); font-size: 12.5px; font-weight: 600; text-align: right; }
 .feed-card-row .v.points { color: var(--accent); font-family: var(--font-mono); }
 
-.feed-card-comment { width: 100%; min-height: 54px; resize: vertical; margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12); font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink); outline: none; }
+.feed-card-comment { width: 100%; min-height: 54px; resize: vertical; margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12); font-family: var(--font-thai); font-size: 16px; color: var(--sb-ink); outline: none; }
 
 .feed-card-actions { display: flex; gap: 8px; margin-top: 10px; }
 .feed-card-actions .btn-approve, .feed-card-actions .btn-reject {
@@ -57,7 +61,7 @@
 .price-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .price-row { display: flex; align-items: center; gap: 10px; background: var(--sb-cream2); border-radius: 12px; padding: 10px 12px; }
 .price-row .name { flex: 1; min-width: 0; font-family: var(--font-thai-serif); font-size: 12.5px; color: var(--sb-ink); }
-.price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.price-row input { width: 70px; padding: 8px; border-radius: 8px; border: 1.5px solid rgba(26,31,51,0.15); background: var(--sb-paper); font-family: var(--font-mono); font-size: 16px; text-align: right; }
 .price-row .save-btn { border: none; border-radius: 10px; padding: 8px 12px; background: var(--accent); color: var(--sb-cream); font-family: var(--font-body); font-weight: 700; font-size: 11px; cursor: pointer; flex-shrink: 0; }
 .price-row .save-btn:disabled { opacity: 0.55; }
 .price-row .unit { display: none; }
@@ -85,13 +89,45 @@
 .shop-manage-edit { color: var(--accent); border: 1.5px solid var(--accent) !important; }
 .shop-manage-delete { color: var(--sb-red); border: 1.5px solid var(--sb-red) !important; }
 
-/* form helpers reused by the item-form modal — select + side-by-side inputs */
-.field-select { flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-mono); font-size: 13px; color: var(--sb-ink); }
-.field-row { display: flex; gap: 8px; }
-/* min-width:0 lets both boxes shrink to share the row — without it the
-   number inputs' built-in width pushes the second box past the modal edge */
-.field-row .field-box { flex: 1; min-width: 0; }
-.field-row .field-box input { width: 100%; }
+/* ── Pickups tab — look up a Shop receipt, mark it handed over ───── */
+.pickup-search { display: flex; gap: 8px; margin-top: 12px; }
+.pickup-search .field-box { flex: 1; min-width: 0; }
+.pickup-search-btn {
+  flex-shrink: 0; border: none; border-radius: 12px; padding: 0 18px; cursor: pointer;
+  background: var(--accent); color: var(--sb-cream);
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px;
+}
+.pickup-card { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--sb-cream2); border: 1.5px dashed rgba(26,31,51,0.18); }
+.pickup-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pickup-code { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .06em; color: var(--accent); }
+.pickup-status {
+  padding: 2px 9px; border: 2px solid currentColor; border-radius: 2px; rotate: -6deg;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: #A2700F;
+}
+.pickup-card.is-picked-up .pickup-status { color: var(--sb-green); }
+.pickup-hint { font-family: var(--font-thai); font-size: 11.5px; color: rgba(26,31,51,0.6); margin-top: 10px; }
+.pickup-confirm-btn {
+  width: 100%; margin-top: 8px; border: none; border-radius: 12px; padding: 12px 10px; cursor: pointer;
+  font-family: var(--font-thai); font-weight: 700; font-size: 14px;
+}
+.pickup-confirm-btn:disabled { opacity: .55; cursor: default; }
+.pickup-done {
+  margin-top: 10px; padding: 8px 10px; border-radius: 10px;
+  background: rgba(192,70,58,0.08); border: 1px dashed rgba(192,70,58,0.4);
+  font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: #8C2E26;
+}
+.pickup-summary { margin-top: 18px; padding-top: 12px; border-top: 1.5px dashed rgba(26,31,51,0.15); }
+.pickup-summary-head { font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--sb-ink); margin-bottom: 4px; }
+.pickup-summary-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 7px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
+.pickup-summary-row:last-child { border-bottom: none; }
+.pickup-summary-row .name { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink); min-width: 0; }
+.pickup-summary-row .n { font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--accent); white-space: nowrap; }
+@variant md {
+  #pickup-panel .card { max-width: 560px; }
+}
+
+/* form helper reused by the item-form modal — the zone select */
+.field-select { flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-mono); font-size: 16px; color: var(--sb-ink); }
 
 /* item-form modal is taller than a phone screen once a photo is attached —
    cap it to the viewport and let it scroll so the Save button stays reachable */
@@ -150,7 +186,7 @@
     gap: 12px; padding: 12px 16px;
   }
   .price-row .name { font-size: 14px; }
-  .price-row input { width: 100%; font-size: 14px; }
+  .price-row input { width: 100%; }
   .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); }
   .price-row .save-btn { padding: 9px 16px; font-size: 12px; }
 }

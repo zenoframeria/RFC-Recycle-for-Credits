@@ -50,7 +50,6 @@ async function loadCategories() {
   list.innerHTML = data.map((cat) => `
     <button type="button" class="category-item" data-category="${cat.id}">
       <div class="category-name">${cat.name}</div>
-      <div class="category-rate">${cat.point_value} pts/kg</div>
     </button>
   `).join('');
 
@@ -61,7 +60,6 @@ async function loadCategories() {
     list.querySelectorAll('.category-item').forEach((el) => {
       el.classList.toggle('is-selected', el === btn);
     });
-    updateSuggestedPoints();
     refreshConfirmState();
   });
 }
@@ -69,7 +67,6 @@ async function loadCategories() {
 // ── weight ──────────────────────────────────────────────────────────
 function wireWeightInput() {
   document.getElementById('weight-input').addEventListener('input', () => {
-    updateSuggestedPoints();
     validateWeight();
     refreshConfirmState();
   });
@@ -78,30 +75,19 @@ function wireWeightInput() {
 // Enforces a flat minimum weight per submission across all categories, so
 // splitting one weighing into several tiny submissions can't out-earn
 // submitting it as one (points round per-submission, see CLAUDE.md).
-// Also gates the photo trigger so a student can't attach/upload a photo
-// for a submission that's about to be rejected anyway.
+// The three fields can be filled in any order — only the submit button
+// waits for all of them (refreshConfirmState).
 function validateWeight() {
   const weight = parseFloat(document.getElementById('weight-input').value);
   const errorEl = document.getElementById('weight-error');
-  const trigger = document.getElementById('photo-trigger');
   const belowMin = weight > 0 && weight < MIN_WEIGHT_KG;
 
   errorEl.textContent = belowMin
     ? `น้ำหนักต้องอย่างน้อย ${MIN_WEIGHT_KG} กก. (${Math.round(MIN_WEIGHT_KG * 1000)} กรัม) ต่อการส่งหนึ่งครั้ง`
     : '';
   errorEl.hidden = !belowMin;
-  trigger.disabled = !(weight >= MIN_WEIGHT_KG);
 
   return weight >= MIN_WEIGHT_KG;
-}
-
-function updateSuggestedPoints() {
-  const weight = parseFloat(document.getElementById('weight-input').value);
-  const cat = scanState.categories.find((c) => c.id === scanState.selectedCategoryId);
-  const pointsEl = document.getElementById('suggested-points');
-  pointsEl.textContent = (!cat || !weight || weight <= 0)
-    ? '0'
-    : Math.round(weight * cat.point_value).toLocaleString();
 }
 
 // ── photo (compress client-side before it ever touches state; compressImage
@@ -137,7 +123,7 @@ function wirePhotoInput() {
       scanState.photoBlob = null;
       showToast('แนบรูปไม่สำเร็จ ลองใหม่อีกครั้ง');
     } finally {
-      validateWeight();
+      trigger.disabled = false;
       triggerLabel.textContent = scanState.photoBlob ? 'เปลี่ยนรูป' : 'แนบรูปถ่าย';
       refreshConfirmState();
     }
@@ -207,12 +193,10 @@ function setSubmitLoading(loading) {
 function showSuccess(cat, weight) {
   document.getElementById('success-category').textContent = cat.name;
   document.getElementById('success-weight').textContent = `${weight.toFixed(2)} kg`;
-  document.getElementById('success-points').textContent =
-    `${Math.round(weight * cat.point_value).toLocaleString()} pts (คาดการณ์)`;
 
   document.getElementById('scan-form').hidden = true;
   document.getElementById('scan-success').hidden = false;
-  showToast('ส่งข้อมูลแล้ว ✅ รอแอดมินตรวจสอบ');
+  showToast('ส่งข้อมูลแล้ว · รอแอดมินตรวจสอบ', { success: true });
 }
 
 function wireSubmitAnother() {
@@ -233,7 +217,6 @@ function resetForm() {
   document.getElementById('photo-trigger').querySelector('.label').textContent = 'แนบรูปถ่าย';
   document.querySelectorAll('.category-item').forEach((el) => el.classList.remove('is-selected'));
 
-  updateSuggestedPoints();
   validateWeight();
   refreshConfirmState();
 

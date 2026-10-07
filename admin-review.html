@@ -9,7 +9,7 @@
 <title>ขยะแลกแต้ม — Admin Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/build/admin.css">
 </head>
 <body data-role="admin">
@@ -19,7 +19,7 @@
   <aside class="admin-side" aria-label="เมนูผู้ดูแล">
     <div class="admin-header">
       <div>
-        <div class="hello-script">mission control ★</div>
+        <div class="hello-script">admin control ★</div>
         <div class="admin-name" id="admin-name">-</div>
       </div>
       <button class="icon-btn admin-logout-btn" id="logout-btn" aria-label="Log out" title="Log out">
@@ -31,6 +31,7 @@
       <button type="button" class="admin-tab active" data-panel="feed-panel">Review</button>
       <button type="button" class="admin-tab" data-panel="price-panel">Prices</button>
       <button type="button" class="admin-tab" data-panel="shop-panel">Shop</button>
+      <button type="button" class="admin-tab" data-panel="pickup-panel">Pickups</button>
     </div>
   </aside>
 
@@ -69,6 +70,27 @@
       </div>
       <div class="shop-manage-list" id="shop-manage-list">
         <div class="coming-soon">กำลังโหลดรายการสินค้า...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section admin-panel" id="pickup-panel">
+    <div class="card">
+      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <span class="title">Pickups</span>
+        <span class="sub">· ตรวจตั๋วก่อนมอบของ</span>
+      </div>
+      <form class="pickup-search" id="pickup-search">
+        <div class="field-box"><input type="text" id="pickup-code" placeholder="รหัสตั๋ว เช่น R-0042" autocomplete="off" aria-label="รหัสตั๋ว"></div>
+        <button type="submit" class="pickup-search-btn">ค้นหา</button>
+      </form>
+      <div id="pickup-result"></div>
+
+      <!-- what to have ready: pending tickets counted per item, no names on
+           purpose — handing over still needs the student's ticket code -->
+      <div class="pickup-summary">
+        <div class="pickup-summary-head">ของที่รอแจก</div>
+        <div id="pickup-summary-list"><div class="coming-soon">กำลังโหลด...</div></div>
       </div>
     </div>
   </div>
@@ -118,11 +140,13 @@
     </div>
 
     <div class="field">
-      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ / ทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></label>
-      <div class="field-row">
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="คงเหลือ" aria-label="จำนวนคงเหลือ"></div>
-        <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="ทั้งหมด" aria-label="จำนวนทั้งหมด"></div>
-      </div>
+      <label class="field-label" for="shop-item-stock-max"><span class="name">จำนวนทั้งหมด</span><span class="sub">ไม่บังคับ · ใช้เฉพาะ Limited</span></label>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock-max" placeholder="เช่น 10"></div>
+    </div>
+
+    <div class="field" id="shop-item-stock-field" hidden>
+      <label class="field-label" for="shop-item-stock"><span class="name">จำนวนคงเหลือ</span><span class="sub">กรณีที่มีคนอยากคืนของหรือว่ากดผิด</span></label>
+      <div class="field-box"><input type="number" min="0" step="1" id="shop-item-stock" placeholder="ว่าง = เท่ากับทั้งหมด"></div>
     </div>
 
     <div class="field">
@@ -142,7 +166,6 @@
 
     <div class="field" style="margin-top:14px;">
       <button type="button" class="btn-primary" id="shop-item-save-btn">
-        <span class="glow"></span>
         <span class="body"><span class="label" id="shop-item-save-label">บันทึก</span></span>
       </button>
     </div>
@@ -157,6 +180,7 @@
 <script src="js/admin-session-guard.js"></script>
 <script src="js/nav-common.js"></script>
 <script src="js/admin-shop.js"></script>
+<script src="js/admin-pickups.js"></script>
 <script src="js/admin-review.js"></script>
 </body>
 </html>

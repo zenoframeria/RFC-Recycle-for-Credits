@@ -9,7 +9,7 @@
 <title>ขยะแลกแต้ม — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/build/student.css">
 </head>
 <body data-role="student">
@@ -50,7 +50,7 @@
         </div>
         <div class="student-fullname" id="student-fullname">พิมพ์ชนก วงศ์ธนโรจน์</div>
       </div>
-      <button type="button" class="icon-btn header-report md:hidden" data-open-report aria-label="แจ้งปัญหา">
+      <button type="button" class="icon-btn header-report md:hidden" data-open-feedback aria-label="แจ้งปัญหา">
         <svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 4.3 2.6 18a1 1 0 0 0 .9 1.5h17a1 1 0 0 0 .9-1.5L13.7 4.3a1.6 1.6 0 0 0-2.8 0z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="notif-wrap header-notif">
@@ -79,7 +79,6 @@
       <span class="sub">· แตะเพื่อสแกนขยะ</span>
     </div>
     <a class="launch-btn" href="scan.html">
-      <div class="launch-glow"></div>
       <div class="launch-body">
         <div class="camera-disc">
           <svg width="28" height="28" viewBox="0 0 24 24">
@@ -142,6 +141,9 @@
         <button class="history-toggle" id="pending-toggle" hidden>แสดงเพิ่มเติม</button>
       </div>
       <div class="activity-panel" id="panel-rejected" hidden>
+        <div class="rejected-actions" id="rejected-actions" hidden>
+          <button type="button" class="notif-clear" id="rejected-clear">ล้างทั้งหมด</button>
+        </div>
         <div class="history-list" id="rejected-list"></div>
         <button class="history-toggle" id="rejected-toggle" hidden>แสดงเพิ่มเติม</button>
       </div>
@@ -183,32 +185,30 @@
       <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="label">me</span>
     </a>
-    <button type="button" class="side-report" data-open-report aria-label="แจ้งปัญหา">
+    <button type="button" class="side-report" data-open-feedback aria-label="แจ้งปัญหา">
       <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 4.3 2.6 18a1 1 0 0 0 .9 1.5h17a1 1 0 0 0 .9-1.5L13.7 4.3a1.6 1.6 0 0 0-2.8 0z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="label">แจ้งปัญหา</span>
     </button>
   </nav>
 </div>
 
-<div class="modal-overlay" id="report-modal">
-  <div class="modal-card">
-    <button class="modal-close" id="report-close" aria-label="ปิด">×</button>
-    <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
-      <span class="title">Report a Problem</span>
-    </div>
-    <div class="sub" style="font-size:11px;color:rgba(26,31,51,0.6);margin-bottom:12px;">แจ้งปัญหาหรือข้อเสนอแนะของคุณ</div>
-    <textarea class="report-textarea" id="report-text" aria-label="รายละเอียดปัญหา" placeholder="พิมพ์รายละเอียดปัญหาที่พบ..."></textarea>
-    <button class="btn-primary" id="report-submit" style="margin-top:12px;">
-      <div class="glow"></div>
-      <div class="body"><span class="label">ส่งเรื่อง</span></div>
-    </button>
-  </div>
-</div>
-
 <div class="modal-overlay" id="photo-lightbox">
   <div class="modal-card modal-card--photo">
     <button class="modal-close" id="lightbox-close" aria-label="ปิด">×</button>
     <img id="lightbox-img" class="lightbox-img" alt="รูปหลักฐานที่ถูกปฏิเสธ" src="">
+  </div>
+</div>
+
+<div class="modal-overlay" id="clear-rejected-confirm">
+  <div class="modal-card redeem-confirm-card" role="dialog" aria-modal="true" aria-labelledby="clear-rejected-title">
+    <button class="modal-close" id="clear-rejected-close" aria-label="ปิด">×</button>
+    <div class="redeem-confirm-kicker">ยืนยันการล้าง</div>
+    <div class="redeem-confirm-name" id="clear-rejected-title">ลบรายการที่ถูกปฏิเสธทั้งหมด <span id="clear-rejected-count">0</span> รายการ?</div>
+    <div class="redeem-confirm-warning"><svg class="inline-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3L2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>รวมรายการที่เก่ากว่า 7 วันด้วย ลบแล้วรูปหลักฐานหายถาวร กู้คืนไม่ได้ และใช้โต้แย้งกับแอดมินไม่ได้อีก</div>
+    <div class="redeem-confirm-actions">
+      <button type="button" class="redeem-confirm-cancel" id="clear-rejected-cancel">ยกเลิก</button>
+      <button type="button" class="redeem-confirm-ok is-danger" id="clear-rejected-ok">ลบทั้งหมด</button>
+    </div>
   </div>
 </div>
 

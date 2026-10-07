@@ -30,6 +30,9 @@
   body:not([data-role="admin"]) .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset; }
   /* Paper cards: lift, but keep each card's own tilt and paper shadow */
   body:not([data-role="admin"]) .app-shell--home .card:hover { rotate: var(--paper-tilt); box-shadow: var(--paper-shadow-lift); }
+  /* Home's handmade-paper card draws its shadow on the section (it follows the
+     deckle edge) — a box-shadow here would show a rectangle behind it */
+  body:not([data-role="admin"]) .app-shell--home .progress-card:hover { box-shadow: none; }
   .card > .tape { transition: translate 0.2s ease; }
   body:not([data-role="admin"]) .card:hover > .tape { translate: 0 -2px; }
 }
@@ -53,12 +56,12 @@
 }
 
 /* 4. press feedback for the buttons that didn't have any yet */
-.btn-primary:not(:disabled):active,
+/* (.btn-primary has its own "sink into the shadow" press in components.css) */
 .icon-btn:active,
 .admin-tab:active,
 .activity-tab:active,
 .side-report:active { scale: 0.96; }
-.btn-primary, .icon-btn, .side-report { transition: scale 0.12s ease; }
+.icon-btn, .side-report { transition: scale 0.12s ease; }
 /* these two already animate colors: keep those, add scale */
 .admin-tab { transition: border-color 0.15s, background 0.15s, scale 0.12s ease; }
 .activity-tab { transition: color 0.15s ease, border-color 0.15s ease, scale 0.12s ease; }

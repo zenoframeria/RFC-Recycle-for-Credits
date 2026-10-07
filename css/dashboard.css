@@ -10,25 +10,13 @@ html, body {
   background-color: #2B438E; /* matches the theme-color meta tag on these 5 pages — a touch lighter than --sb-blue-deep so the status-bar seam isn't too dark */
 }
 
-/* Poppins for English numbers/headline text, Sarabun for all Thai text
-   (both --font-thai and --font-thai-serif resolve to Sarabun now — Bai
-   Jamjuree was dropped site-wide so every page reads as one Thai font).
-   Overriding the shared font tokens here, scoped to .app-shell — which
-   every page loading this stylesheet already has — remaps every existing
-   class that references them. */
-.app-shell {
-  --font-display: 'Poppins', system-ui, sans-serif;
-  --font-script: 'Poppins', system-ui, sans-serif;
-  --font-body: 'Poppins', system-ui, sans-serif;
-  --font-thai: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-thai-serif: 'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
-  --font-mono: 'Poppins', system-ui, sans-serif;
-  font-family: var(--font-thai);
-}
+/* Font tokens live in tokens.css. Student pages default to the Thai face. */
+.app-shell { font-family: var(--font-thai); }
 
 /* Thai content still slips through a couple of --font-display / nav spots —
    pin those back to the Thai face explicitly. */
-.app-shell .btn-primary .label {
+.app-shell .btn-primary .label,
+.app-shell .btn-secondary .label {
   font-family: var(--font-thai);
   font-style: normal;
 }
@@ -225,13 +213,14 @@ html, body {
 .student-name-row[hidden], .nickname-edit-row[hidden] { display: none; }
 .nickname-edit-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; flex-shrink: 0;
+  /* 44px touch target; the negative margin keeps the 20px layout footprint */
+  width: 44px; height: 44px; margin: -12px; flex-shrink: 0;
   border: none; background: transparent; cursor: pointer; padding: 0;
   color: rgba(26,31,51,0.4);
 }
 .nickname-edit-btn:active { color: var(--accent); }
 
-.nickname-edit-row { display: flex; align-items: center; gap: 6px; }
+.nickname-edit-row { display: flex; align-items: center; gap: 12px; }
 .nickname-input {
   flex: 1; min-width: 0;
   font-family: var(--font-thai-serif); font-size: 19px; font-weight: 600; color: var(--sb-ink);
@@ -240,8 +229,13 @@ html, body {
 }
 .nickname-save-btn, .nickname-cancel-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
+  position: relative;
+  width: 32px; height: 32px; flex-shrink: 0; border-radius: 999px;
   border: none; cursor: pointer; padding: 0;
+}
+/* invisible padding grows the touch target to 44px without a bigger circle */
+.nickname-save-btn::after, .nickname-cancel-btn::after, .modal-close::after {
+  content: ''; position: absolute; inset: -6px;
 }
 .nickname-save-btn { background: var(--sb-green); color: var(--sb-cream); }
 .nickname-cancel-btn { background: rgba(26,31,51,0.1); color: var(--sb-ink); }
@@ -258,53 +252,46 @@ html, body {
 }
 .section-heading .icon { flex-shrink: 0; display: flex; }
 .section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; }
-.section-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); }
+.section-heading .sub { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); }
 .section-heading.lg .title { font-size: 18px; }
 
 .launch-btn {
   display: block; width: 100%; border: none; background: transparent; cursor: pointer; padding: 0; position: relative;
   text-decoration: none;
 }
-.launch-btn .launch-body { transition: transform 0.15s ease, filter 0.15s ease; }
-.launch-btn:active .launch-body { transform: scale(0.97); filter: brightness(0.9); }
-.launch-glow {
-  position: absolute; inset: -4px; border-radius: 24px;
-  background: radial-gradient(ellipse at 50% 60%, rgba(242,200,75,0.33) 0%, transparent 70%);
-  filter: blur(6px);
-  animation: sbglow 3s ease-in-out infinite;
-}
+/* same "printed ticket" look as .btn-primary: flat fill, hard shadow, no glow */
+.launch-btn .launch-body { transition: transform 0.1s ease, box-shadow 0.1s ease; }
+.launch-btn:active .launch-body { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--accent-deep); }
 .launch-body {
   position: relative;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--sb-blue-deep) 100%);
+  background: var(--accent);
   border-radius: 18px; padding: 16px 18px;
   display: flex; align-items: center; gap: 14px;
-  box-shadow: 0 6px 18px rgba(30,58,138,0.33), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.18);
+  box-shadow: 3px 4px 0 var(--accent-deep);
   overflow: hidden;
 }
 .launch-body::before {
   content: ''; position: absolute; inset: 6px; border-radius: 14px;
-  border: 1px dashed rgba(242,200,75,0.4); pointer-events: none;
+  border: 1px dashed rgba(242,200,75,0.55); pointer-events: none;
 }
 .camera-disc {
   position: relative; flex-shrink: 0;
   width: 56px; height: 56px; border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, var(--sb-yellow-soft), var(--sb-yellow));
+  background: var(--sb-yellow);
   border: 2px solid var(--sb-cream);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 0 2px var(--accent), 0 0 14px rgba(242,200,75,0.6);
+  box-shadow: 0 0 0 2px var(--accent-deep);
 }
 .launch-text { flex: 1; min-width: 0; text-align: left; }
-.launch-text .lets-go { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow); transform: rotate(-2deg); display: inline-block; }
+.launch-text .lets-go { font-family: var(--font-script); font-size: 14px; color: var(--sb-yellow); display: inline-block; }
 .launch-text .headline {
   font-family: var(--font-display); font-weight: 700; font-style: italic;
   font-size: 24px; color: var(--sb-cream); line-height: 1.05; margin-top: 2px;
-  text-shadow: 0 0 14px rgba(242,200,75,0.4);
 }
 .launch-text .sub { font-family: var(--font-thai); font-size: 11px; color: var(--sb-blue-mist); margin-top: 3px; }
 .launch-arrow {
   width: 32px; height: 32px; border-radius: 999px; background: var(--sb-yellow);
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(245,239,224,0.4);
 }
 
 /* ── personal progress card ──────────────────────────────────── */
@@ -456,6 +443,7 @@ html, body {
   z-index: 30; white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast-icon { vertical-align: -2px; margin-right: 6px; color: #A9D18E; }
 
 /* ── notification dropdown ─────────────────────────────────────── */
 .notif-wrap { position: relative; }
@@ -506,22 +494,10 @@ html, body {
 }
 .modal-overlay.open .modal-card { transform: translateY(0) scale(1); }
 .modal-close {
-  position: absolute; top: 12px; right: 12px;
-  width: 26px; height: 26px; border-radius: 999px; border: none; cursor: pointer;
+  position: absolute; top: 8px; right: 8px;
+  width: 32px; height: 32px; border-radius: 999px; border: none; cursor: pointer;
   background: var(--sb-cream2); color: var(--sb-ink);
   font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
-}
-.report-textarea {
-  width: 100%; min-height: 100px; resize: vertical;
-  padding: 10px 12px; border-radius: 12px;
-  background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-  font-family: var(--font-thai); font-size: 13px; color: var(--sb-ink);
-  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
-}
-.report-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(30,58,138,0.13), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
 /* ── photo lightbox (rejected submission proof) ─────────────────── */
@@ -755,22 +731,22 @@ html, body {
   box-shadow: 0 0 0 3px rgba(30,58,138,0.13);
 }
 .category-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 13px; color: var(--sb-ink); }
-.category-rate { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 3px; }
 
 .photo-checklist { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .photo-checklist-item {
   font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink);
   background: var(--sb-cream2); border-radius: 10px; padding: 8px 10px;
 }
-.photo-note { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin: 8px 0 12px; }
+/* small line icon in front of a line of text (replaces colour emoji) */
+.inline-icon { vertical-align: -3px; margin-right: 6px; flex-shrink: 0; }
+.photo-checklist-item .inline-icon { color: var(--accent); }
+.photo-note { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); margin: 8px 0 12px; }
 
 .photo-preview { margin-top: 12px; }
 .photo-preview img { width: 100%; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }
 .photo-size-note { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.5); text-align: center; margin-top: 6px; }
 
-.suggested-points-row { text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 32px; color: var(--accent); margin-top: 6px; }
-.suggested-points-row .unit { font-family: var(--font-mono); font-size: 13px; font-weight: 400; color: rgba(26,31,51,0.55); }
-.suggested-points-note { text-align: center; font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.5); margin-top: 2px; }
+.submit-note { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.6); margin-top: 4px; }
 
 .field-error {
   margin-top: 8px;
@@ -798,6 +774,8 @@ html, body {
 .activity-tab:active { opacity: 0.7; }
 
 .activity-panel[hidden] { display: none; }
+.rejected-actions { display: flex; justify-content: flex-end; padding-top: 6px; }
+.rejected-actions[hidden] { display: none; }
 
 .history-list { display: flex; flex-direction: column; }
 .history-row { padding: 12px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
@@ -813,7 +791,7 @@ html, body {
 .history-status.is-pending { background: rgba(242,200,75,0.25); color: #8A6D1A; }
 .history-status.is-rejected { background: rgba(192,70,58,0.12); color: var(--sb-red); }
 .history-points { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--accent); }
-.history-comment { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.6); margin-top: 5px; line-height: 1.4; }
+.history-comment { font-family: var(--font-thai); font-size: 13px; color: rgba(26,31,51,0.8); margin-top: 5px; line-height: 1.4; }
 .history-time { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.45); margin-top: 5px; letter-spacing: 0.06em; }
 .history-empty { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.5); text-align: center; padding: 20px 0; }
 
@@ -851,20 +829,52 @@ html, body {
   box-shadow: var(--paper-shadow);
 }
 
-/* Personal Progress: slightly tilted, bottom edge torn out of a notebook.
-   The tear is a strip in the card's own color shaped by an irregular
-   polygon (uneven teeth on purpose, so it doesn't read as a stamp edge). */
-.page-home .progress-card {
-  --paper-tilt: -0.6deg;
-  border-bottom-color: transparent;
-  filter: drop-shadow(1px 2px 0 rgba(20,30,60,.10));
+/* room between the launch button's hard shadow and the washi tape that
+   pokes up above the next card */
+.page-home .home-launch { margin-bottom: 10px; }
+
+/* Personal Progress: a straight sheet of handmade paper — soft, slightly
+   uneven (deckle) edges on all four sides. The paper is the ::before layer
+   clipped to that edge; the card itself is transparent so its corner tape
+   isn't clipped too. The shadow is a drop-shadow on the section, so it
+   follows the edge. The polygon was generated once from a fixed seed. */
+.page-home .progress-card { background: transparent; box-shadow: none; border-color: transparent; }
+.page-home .progress-card::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background: #F7F2E2;
+  clip-path: polygon(
+      0% 2.2px, 2.5% 3.4px, 5% 3.5px, 7.5% 4.4px, 10% 4.6px, 12.5% 4.2px,
+      15% 2.8px, 17.5% 1.7px, 20% 3.2px, 22.5% 3px, 25% 1.9px, 27.5% 2.6px,
+      30% 2.7px, 32.5% 3.7px, 35% 2.5px, 37.5% 2.9px, 40% 3.7px, 42.5% 3.6px,
+      45% 2.7px, 47.5% 2.2px, 50% 1.3px, 52.5% 1.9px, 55% 3px, 57.5% 3.9px,
+      60% 3.8px, 62.5% 5px, 65% 5px, 67.5% 5px, 70% 5px, 72.5% 3.9px,
+      75% 4.2px, 77.5% 5px, 80% 5px, 82.5% 5px, 85% 5px, 87.5% 5px,
+      90% 5px, 92.5% 5px, 95% 5px, 97.5% 4.9px, 100% 3.9px, calc(100% - 2.7px) 2.5%,
+      calc(100% - 3.7px) 5%, calc(100% - 3.9px) 7.5%, calc(100% - 3px) 10%, calc(100% - 2.6px) 12.5%, calc(100% - 2.1px) 15%, calc(100% - 1.9px) 17.5%,
+      calc(100% - 2.2px) 20%, calc(100% - 3.3px) 22.5%, calc(100% - 2.6px) 25%, calc(100% - 3.6px) 27.5%, calc(100% - 3.9px) 30%, calc(100% - 2.7px) 32.5%,
+      calc(100% - 2.9px) 35%, calc(100% - 4.2px) 37.5%, calc(100% - 3.6px) 40%, calc(100% - 2.7px) 42.5%, calc(100% - 2.1px) 45%, calc(100% - 1.8px) 47.5%,
+      calc(100% - 0.5px) 50%, calc(100% - 0px) 52.5%, calc(100% - 0.6px) 55%, calc(100% - 1.3px) 57.5%, calc(100% - 2.2px) 60%, calc(100% - 2.7px) 62.5%,
+      calc(100% - 2.7px) 65%, calc(100% - 3.4px) 67.5%, calc(100% - 4.1px) 70%, calc(100% - 5px) 72.5%, calc(100% - 4.7px) 75%, calc(100% - 4px) 77.5%,
+      calc(100% - 2.8px) 80%, calc(100% - 1.7px) 82.5%, calc(100% - 2.5px) 85%, calc(100% - 3.4px) 87.5%, calc(100% - 3.1px) 90%, calc(100% - 3.2px) 92.5%,
+      calc(100% - 2.6px) 95%, calc(100% - 2.9px) 97.5%, calc(100% - 1.7px) 100%, 97.5% calc(100% - 3.2px), 95% calc(100% - 2.3px), 92.5% calc(100% - 3.2px),
+      90% calc(100% - 2.7px), 87.5% calc(100% - 2.8px), 85% calc(100% - 1.6px), 82.5% calc(100% - 2.3px), 80% calc(100% - 1px), 77.5% calc(100% - 0.7px),
+      75% calc(100% - 0.9px), 72.5% calc(100% - 0.2px), 70% calc(100% - 0px), 67.5% calc(100% - 0px), 65% calc(100% - 0px), 62.5% calc(100% - 0.4px),
+      60% calc(100% - 0.1px), 57.5% calc(100% - 0px), 55% calc(100% - 0px), 52.5% calc(100% - 0px), 50% calc(100% - 0px), 47.5% calc(100% - 1.1px),
+      45% calc(100% - 0px), 42.5% calc(100% - 0px), 40% calc(100% - 0px), 37.5% calc(100% - 0.1px), 35% calc(100% - 0.7px), 32.5% calc(100% - 0.5px),
+      30% calc(100% - 1.9px), 27.5% calc(100% - 1.1px), 25% calc(100% - 0.7px), 22.5% calc(100% - 1.6px), 20% calc(100% - 1.1px), 17.5% calc(100% - 1.5px),
+      15% calc(100% - 1.2px), 12.5% calc(100% - 0.8px), 10% calc(100% - 1.2px), 7.5% calc(100% - 0.5px), 5% calc(100% - 1.2px), 2.5% calc(100% - 2.2px),
+      0% calc(100% - 2.9px), 4.1px 97.5%, 4.4px 95%, 3.7px 92.5%, 2.9px 90%, 2.5px 87.5%,
+      1.8px 85%, 0.9px 82.5%, 1px 80%, 0px 77.5%, 0px 75%, 0.2px 72.5%,
+      0px 70%, 0.3px 67.5%, 1.2px 65%, 0.5px 62.5%, 1.6px 60%, 2.3px 57.5%,
+      1.7px 55%, 1.5px 52.5%, 2.2px 50%, 3.5px 47.5%, 4px 45%, 3.2px 42.5%,
+      3.2px 40%, 1.8px 37.5%, 2.2px 35%, 2.1px 32.5%, 3.3px 30%, 3px 27.5%,
+      2.1px 25%, 2.9px 22.5%, 4px 20%, 3.1px 17.5%, 4.4px 15%, 4.5px 12.5%,
+      5px 10%, 5px 7.5%, 5px 5%, 4.9px 2.5%);
 }
-.page-home .progress-card::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: -13px; height: 14px;
-  background: #F7F2E2; /* = .progress-card background */
-  clip-path: polygon(0 0, 0% 0%, 4.2% 55%, 8.3% 20%, 12.5% 80%, 16.7% 35%, 20.8% 95%, 25% 10%, 29.2% 60%,
-    33.3% 40%, 37.5% 100%, 41.7% 25%, 45.8% 70%, 50% 5%, 54.2% 85%, 58.3% 45%, 62.5% 65%, 66.7% 15%,
-    70.8% 90%, 75% 30%, 79.2% 75%, 83.3% 50%, 87.5% 100%, 91.7% 20%, 95.8% 60%, 100% 0%, 100% 0);
+.page-home .progress-card > * { position: relative; z-index: 1; }
+.page-home .progress-card > .tape { position: absolute; z-index: 2; }
+.page-home .home-progress {
+  filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)) drop-shadow(0 8px 10px rgba(20,30,60,.12));
 }
 
 /* Recent Activity: a spiral-notebook page — a column of punched holes down
@@ -921,7 +931,7 @@ html, body {
 }
 .notif-clear[hidden] { display: none; }
 .notif-rejected { font-weight: 600; color: var(--sb-red); }
-.notif-item .reason { font-family: var(--font-thai); font-size: 11.5px; color: rgba(26,31,51,0.7); margin-top: 2px; }
+.notif-item .reason { font-family: var(--font-thai); font-size: 13px; color: rgba(26,31,51,0.8); margin-top: 2px; }
 
 /* Home desktop: header + Launch Pad full width, then Progress | Activity */
 @variant lg {
@@ -971,6 +981,7 @@ html, body {
 /* certificate = Home's launch button; the Thai name must not use Poppins
    (no Thai glyphs → random system fallback) */
 .page-shop .shop-cert { margin-top: 14px; }
+.page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
 .page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
 .page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
 .page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
@@ -995,6 +1006,102 @@ html, body {
 /* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
 .page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
 
+/* "ตั๋วรับของ" button under the balance ticket — a cut-card square with an
+   ink edge, same as Home's report/bell buttons; red pill = tickets waiting */
+.page-shop .balance-ticket { display: flex; flex-direction: column; align-items: flex-end; }
+.tickets-btn {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 11px;
+  border: 1.5px solid var(--sb-ink); border-radius: 2px; background: var(--sb-paper);
+  box-shadow: 2px 2px 0 rgba(26,31,51,.3); cursor: pointer;
+  font-family: var(--font-thai); font-weight: 700; font-size: 12px; color: var(--sb-ink);
+}
+.tickets-btn[hidden] { display: none; }
+.tickets-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(26,31,51,.3); }
+.tickets-btn .count {
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--sb-red); color: #fff; font-family: var(--font-display); font-size: 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.tickets-btn .count[hidden] { display: none; }
+
+/* ticket pop-up: list scrolls inside the card so many tickets never push
+   the close button off a phone screen */
+.tickets-card { border-radius: 3px; max-width: 400px; max-height: calc(100dvh - 48px); display: flex; flex-direction: column; }
+.tickets-card .receipt-list { overflow-y: auto; padding: 4px 2px 6px; }
+.tickets-head { display: flex; align-items: center; gap: 6px; padding-right: 34px; }
+.tickets-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--accent); }
+.tickets-title .sub { font-family: var(--font-thai); font-weight: 400; font-size: 11.5px; color: rgba(26,31,51,.55); }
+.tickets-card .shop-section-note { margin-bottom: 6px; }
+.info-btn {
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
+  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; font-style: normal; line-height: 1;
+}
+.info-btn[aria-expanded="true"] { background: var(--accent); color: var(--sb-cream); }
+/* the explanation = a yellow sticky note */
+.ticket-help { margin: 8px 0 4px; padding: 10px 12px; background: var(--sb-yellow-soft); border-radius: 2px; box-shadow: 1px 2px 0 rgba(20,30,60,.10); rotate: -.4deg; }
+.ticket-help[hidden] { display: none; }
+.ticket-help .q { font-family: var(--font-thai); font-weight: 700; font-size: 12.5px; color: var(--sb-ink); margin-top: 8px; }
+.ticket-help .q:first-child { margin-top: 0; }
+.ticket-help .a { font-family: var(--font-thai); font-size: 12px; line-height: 1.5; color: rgba(26,31,51,.78); margin-top: 1px; }
+
+/* each pickup ticket — notches on both sides (same mask trick as the
+   balance ticket, so the shadow is a drop-shadow on the list) and a rubber
+   stamp for the status */
+.receipt-list { display: flex; flex-direction: column; gap: 10px; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)); }
+.receipt {
+  position: relative; display: flex; align-items: center; gap: 12px;
+  background: #EFE6CF; padding: 12px 20px;
+  -webkit-mask:
+    radial-gradient(circle 8px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 8px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 8px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 8px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.receipt::before { content: ''; position: absolute; inset: 5px 14px; border: 1px dashed rgba(26,31,51,.22); pointer-events: none; }
+.receipt-main { flex: 1; min-width: 0; }
+.receipt-code { font-family: var(--font-mono); font-weight: 700; font-size: 20px; letter-spacing: .06em; color: var(--accent); line-height: 1.1; }
+.receipt-name { font-family: var(--font-thai); font-weight: 600; font-size: 13px; color: var(--sb-ink); margin-top: 3px; }
+.receipt-meta { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 2px; }
+.receipt-stamp {
+  flex-shrink: 0; padding: 4px 9px; rotate: -8deg;
+  border: 2px solid currentColor; border-radius: 2px;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px; letter-spacing: .04em;
+  color: #A2700F; mix-blend-mode: multiply;
+}
+.receipt.is-picked-up .receipt-stamp { color: var(--sb-green); rotate: 6deg; }
+.receipt.is-picked-up .receipt-code,
+.receipt.is-picked-up .receipt-name { opacity: .55; }
+
+/* redeem confirm pop-up */
+.redeem-confirm-card { border-radius: 3px; }
+.redeem-confirm-kicker { font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--accent); }
+.redeem-confirm-name { font-family: var(--font-thai); font-weight: 700; font-size: 18px; color: var(--sb-ink); line-height: 1.3; margin-top: 2px; padding-right: 30px; }
+.redeem-confirm-points { margin-top: 12px; border-top: 1.5px dashed rgba(26,31,51,0.15); border-bottom: 1.5px dashed rgba(26,31,51,0.15); padding: 6px 0; }
+.redeem-confirm-points .row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+.redeem-confirm-points .k { font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.6); }
+.redeem-confirm-points .v { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--sb-ink); }
+.redeem-confirm-points .v b { color: var(--accent); }
+.redeem-confirm-warning {
+  margin-top: 12px; padding: 8px 10px; border-radius: 2px;
+  background: rgba(192,70,58,0.08); border: 1px dashed rgba(192,70,58,0.45);
+  font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: #8C2E26;
+}
+.redeem-confirm-actions { display: flex; gap: 8px; margin-top: 14px; }
+.redeem-confirm-actions button {
+  flex: 1; padding: 11px 10px; border-radius: 3px; cursor: pointer;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+.redeem-confirm-actions button:active { transform: scale(0.96); }
+.redeem-confirm-cancel { background: transparent; border: 1.5px solid rgba(26,31,51,0.3); color: var(--sb-ink); }
+.redeem-confirm-ok { background: var(--accent); border: 1.5px solid var(--accent); color: var(--sb-cream); }
+.redeem-confirm-ok:disabled { opacity: .55; cursor: default; }
+/* same pop-up reused on Home for "clear rejected" — red, since it deletes */
+.redeem-confirm-ok.is-danger { background: var(--sb-red); border-color: var(--sb-red); }
+
 @variant lg {
   .page-shop { --content-max: 960px; }
   .page-shop .stationery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
@@ -1014,7 +1121,6 @@ html, body {
   display: flex; width: auto; margin: 16px auto 0;
   border: 1.5px solid var(--sb-red); border-radius: 3px; background: transparent;
 }
-.page-me #logout-btn .glow,
 .page-me #logout-btn .body::before { display: none; }
 .page-me #logout-btn .body { padding: 9px 22px; border-radius: 3px; background: transparent; box-shadow: none; }
 .page-me #logout-btn .label { font-size: 14px; color: var(--sb-red); text-shadow: none; }
@@ -1038,8 +1144,7 @@ html, body {
   border-radius: 0; background: transparent; padding-left: 2px;
   border-bottom: 1px dashed rgba(26,31,51,.18);
 }
-.page-scan .btn-primary .body,
-.page-scan .btn-primary .glow { border-radius: 10px; }
+.page-scan .btn-primary .body { border-radius: 10px; }
 .page-scan .btn-primary .body::before { border-radius: 6px; }
 
 @variant lg {
