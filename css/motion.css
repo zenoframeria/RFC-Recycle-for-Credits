@@ -51,15 +51,25 @@
 
   /* small buttons — the full flick (Shop's .redeem-btn buttons have their
      own hover further down) */
-  .redeem-confirm-actions button {
-    transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick), box-shadow 0.2s ease;
-  }
-  .info-btn, .tickets-btn, .modal-close, .history-thumb {
+  .info-btn, .tickets-btn, .history-thumb {
     transition: translate var(--flick), rotate var(--flick);
   }
-  .redeem-confirm-actions button:not(:disabled):hover { translate: 0 -3px; rotate: -3deg; box-shadow: 2px 4px 0 rgba(20,30,60,0.2); }
-  .info-btn:hover, .tickets-btn:hover,
-  .modal-close:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+  .info-btn:hover, .tickets-btn:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+
+  /* confirm pop-ups (Home "clear rejected", Shop "redeem") + every ✕:
+     calm on purpose — short plain easing, nothing bouncy or growing, so
+     the eye stays on the warning. Cancel (the safe choice) lifts 1px;
+     the confirm button only darkens, never moves */
+  .modal-close { transition: background-color 0.18s ease, rotate 0.2s ease; }
+  .modal-close:hover { background-color: #E3D8BE; rotate: 90deg; }
+  .redeem-confirm-actions button { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, translate 0.15s ease; }
+  .redeem-confirm-cancel:hover { background-color: var(--sb-cream2); translate: 0 -1px; }
+  .redeem-confirm-ok:not(:disabled):hover { background-color: var(--accent-deep); border-color: var(--accent-deep); }
+  .redeem-confirm-ok.is-danger:not(:disabled):hover { background-color: #9E3328; border-color: #9E3328; }
+  /* "ล้างทั้งหมด" (bell panel + rejected tab): it deletes — no bounce,
+     just a faint red wash and a deeper red */
+  .notif-clear { border-radius: 3px; transition: background-color 0.15s ease, color 0.15s ease; }
+  .notif-clear:hover { background-color: rgba(192,70,58,0.1); color: #9E3328; }
 
   /* Home header: the button stays put, only the icon inside reacts —
      pencil tilts like it's about to write, bell rings, report flag glows */
