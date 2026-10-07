@@ -24,17 +24,50 @@
 /* admin tab panels swap on click: no stagger wait (out-specifies the nth-child rules) */
 .dash-scroll > .admin-panel { animation-delay: 0s; }
 
-/* 2. paper-lift hover — mouse/trackpad only, never on touch */
+/* 2. "paper flick" hover — only things you can click move; plain cards stay
+   still. Same springy motion everywhere, scaled to the size of the thing:
+   small buttons lift 3px + tilt 3deg, wide buttons / big clickable cards
+   tilt less, the nav bar flicks just its icon. Mouse/trackpad only, never
+   on touch. Uses translate/rotate (not transform) so the existing :active
+   presses (transform: scale…) still compose with it. Each transition list
+   keeps the element's own transitions from its base rule. */
 @media (hover: hover) and (pointer: fine) {
-  .card { transition: translate 0.2s ease, rotate 0.2s ease, box-shadow 0.2s ease; }
-  body:not([data-role="admin"]) .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset; }
-  /* Paper cards: lift, but keep each card's own tilt and paper shadow */
-  body:not([data-role="admin"]) .app-shell--home .card:hover { rotate: var(--paper-tilt); box-shadow: var(--paper-shadow-lift); }
-  /* Home's handmade-paper card draws its shadow on the section (it follows the
-     deckle edge) — a box-shadow here would show a rectangle behind it */
-  body:not([data-role="admin"]) .app-shell--home .progress-card:hover { box-shadow: none; }
-  .card > .tape { transition: translate 0.2s ease; }
-  body:not([data-role="admin"]) .card:hover > .tape { translate: 0 -2px; }
+  :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
+
+  /* small buttons — the full flick */
+  .redeem-btn, .redeem-confirm-actions button {
+    transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick), box-shadow 0.2s ease;
+  }
+  .icon-btn, .side-report { transition: scale 0.12s ease, translate var(--flick), rotate var(--flick); }
+  .info-btn, .tickets-btn, .modal-close, .launch-arrow, .nickname-edit-btn, .history-thumb {
+    transition: translate var(--flick), rotate var(--flick);
+  }
+  .redeem-btn:not(:disabled):hover,
+  .redeem-confirm-actions button:not(:disabled):hover { translate: 0 -3px; rotate: -3deg; box-shadow: 2px 4px 0 rgba(20,30,60,0.2); }
+  .icon-btn:hover, .side-report:hover, .info-btn:hover, .tickets-btn:hover,
+  .modal-close:hover, .launch-arrow:not(:disabled):hover, .nickname-edit-btn:hover,
+  .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+
+  /* wide buttons + Scan's category cards — same lift, less tilt */
+  .btn-primary, .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick); }
+  .category-item { transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s, translate var(--flick), rotate var(--flick); }
+  .btn-primary:not(:disabled):hover,
+  .btn-secondary:not(:disabled):hover,
+  .category-item:hover { translate: 0 -3px; rotate: -1deg; }
+
+  /* big clickable cards (Launch Pad, Shop's cert banner, Limited items) */
+  .launch-btn, .limited-item { transition: translate var(--flick), rotate var(--flick); }
+  .launch-btn:hover, .limited-item:hover { translate: 0 -2px; rotate: -0.6deg; }
+
+  /* Shop stationery: the photo + name open the detail pop-up — flick the photo */
+  .stationery-top .item-medallion { transition: translate var(--flick), rotate var(--flick); }
+  .stationery-top:hover .item-medallion { translate: 0 -3px; rotate: -4deg; }
+
+  /* nav bar / sidebar: just the icon (the Scan FAB is one big icon) */
+  .nav-item svg { transition: translate var(--flick), rotate var(--flick); }
+  .nav-item:not(.nav-item--fab):hover svg { translate: 0 -3px; rotate: -8deg; }
+  .nav-item--fab { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick); }
+  .nav-item--fab:hover { translate: 0 -3px; rotate: -3deg; }
 }
 
 /* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
