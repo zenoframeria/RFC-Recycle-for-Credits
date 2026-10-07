@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireLightbox();
   wireClearRejected(currentUser.id);
   wireNicknameEdit(currentUser);
+  wireProgressHelp();
 
   await Promise.all([
     loadPendingTab(currentUser.id),
@@ -218,6 +219,16 @@ function setupPager(rows, listEl, toggleEl, renderBatch) {
   toggleEl.textContent = 'แสดงเพิ่มเติม';
   toggleEl.onclick = onMoreClick;
   revealNext();
+}
+
+// "i" next to Personal Progress — same sticky-note help as Rank / My Rewards
+function wireProgressHelp() {
+  const infoBtn = document.getElementById('progress-info-btn');
+  const help = document.getElementById('progress-help');
+  infoBtn.addEventListener('click', () => {
+    help.hidden = !help.hidden;
+    infoBtn.setAttribute('aria-expanded', String(!help.hidden));
+  });
 }
 
 // ── recent activity: pending tab ─────────────────────────────────────

@@ -58,10 +58,28 @@
 
   /* small buttons — the full flick (Shop's .redeem-btn buttons have their
      own hover further down) */
-  .info-btn, .tickets-btn, .history-thumb {
+  .tickets-btn, .history-thumb {
     transition: translate var(--flick), rotate var(--flick);
   }
-  .info-btn:hover, .tickets-btn:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+  .tickets-btn:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+
+  /* every "i": grey → theme blue, grows a hair, no tilt (keeps the tiny
+     "i" sharp). data-tip = a short dark-blue tooltip that fades + rises in
+     above it; clicking still opens the full sticky note */
+  .info-btn { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, scale 0.2s ease; }
+  .info-btn:hover { scale: 1.08; color: var(--accent); border-color: var(--accent); }
+  .info-btn[aria-expanded="true"]:hover { color: var(--sb-cream); }
+  .info-btn[data-tip]::after {
+    content: attr(data-tip) "\A กดเพื่ออ่านเพิ่ม";
+    position: absolute; bottom: calc(100% + 9px); left: 50%; z-index: 60;
+    translate: -50% 4px; width: max-content; max-width: 210px;
+    padding: 7px 10px; border-radius: 6px;
+    background: var(--sb-blue-deep); color: #fff; box-shadow: 0 6px 14px rgba(15,36,97,0.25);
+    font-family: var(--font-thai); font-weight: 400; font-style: normal; font-size: 11.5px; line-height: 1.45;
+    letter-spacing: 0; text-transform: none; text-align: center; white-space: pre-line;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease, translate 0.2s ease;
+  }
+  .info-btn[data-tip]:hover::after { opacity: 1; translate: -50% 0; }
 
   /* confirm pop-ups (Home "clear rejected", Shop "redeem") + every ✕:
      calm on purpose — short plain easing, nothing bouncy or growing, so
