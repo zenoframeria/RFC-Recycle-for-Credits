@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Supabase checks the token only once CAPTCHA is switched on in Dashboard →
 // Authentication → Bot and Abuse Protection; until then it's ignored.
 // The site key is public by design (the secret key lives only in Supabase).
-const TURNSTILE_SITE_KEY = '1x00000000000000000000AA'; // Cloudflare test key — swap for the real one
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFP8b5DAbnsWVzkY';
 const captchaWidgets = {}; // slot id -> Turnstile widget id
 
 // Called by the Turnstile script (onload=onTurnstileLoad in the login pages).
@@ -32,6 +32,8 @@ window.onTurnstileLoad = () => {
       sitekey: TURNSTILE_SITE_KEY,
       size: 'flexible',
       language: 'th',
+      // Hidden unless Cloudflare wants a click (Managed mode's checkbox).
+      appearance: 'interaction-only',
     });
   });
 };
