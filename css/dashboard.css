@@ -1,13 +1,13 @@
 /* ขยะแลกแต้ม — dashboard page layout */
 
-/* This stylesheet only ever loads on the 5 "home-style" pages (dashboard,
-   shop, rank, scan, me), so scoping the iOS overscroll-bounce color here
-   (rather than forcing it on every page from tokens.css) keeps the
-   login/admin pages on their own cream/red tone instead of flashing navy
-   during a rubber-band scroll. Matches the navy theme-color meta tag set
-   on these 5 pages' <head>. */
+/* Loads on the 5 student pages + admin. What shows behind/below the app
+   shell — iOS rubber-band overscroll, a short page, the strip behind
+   Safari's floating bottom bar — is the same floral white the shell's
+   paper gradient ends on, so the page reads as one continuous sheet
+   (was navy #2B438E, which showed as a blue band at the bottom). The
+   theme-color meta on every page is the cream at the top of the shell. */
 html, body {
-  background-color: #2B438E; /* matches the theme-color meta tag on these 5 pages — a touch lighter than --sb-blue-deep so the status-bar seam isn't too dark */
+  background: var(--sb-white);
 }
 
 /* Font tokens live in tokens.css. Student pages default to the Thai face. */
@@ -61,8 +61,8 @@ html, body {
 .dash-scroll {
   position: relative;
   z-index: 2;
-  padding-bottom: 130px; /* fallback */
-  padding-bottom: calc(130px + env(safe-area-inset-bottom)); /* keep last card clear of the floating nav (70px tall, 26px up), which itself shifts up for the home-indicator bar */
+  padding-bottom: 100px; /* fallback */
+  padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* keep last card clear of the floating nav (58px tall, 10px up), which itself shifts up for the home-indicator bar */
 }
 
 /* ── hero glow ────────────────────────────────────────────────────
@@ -396,15 +396,15 @@ html, body {
   box-shadow: 0 14px 34px rgba(20,30,60,0.16), 0 2px 6px rgba(20,30,60,0.06);
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
   background: transparent; border: none; cursor: pointer; padding: 4px 2px; min-width: 52px;
   color: rgba(26,31,51,0.42);
   text-decoration: none;
 }
-.nav-item:not(.nav-item--fab) svg { width: 23px; height: 23px; stroke-width: 1.8; }
+.nav-item:not(.nav-item--fab) svg { width: 21px; height: 21px; stroke-width: 1.8; }
 .app-shell .nav-item .label {
   font-family: var(--font-display); font-style: normal;
-  font-size: 11.5px; font-weight: 500; text-transform: capitalize;
+  font-size: 10.5px; font-weight: 500; text-transform: capitalize;
 }
 .nav-item.active { color: var(--sb-blue); }
 .app-shell .nav-item.active .label { font-weight: 700; }
@@ -421,22 +421,22 @@ html, body {
 .nav-item--fab,
 .nav-item--fab.active {
   position: relative;
-  width: 60px; height: 60px; border-radius: 999px;
+  width: 50px; height: 50px; border-radius: 999px;
   justify-content: center;
   flex-shrink: 0;
   background: radial-gradient(circle at 34% 28%, #3453B4 0%, var(--sb-blue) 50%, var(--sb-blue-deep) 100%);
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -6px 12px rgba(0,0,0,0.22), 0 8px 18px rgba(15,36,97,0.30);
   color: var(--sb-cream);
 }
-.nav-item--fab svg { width: 24px; height: 24px; }
+.nav-item--fab svg { width: 21px; height: 21px; }
 .nav-item--fab svg path { fill: currentColor; }
 .nav-item--fab svg circle { fill: var(--sb-blue); stroke: var(--sb-blue); }
 .nav-item--fab .label { display: none; }
 
 /* phone: a pill floating 26px above the bottom edge (clear of the iPhone home bar) */
 @media (max-width: 767.98px) {
-  .bottom-nav-wrap { bottom: calc(26px + env(safe-area-inset-bottom)); padding: 0 16px; }
-  .bottom-nav { border-radius: 999px; padding: 9px 22px; min-height: 70px; }
+  .bottom-nav-wrap { bottom: calc(10px + env(safe-area-inset-bottom)); padding: 0 16px; }
+  .bottom-nav { border-radius: 999px; padding: 6px 20px; min-height: 58px; }
 }
 
 /* ── "me" profile info rows ───────────────────────────────────── */
