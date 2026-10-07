@@ -236,6 +236,44 @@
     }
   }
 
+  /* Admin console: same calm family as the student pages, nothing tilts.
+     Filled buttons only deepen their colour; red-outline buttons (reject,
+     delete, log out) get the soft red wash like Me's LOG OUT; outline
+     buttons get a faint wash of their own colour; the evidence photo lifts
+     like a Shop card; inputs' edges turn faint red */
+  body[data-role="admin"] .btn-primary,
+  body[data-role="admin"] .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  body[data-role="admin"] .btn-primary:not(:disabled):hover,
+  body[data-role="admin"] .btn-secondary:not(:disabled):hover { translate: none; rotate: none; }
+  /* (a filter, not --accent-deep: that's its hard shadow's colour and the
+     button would melt into it) */
+  body[data-role="admin"] .btn-primary .body { transition: transform 0.1s ease, filter 0.2s ease; }
+  body[data-role="admin"] .btn-primary:not(:disabled):hover .body { filter: brightness(0.9); }
+  body[data-role="admin"] .btn-secondary:not(:disabled):hover { background-color: #F6E9B8; }
+
+  .btn-approve, .pickup-search-btn, .price-row .save-btn { transition: transform 0.12s ease, opacity 0.12s ease, filter 0.2s ease, background-color 0.2s ease; }
+  .btn-approve:not(:disabled):hover { filter: brightness(0.9); }
+  .pickup-search-btn:not(:disabled):hover,
+  .price-row .save-btn:not(:disabled):hover { background-color: var(--accent-deep); }
+
+  .btn-reject, .shop-manage-actions button, .admin-logout-btn { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease; }
+  .btn-reject:not(:disabled):hover,
+  .shop-manage-delete:hover { background-color: rgba(192,70,58,0.08); color: #9E3328; border-color: #9E3328 !important; }
+  .shop-manage-edit:hover { background-color: rgba(192,70,58,0.06); }
+  .admin-logout-btn:hover { background-color: rgba(192,70,58,0.08); border-color: rgba(192,70,58,0.5); color: #9E3328; }
+  /* no ladybug-style orange glow on the log-out icon */
+  #logout-btn.admin-logout-btn:hover svg { scale: none; filter: none; }
+
+  .feed-card-photo { transition: translate var(--flick), box-shadow 0.25s ease; }
+  .feed-card-photo:hover { translate: 0 -3px; box-shadow: 0 6px 0 rgba(20,30,60,.06), 0 14px 20px -8px rgba(20,30,60,.35); }
+
+  body[data-role="admin"] .field-box,
+  .feed-card-comment,
+  .price-row input { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  body[data-role="admin"] .field-box:hover:not(:focus-within),
+  .feed-card-comment:hover:not(:focus),
+  .price-row input:hover:not(:focus) { border-color: rgba(192,70,58,0.4); }
+
   .page-scan .field-box { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
   .page-scan .field-box:hover:not(:focus-within) { border-color: rgba(30,58,138,0.35); }
 }
