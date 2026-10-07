@@ -135,11 +135,12 @@
   .app-shell--home .launch-btn:hover .launch-arrow svg { translate: 3px 0; }
   .app-shell--home .camera-disc { transition: scale 0.25s cubic-bezier(0.34, 1.7, 0.5, 1), rotate 0.25s cubic-bezier(0.34, 1.7, 0.5, 1); }
   .app-shell--home .launch-btn:hover .camera-disc { scale: 1.1; rotate: -8deg; }
-  /* Shop: the arrow is its own redeem button — it reacts to its own hover */
-  .page-shop .shop-cert .launch-arrow { transition: transform 0.12s ease, scale 0.25s ease; }
+  /* Shop: the whole cert card opens the detail pop-up, so (like Home) the
+     card's hover drives the arrow */
+  .page-shop .shop-cert .launch-arrow { transition: scale 0.25s ease; }
   .page-shop .shop-cert .launch-arrow svg { transition: translate 0.25s ease; }
-  .page-shop .shop-cert .launch-arrow:not(:disabled):hover { translate: none; rotate: none; box-shadow: none; scale: 1.1; }
-  .page-shop .shop-cert .launch-arrow:not(:disabled):hover svg { translate: 3px 0; }
+  .page-shop .shop-cert:hover .launch-arrow:not(.is-disabled) { scale: 1.1; }
+  .page-shop .shop-cert:hover .launch-arrow:not(.is-disabled) svg { translate: 3px 0; }
 
   /* Shop product cards (Stationery + Limited): the card you're looking at
      lifts 4px with a deeper soft shadow — no tilt */

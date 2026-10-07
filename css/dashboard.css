@@ -586,6 +586,7 @@ html, body {
   margin-top: 10px; padding-top: 10px; border-top: 1.5px dashed rgba(26,31,51,0.15);
   white-space: pre-line;
 }
+#item-detail-actions[hidden] { display: none; }
 
 /* minmax(0, …): with plain 1fr the columns grew past the card on a 360px phone */
 .stationery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -1011,8 +1012,8 @@ html, body {
 .page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
 /* Prompt is wide: shrink a little on small phones so "แลกเกียรติบัตร" stays one word */
 .page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; font-size: clamp(18px, 5.6vw, 24px); white-space: nowrap; }
-.page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
-.page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
+/* the arrow is only a hint — the whole card opens the detail pop-up (redeem is in there) */
+.page-shop .shop-cert .launch-arrow.is-disabled { background: var(--sb-cream2); opacity: .6; }
 
 /* "Got an idea?" — the whole card opens the form. The button's dashes are
    drawn with gradients (not border-style: dashed) so motion.css can make
