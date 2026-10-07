@@ -3,16 +3,25 @@
 // this fills the gap left when profile/logout was cut entirely in Round 3a).
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // show the saved info right away instead of "-" while the session check runs
+  try {
+    const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (cached && cached.role === 'student') renderMeInfo(cached);
+  } catch (err) { /* bad cache — the check below handles it */ }
+
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
-  document.getElementById('me-name').textContent = currentUser.name;
-  document.getElementById('me-id').textContent = currentUser.studentId || '-';
-  document.getElementById('me-classroom').textContent = currentUser.classroom || '-';
-  document.getElementById('me-points').textContent = (currentUser.pointsTotal ?? 0).toLocaleString();
-
+  renderMeInfo(currentUser);
   wireLogout();
 });
+
+function renderMeInfo(user) {
+  document.getElementById('me-name').textContent = user.name || '-';
+  document.getElementById('me-id').textContent = user.studentId || '-';
+  document.getElementById('me-classroom').textContent = user.classroom || '-';
+  document.getElementById('me-points').textContent = (user.pointsTotal ?? 0).toLocaleString();
+}
 
 function wireLogout() {
   document.getElementById('logout-btn').addEventListener('click', async () => {

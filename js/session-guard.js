@@ -6,6 +6,13 @@
 
 async function requireStudentSession() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+  // fill the sidebar from the saved login right away, so it isn't blank /
+  // "0 pts" while the checks below talk to Supabase (filled again after them)
+  if (currentUser && currentUser.role === 'student') {
+    try { renderSidebarUser(currentUser); } catch (err) { console.error('renderSidebarUser failed', err); }
+  }
+
   const { data: { session } } = await supabaseClient.auth.getSession();
 
   if (!currentUser || currentUser.role !== 'student' || !session) {
