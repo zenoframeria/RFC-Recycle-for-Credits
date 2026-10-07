@@ -197,14 +197,26 @@ function setupPager(rows, listEl, toggleEl, renderBatch) {
   let shown = 0;
 
   async function revealNext() {
+    const before = listEl.children.length;
     const batch = rows.slice(shown, shown + PAGE_SIZE);
     await renderBatch(batch);
     shown += batch.length;
     toggleEl.hidden = shown >= rows.length;
+    return listEl.children[before];
+  }
+
+  // a list that scrolls inside its own box (the bell panel) gets the new
+  // rows below the fold — scroll the box so the first new row is on top
+  async function onMoreClick() {
+    const firstNew = await revealNext();
+    if (!firstNew || listEl.scrollHeight <= listEl.clientHeight) return;
+    const offset = firstNew.getBoundingClientRect().top - listEl.getBoundingClientRect().top;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    listEl.scrollTo({ top: listEl.scrollTop + offset, behavior: reduce ? 'auto' : 'smooth' });
   }
 
   toggleEl.textContent = 'แสดงเพิ่มเติม';
-  toggleEl.onclick = revealNext;
+  toggleEl.onclick = onMoreClick;
   revealNext();
 }
 
