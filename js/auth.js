@@ -45,6 +45,22 @@ function getCaptchaToken(slotId) {
   return turnstile.getResponse(captchaWidgets[slotId]) || '';
 }
 
+// The hidden check takes a second or two after the page loads (and after every
+// reset), so a fast tap waits for it here instead of asking the student to tap
+// again. Polls until a token arrives or the time runs out — long enough for
+// someone to click the checkbox if Managed mode shows one.
+const CAPTCHA_WAIT_MS = 15000;
+
+async function waitForCaptchaToken(slotId) {
+  const deadline = Date.now() + CAPTCHA_WAIT_MS;
+  let token = getCaptchaToken(slotId);
+  while (!token && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    token = getCaptchaToken(slotId);
+  }
+  return token;
+}
+
 // Tokens are single-use, so get a fresh one after every attempt.
 function resetCaptcha(slotId) {
   if (window.turnstile && captchaWidgets[slotId] !== undefined) {
@@ -52,7 +68,7 @@ function resetCaptcha(slotId) {
   }
 }
 
-const CAPTCHA_WAIT_MSG = 'รอให้ระบบตรวจว่าไม่ใช่บอทสักครู่ แล้วกดอีกครั้ง';
+const CAPTCHA_WAIT_MSG = 'ระบบตรวจว่าไม่ใช่บอทยังไม่เสร็จ ลองรีเฟรชหน้าแล้วกดอีกครั้ง';
 
 function isCaptchaError(error) {
   return /captcha/i.test(error?.message || '');
@@ -74,6 +90,14 @@ function hideError(el) {
 function setLoading(button, loading) {
   button.disabled = loading;
   button.style.opacity = loading ? '0.6' : '';
+}
+
+// Swaps the button's label while waiting on the CAPTCHA; pass null to restore it.
+function setButtonLabel(button, text) {
+  const label = button.querySelector('.label');
+  if (!label) return;
+  if (!label.dataset.original) label.dataset.original = label.textContent;
+  label.textContent = text ?? label.dataset.original;
 }
 
 function saveCurrentUser(role, profile) {
@@ -154,13 +178,15 @@ function wireLoginForm(role) {
     e.preventDefault();
     hideError(errorEl);
 
-    const captchaToken = getCaptchaToken('login-captcha');
+    setLoading(submitBtn, true);
+    setButtonLabel(submitBtn, 'CHECKING…');
+    const captchaToken = await waitForCaptchaToken('login-captcha');
+    setButtonLabel(submitBtn, null);
     if (captchaToken === '') {
+      setLoading(submitBtn, false);
       showError(errorEl, CAPTCHA_WAIT_MSG);
       return;
     }
-
-    setLoading(submitBtn, true);
 
     try {
       const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
@@ -226,13 +252,15 @@ function wireSignupForm(role) {
       return;
     }
 
-    const captchaToken = getCaptchaToken('signup-captcha');
+    setLoading(submitBtn, true);
+    setButtonLabel(submitBtn, 'CHECKING…');
+    const captchaToken = await waitForCaptchaToken('signup-captcha');
+    setButtonLabel(submitBtn, null);
     if (captchaToken === '') {
+      setLoading(submitBtn, false);
       showError(errorEl, CAPTCHA_WAIT_MSG);
       return;
     }
-
-    setLoading(submitBtn, true);
 
     try {
       // Roster check before creating the auth account, only for a friendly
