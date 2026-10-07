@@ -186,15 +186,24 @@
     box-shadow: 0 0 0 3px rgba(30,58,138,0.13), 0 12px 18px -8px rgba(20,30,60,.3);
   }
 
-  :is(.page-scan, .page-me) .btn-primary { transition: transform 0.12s ease, opacity 0.12s ease; }
-  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover { translate: none; rotate: none; }
-  :is(.page-scan, .page-me) .btn-primary .body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
-  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover .body {
+  .page-scan .btn-primary { transition: transform 0.12s ease, opacity 0.12s ease; }
+  .page-scan .btn-primary:not(:disabled):hover { translate: none; rotate: none; }
+  .page-scan .btn-primary .body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
+  .page-scan .btn-primary:not(:disabled):hover .body {
     box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
   }
-  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover:active .body {
+  .page-scan .btn-primary:not(:disabled):hover:active .body {
     box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
   }
+
+  /* Me "LOG OUT" (red outline): calm like "ล้างทั้งหมด" — a faint red wash
+     and a deeper red, nothing moves or grows */
+  .page-me #logout-btn { transition: background-color 0.18s ease, border-color 0.18s ease; }
+  .page-me #logout-btn .label { transition: color 0.18s ease; }
+  .page-me #logout-btn svg { transition: stroke 0.18s ease; }
+  .page-me #logout-btn:hover { translate: none; rotate: none; background-color: rgba(192,70,58,0.08); border-color: #9E3328; }
+  .page-me #logout-btn:hover .label { color: #9E3328; }
+  .page-me #logout-btn:hover svg { stroke: #9E3328; }
 
   .page-scan .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
   .page-scan .btn-secondary:not(:disabled):hover { translate: none; rotate: none; background-color: #F6E9B8; }
