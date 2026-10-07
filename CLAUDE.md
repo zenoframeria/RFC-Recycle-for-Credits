@@ -105,7 +105,8 @@ Security notes:
 - `submissions.point_value_snapshot` is sent by the browser and trusted by `approve_submission()` — fix planned (set it on the server). Today only the admin's eyeball on suggested points catches an inflated price.
 - Anyone who knows a classmate's ID can sign up as them first; fix by deleting that auth user so the real student can sign up.
 - Ghost accounts can still be *created* with a valid CAPTCHA token (a human in a real browser), just not scripted in bulk.
-- Before launch: Supabase auth rate limits are per IP (signup ~30 / 5 min) — raise them (Authentication → Rate Limits, e.g. 150–300; safe now that CAPTCHA blocks scripts) so a class can sign up together on school Wi-Fi. Also consider min password length 6 → 8, and council admins should use long passwords (an admin account can approve fake points and edit prices/shop).
+- Supabase auth rate limit (sign-ups + sign-ins, per IP per 5 min) raised 30 → **200** on 2026-10-07, so several classes can sign up together on one school Wi-Fi address. Safe because CAPTCHA blocks scripts first.
+- Before launch: council admins should use long passwords (an admin account can approve fake points and edit prices/shop). Optional, undecided: min password length 6 → 8.
 
 Deferred on purpose — don't build unless asked:
 - Time-of-day gating (10:00–17:00) and the round-dates banner — waits for `collection_rounds` to be designed. Submissions are allowed any time for now.
