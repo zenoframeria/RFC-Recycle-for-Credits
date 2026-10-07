@@ -10,7 +10,7 @@
 
 let toastTimer = null;
 // SVG instead of a ✅ emoji, which looks different on every phone/OS.
-const TOAST_CHECK_SVG = '<svg class="toast-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+const TOAST_CHECK_SVG = '<svg class="toast-icon" width="14" height="14" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>';
 function showToast(message, { success = false } = {}) {
   const toast = document.getElementById('toast');
   toast.innerHTML = success ? TOAST_CHECK_SVG : '';

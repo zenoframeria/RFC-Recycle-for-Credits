@@ -36,26 +36,26 @@
         <div class="student-name-row" id="student-name-row">
           <div class="student-name" id="student-name">พิมพ์ชนก ว.</div>
           <button class="nickname-edit-btn" id="nickname-edit-btn" aria-label="แก้ไขชื่อเล่น">
-            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16v4zM14.5 6.5l3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg>
           </button>
         </div>
         <div class="nickname-edit-row" id="nickname-edit-row" hidden>
           <input type="text" class="nickname-input" id="nickname-input" aria-label="ชื่อเล่น" maxlength="30" placeholder="ชื่อเล่น" autocomplete="off">
           <button class="nickname-save-btn" id="nickname-save-btn" aria-label="บันทึก">
-            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
           </button>
           <button class="nickname-cancel-btn" id="nickname-cancel-btn" aria-label="ยกเลิก">
-            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
           </button>
         </div>
         <div class="student-fullname" id="student-fullname">พิมพ์ชนก วงศ์ธนโรจน์</div>
       </div>
       <button type="button" class="icon-btn header-report md:hidden" data-open-feedback aria-label="แจ้งปัญหา">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7.4a4 4 0 0 1 8 0"/><circle cx="12" cy="14" r="7.6" fill="currentColor" fill-opacity="0.18"/><path d="M12 6.4v15.2M9.8 4.3 8.4 2.4M14.2 4.3l1.4-1.9"/><g fill="currentColor" stroke="none"><circle cx="8.7" cy="11.8" r="1.35"/><circle cx="15.3" cy="11.8" r="1.35"/><circle cx="9.1" cy="16.9" r="1.25"/><circle cx="14.9" cy="16.9" r="1.25"/></g></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88" /><path d="M14.12 3.88 16 2" /><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1" /><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6" /><path d="M12 20v-9" /><path d="M6.53 9C4.6 8.8 3 7.1 3 5" /><path d="M6 13H2" /><path d="M3 21c0-2.1 1.7-3.9 3.8-4" /><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4" /><path d="M22 13h-4" /><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4" /></svg>
       </button>
       <div class="notif-wrap header-notif">
         <button class="icon-btn" id="notif-btn" aria-haspopup="true" aria-expanded="false" aria-label="Notifications">
-          <svg width="17" height="17" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
           <span class="badge" id="notif-badge" hidden></span>
         </button>
         <div class="notif-panel" id="notif-panel">
@@ -74,17 +74,14 @@
   <!-- launch pad -->
   <div class="section home-launch">
     <div class="section-heading">
-      <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 3l2.4 5.5 6 .5-4.5 4 1.4 6-5.3-3.2L6.7 19l1.4-6L3.6 9l6-.5z" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></svg>
       <span class="title">The Launch Pad</span>
       <span class="sub">· แตะเพื่อสแกนขยะ</span>
     </div>
     <a class="launch-btn" href="scan.html">
       <div class="launch-body">
         <div class="camera-disc">
-          <svg width="28" height="28" viewBox="0 0 24 24">
-            <path d="M4 8h3l2-2h6l2 2h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" fill="none" stroke="var(--sb-ink)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 10.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="var(--sb-ink)" stroke-width="1.6"/>
-          </svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
         </div>
         <div class="launch-text">
           <span class="lets-go">let's go ★</span>
@@ -92,7 +89,7 @@
           <div class="sub">ถ่ายรูปขยะของคุณ · รับแต้มทันที</div>
         </div>
         <div class="launch-arrow">
-          <svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
         </div>
       </div>
     </a>
@@ -139,7 +136,7 @@
   <!-- recent activity -->
   <div class="section home-activity">
     <div class="section-heading">
-      <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 7v5l3.5 2.1M21 12a9 9 0 1 1-9-9" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
       <span class="title">Recent Activity</span>
       <span class="sub">· ประวัติการส่งล่าสุด</span>
     </div>
@@ -178,27 +175,27 @@
     </div>
     <div class="side-divider" aria-hidden="true"></div>
     <a href="dashboard.html" class="nav-item active" aria-current="page" data-tab="home">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 12 12 4l8 8v7a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
       <span class="label">home</span>
     </a>
     <a href="shop.html" class="nav-item" data-tab="shop">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 9h12l-1 11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 9zM9 9V6a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
       <span class="label">shop</span>
     </a>
     <a href="scan.html" class="nav-item nav-item--fab" data-tab="scan" aria-label="Scan">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 8h3l2-2h6l2 2h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
       <span class="label">scan</span>
     </a>
     <a href="rank.html" class="nav-item" data-tab="rank">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 4h8v4a4 4 0 0 1-8 0V4zM5 5H3a3 3 0 0 0 3 5M19 5h2a3 3 0 0 1-3 5M10 14h4v3h2v3H8v-3h2v-3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></svg>
       <span class="label">rank</span>
     </a>
     <a href="me.html" class="nav-item" data-tab="me">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
       <span class="label">me</span>
     </a>
     <button type="button" class="side-report" data-open-feedback aria-label="แจ้งปัญหา">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7.4a4 4 0 0 1 8 0"/><circle cx="12" cy="14" r="7.6" fill="currentColor" fill-opacity="0.18"/><path d="M12 6.4v15.2M9.8 4.3 8.4 2.4M14.2 4.3l1.4-1.9"/><g fill="currentColor" stroke="none"><circle cx="8.7" cy="11.8" r="1.35"/><circle cx="15.3" cy="11.8" r="1.35"/><circle cx="9.1" cy="16.9" r="1.25"/><circle cx="14.9" cy="16.9" r="1.25"/></g></svg>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88" /><path d="M14.12 3.88 16 2" /><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1" /><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6" /><path d="M12 20v-9" /><path d="M6.53 9C4.6 8.8 3 7.1 3 5" /><path d="M6 13H2" /><path d="M3 21c0-2.1 1.7-3.9 3.8-4" /><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4" /><path d="M22 13h-4" /><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4" /></svg>
       <span class="label">แจ้งปัญหา</span>
     </button>
   </nav>
@@ -216,7 +213,7 @@
     <button class="modal-close" id="clear-rejected-close" aria-label="ปิด">×</button>
     <div class="redeem-confirm-kicker">ยืนยันการล้าง</div>
     <div class="redeem-confirm-name" id="clear-rejected-title">ลบรายการที่ถูกปฏิเสธทั้งหมด <span id="clear-rejected-count">0</span> รายการ?</div>
-    <div class="redeem-confirm-warning"><svg class="inline-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3L2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>รวมรายการที่เก่ากว่า 7 วันด้วย ลบแล้วรูปหลักฐานหายถาวร กู้คืนไม่ได้ และใช้โต้แย้งกับแอดมินไม่ได้อีก</div>
+    <div class="redeem-confirm-warning"><svg class="inline-icon" width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>รวมรายการที่เก่ากว่า 7 วันด้วย ลบแล้วรูปหลักฐานหายถาวร กู้คืนไม่ได้ และใช้โต้แย้งกับแอดมินไม่ได้อีก</div>
     <div class="redeem-confirm-actions">
       <button type="button" class="redeem-confirm-cancel" id="clear-rejected-cancel">ยกเลิก</button>
       <button type="button" class="redeem-confirm-ok is-danger" id="clear-rejected-ok">ลบทั้งหมด</button>

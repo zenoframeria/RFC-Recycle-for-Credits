@@ -1160,7 +1160,7 @@ html, body {
 .page-me #logout-btn .body::before { display: none; }
 .page-me #logout-btn .body { padding: 9px 22px; border-radius: 3px; background: transparent; box-shadow: none; }
 .page-me #logout-btn .label { font-size: 14px; color: var(--sb-red); text-shadow: none; }
-.page-me #logout-btn svg path { stroke: var(--sb-red); }
+.page-me #logout-btn svg { stroke: var(--sb-red); }
 
 @variant md {
   .page-rank, .page-me { --content-max: 720px; }

@@ -121,18 +121,19 @@ function goToRoleHome(role) {
 }
 
 // ── password show/hide (login form only) ─────────────────────────────
-const EYE_PATH = 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z';
-const EYE_OFF_PATH = 'M3 3l18 18M10.5 10.5a2 2 0 0 0 3 3M9.4 6.3A10 10 0 0 1 12 6c5 0 9 4 10 6-.4.8-1.2 2-2.5 3.3M6.3 6.3C4 7.7 2.4 10 2 12c1 2 5 6 10 6 1.3 0 2.5-.3 3.6-.7';
+// Lucide "eye" / "eye-off" — static markup, swapped into #eye-icon.
+const EYE_SVG = '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" />';
+const EYE_OFF_SVG = '<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" /><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" /><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" /><path d="m2 2 20 20" />';
 
 function wirePasswordToggle() {
   const toggleBtn = document.getElementById('toggle-password');
   const pwInput = document.getElementById('field-password');
-  const eyePath = document.getElementById('eye-path');
+  const eyeIcon = document.getElementById('eye-icon');
 
   toggleBtn.addEventListener('click', () => {
     const showing = pwInput.type === 'text';
     pwInput.type = showing ? 'password' : 'text';
-    eyePath.setAttribute('d', showing ? EYE_PATH : EYE_OFF_PATH);
+    eyeIcon.innerHTML = showing ? EYE_SVG : EYE_OFF_SVG;
     toggleBtn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
   });
 }
