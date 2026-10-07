@@ -54,22 +54,22 @@
   .redeem-confirm-actions button {
     transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick), box-shadow 0.2s ease;
   }
-  .side-report { transition: scale 0.12s ease, translate var(--flick), rotate var(--flick); }
   .info-btn, .tickets-btn, .modal-close, .history-thumb {
     transition: translate var(--flick), rotate var(--flick);
   }
   .redeem-confirm-actions button:not(:disabled):hover { translate: 0 -3px; rotate: -3deg; box-shadow: 2px 4px 0 rgba(20,30,60,0.2); }
-  .side-report:hover, .info-btn:hover, .tickets-btn:hover,
+  .info-btn:hover, .tickets-btn:hover,
   .modal-close:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
 
   /* Home header: the button stays put, only the icon inside reacts —
      pencil tilts like it's about to write, bell rings, report flag glows */
   .nickname-edit-btn svg { transition: scale 0.22s ease, rotate 0.22s ease; }
   .nickname-edit-btn:hover svg { scale: 1.15; rotate: -15deg; }
-  .icon-btn svg { transition: scale 0.22s ease, filter 0.22s ease; }
+  .icon-btn svg, .side-report svg { transition: scale 0.22s ease, filter 0.22s ease; }
   #notif-btn svg { transform-origin: 50% 10%; } /* swing from the bell's top */
   #notif-btn:hover svg { animation: bell-ring 0.7s ease-in-out; }
-  .icon-btn:not(#notif-btn):hover svg { scale: 1.1; filter: drop-shadow(0 0 4px rgba(230,90,50,0.75)); }
+  /* the sidebar's "แจ้งปัญหา" (computer) matches the phone header button */
+  .icon-btn:not(#notif-btn):hover svg, .side-report:hover svg { scale: 1.1; filter: drop-shadow(0 0 4px rgba(230,90,50,0.75)); }
 
   /* Recent Activity tabs: the unselected tab turns blue and a faint
      underline fades in; the selected tab keeps its line, text goes deeper */
