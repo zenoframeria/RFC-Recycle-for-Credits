@@ -16,7 +16,7 @@
 .admin-tabs { display: flex; }
 .admin-tab {
   flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  border: none; background: none; padding: 4px 2px; cursor: pointer;
+  border: none; border-radius: 999px; background: none; padding: 4px 2px; cursor: pointer;
   color: rgba(26,31,51,0.42);
 }
 .admin-tab svg { width: 21px; height: 21px; }

@@ -216,8 +216,9 @@
   .admin-tab:not(.active):hover {
     color: var(--accent);
     background-color: rgba(30,58,138,0.07);
-    border-radius: 999px; /* round, like the nav panel/pill itself */
   }
+  /* (tabs are always round — set on .nav-item / .admin-tab — so the wash
+     fades out round too, never as a square) */
   body[data-role="admin"] .admin-tab:not(.active):hover { background-color: rgba(192,70,58,0.07); }
   /* Scan is the star of the student nav: brighter + a blue glow (the same
      glow as Home's Scan banner), still no grow */
