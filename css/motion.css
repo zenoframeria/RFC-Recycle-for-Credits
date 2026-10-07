@@ -36,6 +36,13 @@
 @keyframes idea-dash {
   to { background-position: 10px 0, -10px 100%, 0 -10px, 100% 10px, 0 0; }
 }
+/* Home's Recent Activity: the list slides in from the side of the tab you
+   picked (rejected = right tab → from the right), like flipping pages */
+@keyframes panel-in-right { from { opacity: 0; translate: 14px 0; } to { opacity: 1; translate: 0 0; } }
+@keyframes panel-in-left  { from { opacity: 0; translate: -14px 0; } to { opacity: 1; translate: 0 0; } }
+#panel-rejected:not([hidden]) { animation: panel-in-right 0.28s ease; }
+#panel-pending:not([hidden]) { animation: panel-in-left 0.28s ease; }
+
 /* Home's bell: a short left-right ring that dies down */
 @keyframes bell-ring {
   0%, 100% { rotate: 0deg; }
