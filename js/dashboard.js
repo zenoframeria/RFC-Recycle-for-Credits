@@ -622,7 +622,7 @@ function renderNotifRow(row) {
     return `
       <div class="notif-item">
         <div class="content">
-          <div class="text">มอบ${escapeHtml(row.item_name || '-')}ให้แล้ว <span class="notif-points">${receiptCode(row.id)}</span></div>
+          <div class="text">มอบ${escapeHtml(row.item_name || '-')}ของตั๋ว <span class="notif-points">${receiptCode(row.id)}</span> ให้แล้วน้า</div>
           <div class="time">${formatDateTime(row.picked_up_at)}</div>
         </div>
       </div>
