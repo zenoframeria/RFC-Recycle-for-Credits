@@ -2,7 +2,7 @@
 
 Guidance for Claude Code in this repo. **Full history** (every phase/round, testing notes, tried-and-rejected designs, old decisions) is in `docs/history.md` — read the relevant section there when you need the why behind something. If the two disagree, this file wins.
 
-The project owner is a beginner learning as we go: explain things simply (casual Thai), one step at a time, and don't build ahead of what they asked for.
+The project owner is a beginner learning as we go: explain things simply (they write in Thai; reply in plain English), one step at a time, and don't build ahead of what they asked for.
 
 ## What this is
 
@@ -93,13 +93,19 @@ Storage:
 
 ## Current state and open work
 
-**Paused — branch `ghost-lockdown`** (pushed, not tested, not merged, no SQL run; 16 commits behind `main` — merge `main` in before resuming). The owner parked it on 2026-10-06 to work on other things; resume when they bring it up. Two friends have already tried password-guessing the site (with AI help), so this is needed before launch. The pen-tester friend had no advice and suggested "login with Google". Discussed on 2026-10-06: Google login is only worth switching to with **school-issued accounts** (they prove the student ID, which closes the "sign up as a classmate" hole). That needs school IT to (1) allowlist our app, since under-18 Workspace for Education accounts block third-party sign-in by default, and (2) let us map each email to a student ID. Personal Gmail barely beats ID + CAPTCHA, so don't switch to it. The owner hasn't asked IT yet. Default plan: finish CAPTCHA. Damage if a password is guessed: a student account can spend that student's points in the Shop (no refund) and change their nickname, which shows on Top 10. An admin account is much worse (approve fake points, edit prices/shop). Also have council admins use long passwords. Contents: `sql/ghost-read-lockdown.sql` (ghost accounts can't read prices/shop/Top 10), student guard confirms `profiles.role` from the DB, Cloudflare Turnstile on both login pages (`js/auth.js` still has Cloudflare's **test** site key). CAPTCHA's main job is stopping password guessing (guessable IDs + 6-char passwords), then ghost-account spam. Recommended widget: **Managed**. Rollout: create Turnstile widget (hostnames: production domain, `localhost`, `127.0.0.1`, preview hostnames) → real site key in `auth.js` → test → merge → **then** paste the secret key into Supabase → Authentication → Bot and Abuse Protection and switch it on.
+**Done 2026-10-07 — ghost lockdown + CAPTCHA live** (PR #19 merged, `sql/ghost-read-lockdown.sql` run, Supabase CAPTCHA switched on; a no-token login now gets `captcha_failed`). Why: two friends tried password-guessing the site. Login stays student ID + password — the school has no per-student email, and personal Gmail doesn't prove who someone is, so don't switch to Google login.
+- Cloudflare Turnstile widget `RFC_login`, **Managed** mode (free, no usage cap), site key in `js/auth.js`, secret key only in Supabase → Authentication → Bot and Abuse Protection. Pre-clearance off (site isn't behind Cloudflare). Allowed hostnames: `recycle-for-credits.vercel.app`, `localhost`, `127.0.0.1`, the `ghost-lockdown` branch preview — **a new branch's preview hostname must be added (and saved) in Cloudflare or login fails there** (max 10).
+- `appearance: 'interaction-only'`: the box is hidden unless Cloudflare wants a click (Incognito / rapid repeat logins can trigger it). A fast tap waits up to 15 s for the token (button reads CHECKING…), then shows "ลองรีเฟรช".
+- Cloudflare's "Likely human %" is the thing to watch after launch — a sudden drop means someone is scripting the login.
+- Since Supabase CAPTCHA is on for the whole project, every page that calls `auth.signUp` / `signInWithPassword` must send a Turnstile token.
+- Ghost accounts can't read prices/shop/Top 10; the student guard confirms `profiles.role` from the DB.
 
 Security notes:
 - Ghost accounts (direct `auth.signUp` from devtools, no profile) can still be created; they can't upload, submit, or touch admin data.
 - `submissions.point_value_snapshot` is sent by the browser and trusted by `approve_submission()` — fix planned (set it on the server). Today only the admin's eyeball on suggested points catches an inflated price.
 - Anyone who knows a classmate's ID can sign up as them first; fix by deleting that auth user so the real student can sign up.
-- Before launch: Supabase auth rate limits are per IP (signup ~30 / 5 min) — raise them (Authentication → Rate Limits) if a class signs up together on school Wi-Fi.
+- Ghost accounts can still be *created* with a valid CAPTCHA token (a human in a real browser), just not scripted in bulk.
+- Before launch: Supabase auth rate limits are per IP (signup ~30 / 5 min) — raise them (Authentication → Rate Limits, e.g. 150–300; safe now that CAPTCHA blocks scripts) so a class can sign up together on school Wi-Fi. Also consider min password length 6 → 8, and council admins should use long passwords (an admin account can approve fake points and edit prices/shop).
 
 Deferred on purpose — don't build unless asked:
 - Time-of-day gating (10:00–17:00) and the round-dates banner — waits for `collection_rounds` to be designed. Submissions are allowed any time for now.
