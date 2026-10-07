@@ -170,6 +170,37 @@
   .page-shop .idea-card .arrow { transition: translate 0.28s ease; }
   .page-shop .idea-card:hover .label { translate: 0 -1px; }
   .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
+
+  /* Scan + Me: same language as Home/Shop instead of the old lift + tilt.
+     Category cards lift like Shop's product cards (no tilt); the blue
+     buttons glow like Home's Scan banner (no lift); "แนบรูปถ่าย" warms to
+     pastel yellow like Shop's idea button; the weight box's edge turns blue */
+  .page-scan .category-item { transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.12s ease, translate var(--flick); }
+  .page-scan .category-item:hover {
+    translate: 0 -3px; rotate: none;
+    border-color: rgba(30,58,138,0.35);
+    box-shadow: 2px 4px 0 rgba(20,30,60,.07), 0 12px 18px -8px rgba(20,30,60,.3);
+  }
+  .page-scan .category-item.is-selected:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,138,0.13), 0 12px 18px -8px rgba(20,30,60,.3);
+  }
+
+  :is(.page-scan, .page-me) .btn-primary { transition: transform 0.12s ease, opacity 0.12s ease; }
+  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover { translate: none; rotate: none; }
+  :is(.page-scan, .page-me) .btn-primary .body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
+  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover .body {
+    box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  :is(.page-scan, .page-me) .btn-primary:not(:disabled):hover:active .body {
+    box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+
+  .page-scan .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  .page-scan .btn-secondary:not(:disabled):hover { translate: none; rotate: none; background-color: #F6E9B8; }
+
+  .page-scan .field-box { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  .page-scan .field-box:hover:not(:focus-within) { border-color: rgba(30,58,138,0.35); }
 }
 
 /* 3. nav (student bar/sidebar + admin tabs): no highlighter, hover or tap
