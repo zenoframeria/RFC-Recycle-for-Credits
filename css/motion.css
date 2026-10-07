@@ -36,6 +36,15 @@
 @keyframes idea-dash {
   to { background-position: 10px 0, -10px 100%, 0 -10px, 100% 10px, 0 0; }
 }
+/* Home's bell: a short left-right ring that dies down */
+@keyframes bell-ring {
+  0%, 100% { rotate: 0deg; }
+  15% { rotate: 14deg; }
+  30% { rotate: -12deg; }
+  45% { rotate: 9deg; }
+  60% { rotate: -6deg; }
+  75% { rotate: 3deg; }
+}
 
 @media (hover: hover) and (pointer: fine) {
   :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
@@ -45,14 +54,28 @@
   .redeem-confirm-actions button {
     transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick), box-shadow 0.2s ease;
   }
-  .icon-btn, .side-report { transition: scale 0.12s ease, translate var(--flick), rotate var(--flick); }
-  .info-btn, .tickets-btn, .modal-close, .nickname-edit-btn, .history-thumb {
+  .side-report { transition: scale 0.12s ease, translate var(--flick), rotate var(--flick); }
+  .info-btn, .tickets-btn, .modal-close, .history-thumb {
     transition: translate var(--flick), rotate var(--flick);
   }
   .redeem-confirm-actions button:not(:disabled):hover { translate: 0 -3px; rotate: -3deg; box-shadow: 2px 4px 0 rgba(20,30,60,0.2); }
-  .icon-btn:hover, .side-report:hover, .info-btn:hover, .tickets-btn:hover,
-  .modal-close:hover, .nickname-edit-btn:hover,
-  .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+  .side-report:hover, .info-btn:hover, .tickets-btn:hover,
+  .modal-close:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+
+  /* Home header: the button stays put, only the icon inside reacts —
+     pencil tilts like it's about to write, bell rings, ⚠ glows orange */
+  .nickname-edit-btn svg { transition: scale 0.22s ease, rotate 0.22s ease; }
+  .nickname-edit-btn:hover svg { scale: 1.15; rotate: -15deg; }
+  .icon-btn svg { transition: scale 0.22s ease, filter 0.22s ease; }
+  #notif-btn svg { transform-origin: 50% 10%; } /* swing from the bell's top */
+  #notif-btn:hover svg { animation: bell-ring 0.7s ease-in-out; }
+  .icon-btn:not(#notif-btn):hover svg { scale: 1.1; filter: drop-shadow(0 0 4px rgba(230,90,50,0.75)); }
+
+  /* Recent Activity tabs: the unselected tab turns blue and a faint
+     underline fades in; the selected tab keeps its line, text goes deeper */
+  .activity-tabs .activity-tab { transition: color 0.2s ease, border-color 0.2s ease, scale 0.12s ease; }
+  .activity-tab:not(.is-active):hover { color: var(--accent); border-bottom-color: rgba(30,58,138,0.3); }
+  .activity-tab.is-active:hover { color: var(--sb-blue-deep); }
 
   /* wide buttons + Scan's category cards — same lift, less tilt */
   .btn-primary, .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick); }
@@ -61,19 +84,23 @@
   .btn-secondary:not(:disabled):hover,
   .category-item:hover { translate: 0 -3px; rotate: -1deg; }
 
-  /* Home's Launch Pad — big clickable card, gentle flick */
-  .launch-btn { transition: translate var(--flick), rotate var(--flick); }
-  .launch-btn:not(.shop-cert):hover { translate: 0 -2px; rotate: -0.6deg; }
-
-  /* Shop's cert banner = the special item: no lift/tilt, a blue glow
-     instead; its yellow arrow grows and the arrow inside nudges right */
-  .page-shop .shop-cert .launch-body { transition: transform 0.1s ease, box-shadow 0.35s ease; }
-  .page-shop .shop-cert:hover .launch-body {
+  /* Blue banners (Home's Scan & launch, Shop's cert): no lift/tilt, a blue
+     glow instead; the yellow arrow grows and the arrow inside nudges right */
+  .launch-btn .launch-body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
+  .launch-btn:hover .launch-body {
     box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
   }
-  .page-shop .shop-cert:hover:active .launch-body {
+  .launch-btn:hover:active .launch-body {
     box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
   }
+  /* Home: the whole banner is one link, so its hover drives the arrow + camera */
+  .app-shell--home .launch-arrow { transition: scale 0.22s ease; }
+  .app-shell--home .launch-arrow svg { transition: translate 0.22s ease; }
+  .app-shell--home .launch-btn:hover .launch-arrow { scale: 1.1; }
+  .app-shell--home .launch-btn:hover .launch-arrow svg { translate: 3px 0; }
+  .app-shell--home .camera-disc { transition: scale 0.25s cubic-bezier(0.34, 1.7, 0.5, 1), rotate 0.25s cubic-bezier(0.34, 1.7, 0.5, 1); }
+  .app-shell--home .launch-btn:hover .camera-disc { scale: 1.1; rotate: -8deg; }
+  /* Shop: the arrow is its own redeem button — it reacts to its own hover */
   .page-shop .shop-cert .launch-arrow { transition: transform 0.12s ease, scale 0.25s ease; }
   .page-shop .shop-cert .launch-arrow svg { transition: translate 0.25s ease; }
   .page-shop .shop-cert .launch-arrow:not(:disabled):hover { translate: none; rotate: none; box-shadow: none; scale: 1.1; }
