@@ -16,7 +16,7 @@
 .admin-tabs { display: flex; }
 .admin-tab {
   flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  border: none; background: none; padding: 4px 2px; cursor: pointer;
+  border: none; border-radius: 999px; background: none; padding: 4px 2px; cursor: pointer;
   color: rgba(26,31,51,0.42);
 }
 .admin-tab svg { width: 21px; height: 21px; }
@@ -149,7 +149,7 @@
 .pickup-summary-row .name { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink); min-width: 0; }
 .pickup-summary-row .n { font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--accent); white-space: nowrap; }
 @variant md {
-  #pickup-panel .card { max-width: 560px; }
+  #pickup-panel .card { max-width: 560px; margin-inline: auto; }
 }
 
 /* form helper reused by the item-form modal — the zone select */
@@ -205,7 +205,7 @@
 /* ── desktop (md+): Prices tab — only 4 rows, so keep the card narrow
    and line the inputs / units / Save buttons up in columns ───────── */
 @variant md {
-  #price-panel .card { max-width: 720px; }
+  #price-panel .card { max-width: 720px; margin-inline: auto; }
   .price-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 110px auto auto;

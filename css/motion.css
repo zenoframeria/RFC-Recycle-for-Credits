@@ -170,10 +170,117 @@
   .page-shop .idea-card .arrow { transition: translate 0.28s ease; }
   .page-shop .idea-card:hover .label { translate: 0 -1px; }
   .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
+
+  /* Scan + Me: same language as Home/Shop instead of the old lift + tilt.
+     Category cards lift like Shop's product cards (no tilt); the blue
+     buttons glow like Home's Scan banner (no lift); "แนบรูปถ่าย" warms to
+     pastel yellow like Shop's idea button; the weight box's edge turns blue */
+  .page-scan .category-item { transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.12s ease, translate var(--flick); }
+  .page-scan .category-item:hover {
+    translate: 0 -3px; rotate: none;
+    border-color: rgba(30,58,138,0.35);
+    box-shadow: 2px 4px 0 rgba(20,30,60,.07), 0 12px 18px -8px rgba(20,30,60,.3);
+  }
+  .page-scan .category-item.is-selected:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,138,0.13), 0 12px 18px -8px rgba(20,30,60,.3);
+  }
+
+  .page-scan .btn-primary { transition: transform 0.12s ease, opacity 0.12s ease; }
+  .page-scan .btn-primary:not(:disabled):hover { translate: none; rotate: none; }
+  .page-scan .btn-primary .body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
+  .page-scan .btn-primary:not(:disabled):hover .body {
+    box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  .page-scan .btn-primary:not(:disabled):hover:active .body {
+    box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+
+  /* Me "LOG OUT" (red outline): calm like "ล้างทั้งหมด" — a faint red wash
+     and a deeper red, nothing moves or grows */
+  .page-me #logout-btn { transition: background-color 0.18s ease, border-color 0.18s ease; }
+  .page-me #logout-btn .label { transition: color 0.18s ease; }
+  .page-me #logout-btn svg { transition: stroke 0.18s ease; }
+  .page-me #logout-btn:hover { translate: none; rotate: none; background-color: rgba(192,70,58,0.08); border-color: #9E3328; }
+  .page-me #logout-btn:hover .label { color: #9E3328; }
+  .page-me #logout-btn:hover svg { stroke: #9E3328; }
+
+  .page-scan .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  .page-scan .btn-secondary:not(:disabled):hover { translate: none; rotate: none; background-color: #F6E9B8; }
+
+  /* nav (student + admin): calm — a grey tab turns the theme colour (blue
+     student / red admin) with a faint wash behind it; the Scan ball/pill
+     brightens a touch. Nothing moves or grows; the active tab stays as is */
+  .nav-item, .admin-tab { transition: color 0.18s ease, background-color 0.18s ease, filter 0.18s ease; }
+  .nav-item:not(.active):not(.nav-item--fab):hover,
+  .admin-tab:not(.active):hover {
+    color: var(--accent);
+    background-color: rgba(30,58,138,0.07);
+  }
+  /* (tabs are always round — set on .nav-item / .admin-tab — so the wash
+     fades out round too, never as a square) */
+  body[data-role="admin"] .admin-tab:not(.active):hover { background-color: rgba(192,70,58,0.07); }
+  /* Scan is the star of the student nav: brighter + a blue glow (the same
+     glow as Home's Scan banner), still no grow */
+  .nav-item--fab { transition: filter 0.2s ease, box-shadow 0.25s ease; }
+  .nav-item--fab:hover {
+    filter: brightness(1.15);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -6px 12px rgba(0,0,0,0.22),
+      0 0 0 4px rgba(110,150,255,0.3), 0 0 26px 8px rgba(110,150,255,0.6);
+  }
+  /* the sidebar scrolls (overflow) and would clip a big glow — keep it tight */
+  @variant md {
+    .bottom-nav .nav-item--fab:hover {
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -6px 12px rgba(0,0,0,0.22),
+        0 0 0 3px rgba(110,150,255,0.35), 0 0 12px 2px rgba(110,150,255,0.6);
+    }
+  }
+
+  /* Admin console: same calm family as the student pages, nothing tilts.
+     Filled buttons only deepen their colour; red-outline buttons (reject,
+     delete, log out) get the soft red wash like Me's LOG OUT; outline
+     buttons get a faint wash of their own colour; the evidence photo lifts
+     like a Shop card; inputs' edges turn faint red */
+  body[data-role="admin"] .btn-primary,
+  body[data-role="admin"] .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  body[data-role="admin"] .btn-primary:not(:disabled):hover,
+  body[data-role="admin"] .btn-secondary:not(:disabled):hover { translate: none; rotate: none; }
+  /* (a filter, not --accent-deep: that's its hard shadow's colour and the
+     button would melt into it) */
+  body[data-role="admin"] .btn-primary .body { transition: transform 0.1s ease, filter 0.2s ease; }
+  body[data-role="admin"] .btn-primary:not(:disabled):hover .body { filter: brightness(0.9); }
+  body[data-role="admin"] .btn-secondary:not(:disabled):hover { background-color: #F6E9B8; }
+
+  .btn-approve, .pickup-search-btn, .price-row .save-btn { transition: transform 0.12s ease, opacity 0.12s ease, filter 0.2s ease, background-color 0.2s ease; }
+  .btn-approve:not(:disabled):hover { filter: brightness(0.9); }
+  .pickup-search-btn:not(:disabled):hover,
+  .price-row .save-btn:not(:disabled):hover { background-color: var(--accent-deep); }
+
+  .btn-reject, .shop-manage-actions button, .admin-logout-btn { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease; }
+  .btn-reject:not(:disabled):hover,
+  .shop-manage-delete:hover { background-color: rgba(192,70,58,0.08); color: #9E3328; border-color: #9E3328 !important; }
+  .shop-manage-edit:hover { background-color: rgba(192,70,58,0.06); }
+  .admin-logout-btn:hover { background-color: rgba(192,70,58,0.08); border-color: rgba(192,70,58,0.5); color: #9E3328; }
+  /* no ladybug-style orange glow on the log-out icon */
+  #logout-btn.admin-logout-btn:hover svg { scale: none; filter: none; }
+
+  .feed-card-photo { transition: translate var(--flick), box-shadow 0.25s ease; }
+  .feed-card-photo:hover { translate: 0 -3px; box-shadow: 0 6px 0 rgba(20,30,60,.06), 0 14px 20px -8px rgba(20,30,60,.35); }
+
+  body[data-role="admin"] .field-box,
+  .feed-card-comment,
+  .price-row input { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  body[data-role="admin"] .field-box:hover:not(:focus-within),
+  .feed-card-comment:hover:not(:focus),
+  .price-row input:hover:not(:focus) { border-color: rgba(192,70,58,0.4); }
+
+  .page-scan .field-box { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  .page-scan .field-box:hover:not(:focus-within) { border-color: rgba(30,58,138,0.35); }
 }
 
-/* 3. nav (student bar/sidebar + admin tabs): no highlighter, hover or tap
-   animation — the active tab is a filled icon (dashboard.css / admin.css). */
+/* 3. nav (student bar/sidebar + admin tabs): no highlighter or tap
+   animation — the active tab is a filled icon (dashboard.css / admin.css);
+   the only hover is the calm colour + wash in section 2. */
 
 /* 4. press feedback for the buttons that didn't have any yet */
 /* (.btn-primary has its own "sink into the shadow" press in components.css) */

@@ -80,7 +80,7 @@
   .side-brand, .side-divider { display: flex; }
   .side-report { display: flex; order: 2; margin-top: auto; }
 
-  .bottom-nav .nav-item { width: 100%; padding: 8px 4px; border-radius: 3px; }
+  .bottom-nav .nav-item { width: 100%; padding: 8px 4px; border-radius: 999px; }
   /* labels + brand name stay in the a11y tree (visually hidden, not display:none) */
   .bottom-nav .nav-item .label,
   .side-brand-text { display: inline; position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
