@@ -57,7 +57,21 @@
 
   /* big clickable cards (Launch Pad, Shop's cert banner, Limited items) */
   .launch-btn, .limited-item { transition: translate var(--flick), rotate var(--flick); }
-  .launch-btn:hover, .limited-item:hover { translate: 0 -2px; rotate: -0.6deg; }
+  .launch-btn:not(.shop-cert):hover, .limited-item:hover { translate: 0 -2px; rotate: -0.6deg; }
+
+  /* Shop's cert banner = the special item: no lift/tilt, a blue glow
+     instead; its yellow arrow grows and the arrow inside nudges right */
+  .page-shop .shop-cert .launch-body { transition: transform 0.1s ease, box-shadow 0.35s ease; }
+  .page-shop .shop-cert:hover .launch-body {
+    box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  .page-shop .shop-cert:hover:active .launch-body {
+    box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  .page-shop .shop-cert .launch-arrow { transition: transform 0.12s ease, scale 0.25s ease; }
+  .page-shop .shop-cert .launch-arrow svg { transition: translate 0.25s ease; }
+  .page-shop .shop-cert .launch-arrow:not(:disabled):hover { translate: none; rotate: none; box-shadow: none; scale: 1.1; }
+  .page-shop .shop-cert .launch-arrow:not(:disabled):hover svg { translate: 3px 0; }
 
   /* Shop stationery: the photo + name open the detail pop-up — flick the photo */
   .stationery-top .item-medallion { transition: translate var(--flick), rotate var(--flick); }
