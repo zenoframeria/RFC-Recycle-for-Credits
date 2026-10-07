@@ -241,3 +241,22 @@
 /* these two already animate colors: keep those, add scale */
 .admin-tab { transition: border-color 0.15s, background 0.15s, scale 0.12s ease; }
 .activity-tab { transition: color 0.15s ease, border-color 0.15s ease, scale 0.12s ease; }
+
+/* 5. tap feedback for everything else (phones have no hover): while the
+   finger is down the ✕ / "ล้างทั้งหมด" darken like their hover, the rest
+   fade to 0.8. Short and soft — nothing moves. */
+.modal-close:active { background-color: #E3D8BE; }
+.notif-clear:active { background-color: rgba(192,70,58,0.1); color: #9E3328; }
+.info-btn:active,
+.history-thumb:active,
+.nickname-save-btn:not(:disabled):active,
+.nickname-cancel-btn:active,
+.save-btn:not(:disabled):active,
+.shop-manage-actions button:active,
+.pickup-search-btn:not(:disabled):active,
+.pickup-confirm-btn:not(:disabled):active,
+.page-shop .idea-card:active,
+/* tapping a Limited card's own "แลกเลย" shouldn't fade the whole card */
+[data-open-item]:active:not(:has(button:active)) { opacity: 0.8; }
+/* (.info-btn / .history-thumb keep their own transitions from section 2) */
+.nickname-save-btn, .nickname-cancel-btn, .save-btn, .shop-manage-actions button, .pickup-search-btn, .pickup-confirm-btn { transition: opacity 0.12s ease; }

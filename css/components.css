@@ -125,6 +125,7 @@
   display: flex;
   color: rgba(26,31,51,0.55);
 }
+.field-box .toggle-btn:active { opacity: 0.6; } /* tap feedback (already faint, so a bigger drop) */
 
 /* primary call-to-action button (login submit / scan button).
    "Printed ticket" look: flat ink fill + a hard offset shadow, no glow —

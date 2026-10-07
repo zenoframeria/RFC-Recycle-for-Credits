@@ -184,6 +184,26 @@ function wireFeedbackButtons(user) {
   });
 }
 
+// "i" button → its yellow sticky-note help. Tap/click toggles it; tapping
+// anywhere else (outside the button and the note) closes it again.
+function wireInfoHelp(btnId, helpId) {
+  const infoBtn = document.getElementById(btnId);
+  const help = document.getElementById(helpId);
+  const setOpen = (open) => {
+    help.hidden = !open;
+    infoBtn.setAttribute('aria-expanded', String(open));
+  };
+  infoBtn.addEventListener('click', () => setOpen(help.hidden));
+  document.addEventListener('click', (e) => {
+    if (help.hidden || infoBtn.contains(e.target) || help.contains(e.target)) return;
+    setOpen(false);
+  });
+}
+
+// iOS Safari only shows :active (the tap feedback in the CSS) when the page
+// listens for touches somewhere — this empty listener switches it on.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // ── nav highlighter (.nav-ind, styled in motion.css §3) ─────────────
 // One highlighter sits behind where you are: a stroke under a tab's label
 // (phone bar) or a swipe across the row (sidebar), and a yellow frame
