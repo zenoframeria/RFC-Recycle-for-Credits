@@ -34,18 +34,18 @@
 @media (hover: hover) and (pointer: fine) {
   :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
 
-  /* small buttons — the full flick */
-  .redeem-btn, .redeem-confirm-actions button {
+  /* small buttons — the full flick (Shop's .redeem-btn buttons have their
+     own hover further down) */
+  .redeem-confirm-actions button {
     transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick), box-shadow 0.2s ease;
   }
   .icon-btn, .side-report { transition: scale 0.12s ease, translate var(--flick), rotate var(--flick); }
-  .info-btn, .tickets-btn, .modal-close, .launch-arrow, .nickname-edit-btn, .history-thumb {
+  .info-btn, .tickets-btn, .modal-close, .nickname-edit-btn, .history-thumb {
     transition: translate var(--flick), rotate var(--flick);
   }
-  .redeem-btn:not(:disabled):hover,
   .redeem-confirm-actions button:not(:disabled):hover { translate: 0 -3px; rotate: -3deg; box-shadow: 2px 4px 0 rgba(20,30,60,0.2); }
   .icon-btn:hover, .side-report:hover, .info-btn:hover, .tickets-btn:hover,
-  .modal-close:hover, .launch-arrow:not(:disabled):hover, .nickname-edit-btn:hover,
+  .modal-close:hover, .nickname-edit-btn:hover,
   .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
 
   /* wide buttons + Scan's category cards — same lift, less tilt */
@@ -55,9 +55,9 @@
   .btn-secondary:not(:disabled):hover,
   .category-item:hover { translate: 0 -3px; rotate: -1deg; }
 
-  /* big clickable cards (Launch Pad, Shop's cert banner, Limited items) */
-  .launch-btn, .limited-item { transition: translate var(--flick), rotate var(--flick); }
-  .launch-btn:not(.shop-cert):hover, .limited-item:hover { translate: 0 -2px; rotate: -0.6deg; }
+  /* Home's Launch Pad — big clickable card, gentle flick */
+  .launch-btn { transition: translate var(--flick), rotate var(--flick); }
+  .launch-btn:not(.shop-cert):hover { translate: 0 -2px; rotate: -0.6deg; }
 
   /* Shop's cert banner = the special item: no lift/tilt, a blue glow
      instead; its yellow arrow grows and the arrow inside nudges right */
@@ -73,15 +73,31 @@
   .page-shop .shop-cert .launch-arrow:not(:disabled):hover { translate: none; rotate: none; box-shadow: none; scale: 1.1; }
   .page-shop .shop-cert .launch-arrow:not(:disabled):hover svg { translate: 3px 0; }
 
-  /* Shop stationery: the photo + name open the detail pop-up — flick the photo */
-  .stationery-top .item-medallion { transition: translate var(--flick), rotate var(--flick); }
-  .stationery-top:hover .item-medallion { translate: 0 -3px; rotate: -4deg; }
+  /* Shop product cards (Stationery + Limited): the card you're looking at
+     lifts 4px with a deeper soft shadow — no tilt */
+  .page-shop .stationery-item,
+  .page-shop .limited-item { transition: translate var(--flick), box-shadow 0.25s ease; }
+  .page-shop .stationery-item:hover {
+    translate: 0 -4px;
+    box-shadow: 0 1px 0 rgba(20,30,60,.06), 3px 6px 0 rgba(20,30,60,.08), 0 14px 20px -8px rgba(20,30,60,.32), 0 0 0 1px rgba(26,31,51,.06);
+  }
+  .page-shop .limited-item:hover { translate: 0 -4px; box-shadow: 3px 6px 0 rgba(20,30,60,.08), 0 14px 20px -8px rgba(20,30,60,.32); }
+  /* Stationery "แลกเลย": colour only — growing would bump the price chip */
+  .stationery-foot .redeem-btn { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.2s ease; }
+  .stationery-foot .redeem-btn:not(:disabled):hover { background-color: #2F55C4; }
+  /* Limited "แลกเลย": the loudest button on the page — grows + red glow */
+  .redeem-btn--limited { transition: transform 0.12s ease, opacity 0.12s ease, scale var(--flick), box-shadow 0.25s ease; }
+  .redeem-btn--limited:not(:disabled):hover { scale: 1.05; box-shadow: 0 0 0 3px rgba(240,110,60,.25), 0 0 18px 4px rgba(240,100,50,.6); }
 
-  /* nav bar / sidebar: just the icon (the Scan FAB is one big icon) */
-  .nav-item svg { transition: translate var(--flick), rotate var(--flick); }
-  .nav-item:not(.nav-item--fab):hover svg { translate: 0 -3px; rotate: -8deg; }
-  .nav-item--fab { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick); }
-  .nav-item--fab:hover { translate: 0 -3px; rotate: -3deg; }
+  /* phone bottom bar: icon + label bounce up together, like a phone app;
+     sidebar (md+): just the icon; the Scan FAB lifts as one piece */
+  .nav-item { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick); }
+  .nav-item svg { transition: translate var(--flick); }
+  .nav-item:hover { translate: 0 -4px; }
+  @variant md {
+    .bottom-nav .nav-item:not(.nav-item--fab):hover { translate: none; }
+    .bottom-nav .nav-item:not(.nav-item--fab):hover svg { translate: 0 -3px; }
+  }
 }
 
 /* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
