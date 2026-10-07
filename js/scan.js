@@ -12,6 +12,9 @@
 const MAX_PHOTO_WIDTH = 800;
 const PHOTO_QUALITY = 0.7;
 const MIN_WEIGHT_KG = 0.05;
+// mainly a typo guard (e.g. "50" for "5.0") — every submission is still
+// checked by an admin with the photo
+const MAX_WEIGHT_KG = 10;
 
 const scanState = {
   currentUser: null,
@@ -81,13 +84,22 @@ function validateWeight() {
   const weight = parseFloat(document.getElementById('weight-input').value);
   const errorEl = document.getElementById('weight-error');
   const belowMin = weight > 0 && weight < MIN_WEIGHT_KG;
+  const aboveMax = weight > MAX_WEIGHT_KG;
 
-  errorEl.textContent = belowMin
-    ? `น้ำหนักต้องอย่างน้อย ${MIN_WEIGHT_KG} กก. (${Math.round(MIN_WEIGHT_KG * 1000)} กรัม) ต่อการส่งหนึ่งครั้ง`
-    : '';
-  errorEl.hidden = !belowMin;
+  if (belowMin) {
+    errorEl.textContent = `น้ำหนักต้องอย่างน้อย ${MIN_WEIGHT_KG} กก. (${Math.round(MIN_WEIGHT_KG * 1000)} กรัม) ต่อการส่งหนึ่งครั้ง`;
+  } else if (aboveMax) {
+    errorEl.textContent = `น้ำหนักต้องไม่เกิน ${MAX_WEIGHT_KG} กก. ต่อการส่งหนึ่งครั้ง ถ้ามีมากกว่านี้ให้แบ่งส่งหลายครั้ง`;
+  } else {
+    errorEl.textContent = '';
+  }
+  errorEl.hidden = !belowMin && !aboveMax;
 
-  return weight >= MIN_WEIGHT_KG;
+  return isWeightOk(weight);
+}
+
+function isWeightOk(weight) {
+  return weight >= MIN_WEIGHT_KG && weight <= MAX_WEIGHT_KG;
 }
 
 // ── photo (compress client-side before it ever touches state; compressImage
@@ -133,7 +145,7 @@ function wirePhotoInput() {
 // ── confirm state ──────────────────────────────────────────────────
 function refreshConfirmState() {
   const weight = parseFloat(document.getElementById('weight-input').value);
-  const ready = scanState.selectedCategoryId && weight >= MIN_WEIGHT_KG && scanState.photoBlob;
+  const ready = scanState.selectedCategoryId && isWeightOk(weight) && scanState.photoBlob;
   document.getElementById('confirm-btn').disabled = !ready;
 }
 
@@ -142,7 +154,7 @@ function wireSubmit() {
   document.getElementById('confirm-btn').addEventListener('click', async () => {
     const weight = parseFloat(document.getElementById('weight-input').value);
     const cat = scanState.categories.find((c) => c.id === scanState.selectedCategoryId);
-    if (!cat || !weight || weight < MIN_WEIGHT_KG || !scanState.photoBlob) return;
+    if (!cat || !isWeightOk(weight) || !scanState.photoBlob) return;
 
     setSubmitLoading(true);
 

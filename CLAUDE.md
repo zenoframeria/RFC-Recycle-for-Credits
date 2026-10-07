@@ -120,7 +120,7 @@ Deferred on purpose — don't build unless asked:
 - Audit view (bin weight vs claimed) — the owner reconciles manually.
 - Bulk approve, cleanup of old rejected photos, expiring receipts nobody picked up.
 - More Realtime. Only Home subscribes today; free tier = 200 concurrent connections. If ever needed, the one worth doing is the admin Review feed (a "N new — tap to load" bar + drop cards other admins already handled) — not Shop/Rank/Pickups.
-- Minimum weight 0.05 kg is enforced client-side only.
+- Weight limits (min 0.05 kg, max 10 kg per submission — the max is a typo guard) are enforced client-side only.
 - Parked looks the owner liked but said "not yet": graph-paper washi tape ("G") and a recycled-paper texture for paper surfaces ("direction A"). Recipes + the list of rejected UI experiments are in `docs/history.md` → "UI review follow-ups". Build only when asked.
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
