@@ -1034,12 +1034,16 @@ html, body {
 .tickets-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--accent); }
 .tickets-title .sub { font-family: var(--font-thai); font-weight: 400; font-size: 11.5px; color: rgba(26,31,51,.55); }
 .tickets-card .shop-section-note { margin-bottom: 6px; }
+/* 16px = the cap height of the heading next to it; ::before widens the
+   tap area to 32px without making the circle look bigger */
 .info-btn {
-  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
-  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+  position: relative;
+  width: 16px; height: 16px; flex-shrink: 0; padding: 0; border-radius: 999px;
+  border: 1.3px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 12px; font-style: normal; line-height: 1;
+  font-family: var(--font-display); font-weight: 700; font-size: 10px; font-style: normal; line-height: 1;
 }
+.info-btn::before { content: ''; position: absolute; inset: -8px; }
 .info-btn[aria-expanded="true"] { background: var(--accent); color: var(--sb-cream); }
 /* the explanation = a yellow sticky note */
 .ticket-help { margin: 8px 0 4px; padding: 10px 12px; background: var(--sb-yellow-soft); border-radius: 2px; box-shadow: 1px 2px 0 rgba(20,30,60,.10); rotate: -.4deg; }
