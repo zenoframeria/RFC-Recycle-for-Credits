@@ -368,12 +368,7 @@ function wireTickets() {
     if (e.key === 'Escape' && overlay.classList.contains('open')) closeTickets();
   });
 
-  const infoBtn = document.getElementById('tickets-info-btn');
-  const help = document.getElementById('tickets-help');
-  infoBtn.addEventListener('click', () => {
-    help.hidden = !help.hidden;
-    infoBtn.setAttribute('aria-expanded', String(!help.hidden));
-  });
+  wireInfoHelp('tickets-info-btn', 'tickets-help');
 }
 async function loadRedemptions() {
   const { data, error } = await supabaseClient

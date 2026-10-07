@@ -95,8 +95,9 @@
   flex-direction: column;
   align-items: center;
   gap: 1px;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, opacity 0.12s;
 }
+.auth-tab:active { opacity: 0.8; } /* tap feedback */
 .auth-tab .tab-sub {
   font-family: var(--font-mono);
   font-size: 10px;

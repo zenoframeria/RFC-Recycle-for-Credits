@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
   wireSignupForm(role);
 });
 
+// iOS Safari only shows :active tap feedback when the page listens for
+// touches (same one-liner as nav-common.js, which login pages don't load)
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // ── CAPTCHA (Cloudflare Turnstile) ─────────────────────────────────────
 // Every sign-in/sign-up sends a one-time token from the Turnstile box, so a
 // script calling supabaseClient.auth directly (no real page) can't get one.
