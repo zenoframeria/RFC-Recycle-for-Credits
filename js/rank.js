@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
+  // "i" next to Top 10 — same sticky-note help as Shop's My Rewards
+  const infoBtn = document.getElementById('rank-info-btn');
+  const help = document.getElementById('rank-help');
+  infoBtn.addEventListener('click', () => {
+    help.hidden = !help.hidden;
+    infoBtn.setAttribute('aria-expanded', String(!help.hidden));
+  });
+
   const [{ data: top10, error: top10Error }, { data: myRankRows, error: myRankError }] = await Promise.all([
     supabaseClient.rpc('leaderboard_top10'),
     supabaseClient.rpc('my_rank'),
