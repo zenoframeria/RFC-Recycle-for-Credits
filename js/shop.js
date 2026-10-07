@@ -3,7 +3,7 @@
 // checks points/stock/rules, deducts points, drops stock and writes a
 // receipt to `redemptions` — all on the server. Redeeming is final (no
 // refund), so a confirm pop-up comes first. The student's receipts show in
-// "My Rewards"; a council member marks them picked up in the admin
+// "My Tickets"; a council member marks them picked up in the admin
 // Pickups tab.
 
 const shopState = {

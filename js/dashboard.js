@@ -230,7 +230,7 @@ function setupPager(rows, listEl, toggleEl, renderBatch) {
   revealNext();
 }
 
-// "i" next to Personal Progress — same sticky-note help as Rank / My Rewards
+// "i" next to Personal Progress — same sticky-note help as Rank / My Tickets
 function wireProgressHelp() {
   wireInfoHelp('progress-info-btn', 'progress-help');
 }

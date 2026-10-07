@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
-  // "i" next to Top 10 — same sticky-note help as Shop's My Rewards
+  // "i" next to Top 10 — same sticky-note help as Shop's My Tickets
   wireInfoHelp('rank-info-btn', 'rank-help');
 
   const [{ data: top10, error: top10Error }, { data: myRankRows, error: myRankError }] = await Promise.all([
