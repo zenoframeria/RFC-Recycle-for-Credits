@@ -988,6 +988,22 @@ html, body {
 .page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
 .page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
 
+/* "Got an idea?" — the whole card opens the form. The button's dashes are
+   drawn with gradients (not border-style: dashed) so motion.css can make
+   them run around the button on hover. */
+.page-shop .idea-card { cursor: pointer; }
+.page-shop .idea-card .btn-secondary {
+  border-color: transparent;
+  background:
+    linear-gradient(90deg, var(--accent) 50%, transparent 0) repeat-x 0 0 / 10px 1.5px,
+    linear-gradient(90deg, var(--accent) 50%, transparent 0) repeat-x 0 100% / 10px 1.5px,
+    linear-gradient(0deg, var(--accent) 50%, transparent 0) repeat-y 0 0 / 1.5px 10px,
+    linear-gradient(0deg, var(--accent) 50%, transparent 0) repeat-y 100% 0 / 1.5px 10px,
+    var(--sb-cream2);
+}
+.page-shop .idea-card .label,
+.page-shop .idea-card .arrow { display: inline-block; }
+
 .page-shop .redeem-btn:not(.launch-arrow) { border-radius: 3px; }
 .page-shop .price-chip { border-radius: 2px; background: transparent; }
 .page-shop .stationery-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.08), 0 0 0 1px rgba(26,31,51,.06); }

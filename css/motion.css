@@ -31,6 +31,12 @@
    on touch. Uses translate/rotate (not transform) so the existing :active
    presses (transform: scale…) still compose with it. Each transition list
    keeps the element's own transitions from its base rule. */
+/* one dash period (10px) per loop on every side — top runs right, right
+   runs down, bottom runs left, left runs up: a full lap around the button */
+@keyframes idea-dash {
+  to { background-position: 10px 0, -10px 100%, 0 -10px, 100% 10px, 0 0; }
+}
+
 @media (hover: hover) and (pointer: fine) {
   :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
 
@@ -88,6 +94,20 @@
   /* Limited "แลกเลย": the loudest button on the page — grows + red glow */
   .redeem-btn--limited { transition: transform 0.12s ease, opacity 0.12s ease, scale var(--flick), box-shadow 0.25s ease; }
   .redeem-btn--limited:not(:disabled):hover { scale: 1.05; box-shadow: 0 0 0 3px rgba(240,110,60,.25), 0 0 18px 4px rgba(240,100,50,.6); }
+
+  /* Shop "Got an idea?" card: lifts 2px; its dashes run around the button,
+     the button warms to pastel yellow, the label lifts, ↗ shoots up-right */
+  .page-shop .idea-card { transition: translate 0.3s ease, box-shadow 0.3s ease; }
+  .page-shop .idea-card:hover {
+    translate: 0 -2px;
+    box-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 4px 0 rgba(20,30,60,.07), 0 12px 18px -10px rgba(20,30,60,.3);
+  }
+  .page-shop .idea-card .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  .page-shop .idea-card:hover .btn-secondary { translate: none; rotate: none; background-color: #F6E9B8; animation: idea-dash 0.5s linear infinite; }
+  .page-shop .idea-card .label,
+  .page-shop .idea-card .arrow { transition: translate 0.28s ease; }
+  .page-shop .idea-card:hover .label { translate: 0 -1px; }
+  .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
 
   /* phone bottom bar: icon + label bounce up together, like a phone app;
      sidebar (md+): just the icon; the Scan FAB lifts as one piece */
