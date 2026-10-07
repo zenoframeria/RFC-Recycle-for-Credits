@@ -251,7 +251,7 @@ html, body {
   display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-left: 4px;
 }
 .section-heading .icon { flex-shrink: 0; display: flex; }
-.section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; }
+.section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 .section-heading .sub { font-family: var(--font-thai); font-size: 12.5px; color: rgba(26,31,51,0.55); }
 .section-heading.lg .title { font-size: 18px; }
 
@@ -371,6 +371,10 @@ html, body {
   font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.05;
   font-variant-numeric: tabular-nums; color: var(--sb-blue-deep);
 }
+.points-ring-center .unit {
+  font-family: var(--font-display); font-weight: 600; font-size: 12px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(26,31,51,0.5); margin-top: 2px;
+}
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
 .stat-tile { padding: 8px 6px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.08); border-radius: 10px; text-align: center; }
@@ -449,7 +453,7 @@ html, body {
 .notif-wrap { position: relative; }
 .notif-panel {
   position: absolute; top: calc(100% + 10px); right: -6px; z-index: 40;
-  width: 260px; max-width: 78vw;
+  width: 300px; max-width: calc(100vw - 32px);
   background: var(--sb-paper); border-radius: 16px;
   border: 1px solid rgba(26,31,51,0.12);
   box-shadow: 0 14px 30px rgba(20,30,60,0.22), inset 0 1px 0 rgba(255,255,255,0.7);
@@ -462,7 +466,7 @@ html, body {
 .notif-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .notif-panel-heading { display: flex; align-items: baseline; gap: 5px; padding: 0 2px 10px; }
 .notif-panel-heading .title { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 14px; color: var(--accent); }
-.notif-panel-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.5); }
+.notif-panel-heading .sub { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.5); white-space: nowrap; }
 .notif-list { display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; }
 .notif-item { display: flex; gap: 8px; padding: 8px; border-radius: 10px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.07); }
 .notif-item .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 5px var(--accent); }
@@ -570,13 +574,14 @@ html, body {
   white-space: pre-line;
 }
 
-.stationery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* minmax(0, …): with plain 1fr the columns grew past the card on a 360px phone */
+.stationery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; }
 .stationery-top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .stationery-top .item-medallion { width: 44px; height: 44px; }
 .stationery-top .item-medallion svg { width: 20px; height: 20px; }
 .stationery-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.stationery-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.stationery-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
 
 /* price pill — same shape language as .redeem-btn / .balance-chip, replacing
    the old circular .price-badge (a 4-digit cost like "3,200 pts" wrapped
@@ -762,7 +767,15 @@ html, body {
 /* ── recent activity (submission history) ────────────────────── */
 .history-card { text-align: left; }
 
-.activity-tabs { display: flex; gap: 4px; border-bottom: 1px solid rgba(26,31,51,0.1); margin-bottom: 4px; }
+.activity-tabs { position: relative; display: flex; gap: 4px; border-bottom: 1px solid rgba(26,31,51,0.1); margin-bottom: 4px; }
+/* the selected tab's blue line is one bar that slides between the two
+   tabs (each tab = half the row minus the 4px gap) */
+.activity-tabs::after {
+  content: ''; position: absolute; left: 0; bottom: -1px;
+  width: calc((100% - 4px) / 2); height: 2px; background: var(--accent);
+  transition: translate 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.activity-tabs:has(#tab-rejected.is-active)::after { translate: calc(100% + 4px) 0; }
 .activity-tab {
   flex: 1; border: none; background: transparent; cursor: pointer;
   font-family: var(--font-thai); font-weight: 600; font-size: 12.5px;
@@ -770,7 +783,7 @@ html, body {
   border-bottom: 2px solid transparent; margin-bottom: -1px;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
-.activity-tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.activity-tab.is-active { color: var(--accent); } /* its line = .activity-tabs::after */
 .activity-tab:active { opacity: 0.7; }
 
 .activity-panel[hidden] { display: none; }
@@ -927,7 +940,7 @@ html, body {
 .notif-clear {
   margin-left: auto; padding: 2px 4px; border: none; background: none; cursor: pointer;
   font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--sb-red);
-  text-decoration: underline; text-underline-offset: 2px;
+  text-decoration: underline; text-underline-offset: 2px; white-space: nowrap;
 }
 .notif-clear[hidden] { display: none; }
 .notif-rejected { font-weight: 600; color: var(--sb-red); }
@@ -982,9 +995,26 @@ html, body {
    (no Thai glyphs → random system fallback) */
 .page-shop .shop-cert { margin-top: 14px; }
 .page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
-.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; }
+/* Prompt is wide: shrink a little on small phones so "แลกเกียรติบัตร" stays one word */
+.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; font-size: clamp(18px, 5.6vw, 24px); white-space: nowrap; }
 .page-shop .shop-cert .launch-arrow { padding: 0; border: none; border-radius: 999px; background: var(--sb-yellow); cursor: pointer; }
 .page-shop .shop-cert .launch-arrow:disabled { cursor: default; background: var(--sb-cream2); opacity: .6; }
+
+/* "Got an idea?" — the whole card opens the form. The button's dashes are
+   drawn with gradients (not border-style: dashed) so motion.css can make
+   them run around the button on hover. */
+.page-shop .idea-card { cursor: pointer; }
+.page-shop .idea-card .btn-secondary {
+  border-color: transparent;
+  background:
+    linear-gradient(90deg, var(--accent) 50%, transparent 0) repeat-x 0 0 / 10px 1.5px,
+    linear-gradient(90deg, var(--accent) 50%, transparent 0) repeat-x 0 100% / 10px 1.5px,
+    linear-gradient(0deg, var(--accent) 50%, transparent 0) repeat-y 0 0 / 1.5px 10px,
+    linear-gradient(0deg, var(--accent) 50%, transparent 0) repeat-y 100% 0 / 1.5px 10px,
+    var(--sb-cream2);
+}
+.page-shop .idea-card .label,
+.page-shop .idea-card .arrow { display: inline-block; }
 
 .page-shop .redeem-btn:not(.launch-arrow) { border-radius: 3px; }
 .page-shop .price-chip { border-radius: 2px; background: transparent; }
@@ -1032,13 +1062,19 @@ html, body {
 .tickets-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--accent); }
 .tickets-title .sub { font-family: var(--font-thai); font-weight: 400; font-size: 11.5px; color: rgba(26,31,51,.55); }
 .tickets-card .shop-section-note { margin-bottom: 6px; }
+/* 16px = the cap height of the heading next to it; ::before widens the
+   tap area to 32px without making the circle look bigger */
 .info-btn {
-  width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px;
-  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+  position: relative;
+  width: 16px; height: 16px; flex-shrink: 0; padding: 0; border-radius: 999px;
+  border: 1.3px solid rgba(26,31,51,0.35); background: transparent; color: rgba(26,31,51,0.45); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 12px; font-style: normal; line-height: 1;
+  font-family: var(--font-display); font-weight: 700; font-size: 10px; font-style: normal; line-height: 1;
 }
-.info-btn[aria-expanded="true"] { background: var(--accent); color: var(--sb-cream); }
+.info-btn::before { content: ''; position: absolute; inset: -8px; }
+.info-btn[aria-expanded="true"] { background: var(--accent); border-color: var(--accent); color: var(--sb-cream); }
+/* Home's Personal Progress note sits under the heading, inside the card */
+#progress-help { margin-top: 10px; text-align: left; }
 /* the explanation = a yellow sticky note */
 .ticket-help { margin: 8px 0 4px; padding: 10px 12px; background: var(--sb-yellow-soft); border-radius: 2px; box-shadow: 1px 2px 0 rgba(20,30,60,.10); rotate: -.4deg; }
 .ticket-help[hidden] { display: none; }

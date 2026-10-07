@@ -24,32 +24,208 @@
 /* admin tab panels swap on click: no stagger wait (out-specifies the nth-child rules) */
 .dash-scroll > .admin-panel { animation-delay: 0s; }
 
-/* 2. paper-lift hover — mouse/trackpad only, never on touch */
-@media (hover: hover) and (pointer: fine) {
-  .card { transition: translate 0.2s ease, rotate 0.2s ease, box-shadow 0.2s ease; }
-  body:not([data-role="admin"]) .card:hover { translate: 0 -3px; rotate: -0.4deg; box-shadow: 0 18px 34px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset; }
-  /* Paper cards: lift, but keep each card's own tilt and paper shadow */
-  body:not([data-role="admin"]) .app-shell--home .card:hover { rotate: var(--paper-tilt); box-shadow: var(--paper-shadow-lift); }
-  /* Home's handmade-paper card draws its shadow on the section (it follows the
-     deckle edge) — a box-shadow here would show a rectangle behind it */
-  body:not([data-role="admin"]) .app-shell--home .progress-card:hover { box-shadow: none; }
-  .card > .tape { transition: translate 0.2s ease; }
-  body:not([data-role="admin"]) .card:hover > .tape { translate: 0 -2px; }
+/* 2. "paper flick" hover — only things you can click move; plain cards stay
+   still. Same springy motion everywhere, scaled to the size of the thing:
+   small buttons lift 3px + tilt 3deg, wide buttons / big clickable cards
+   tilt less, the nav bar flicks just its icon. Mouse/trackpad only, never
+   on touch. Uses translate/rotate (not transform) so the existing :active
+   presses (transform: scale…) still compose with it. Each transition list
+   keeps the element's own transitions from its base rule. */
+/* one dash period (10px) per loop on every side — top runs right, right
+   runs down, bottom runs left, left runs up: a full lap around the button */
+@keyframes idea-dash {
+  to { background-position: 10px 0, -10px 100%, 0 -10px, 100% 10px, 0 0; }
+}
+/* Home's Recent Activity: the list slides in from the side of the tab you
+   picked (rejected = right tab → from the right), like flipping pages */
+@keyframes panel-in-right { from { opacity: 0; translate: 14px 0; } to { opacity: 1; translate: 0 0; } }
+@keyframes panel-in-left  { from { opacity: 0; translate: -14px 0; } to { opacity: 1; translate: 0 0; } }
+#panel-rejected:not([hidden]) { animation: panel-in-right 0.28s ease; }
+#panel-pending:not([hidden]) { animation: panel-in-left 0.28s ease; }
+
+/* Home's bell: a short left-right ring that dies down */
+@keyframes bell-ring {
+  0%, 100% { rotate: 0deg; }
+  15% { rotate: 14deg; }
+  30% { rotate: -12deg; }
+  45% { rotate: 9deg; }
+  60% { rotate: -6deg; }
+  75% { rotate: 3deg; }
 }
 
-/* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
-   (sidebar sizes only — the phone bar uses 3b below) */
+@media (hover: hover) and (pointer: fine) {
+  :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
+
+  /* small buttons — the full flick (Shop's .redeem-btn buttons have their
+     own hover further down) */
+  .tickets-btn, .history-thumb {
+    transition: translate var(--flick), rotate var(--flick);
+  }
+  .tickets-btn:hover, .history-thumb:hover { translate: 0 -3px; rotate: -3deg; }
+
+  /* every "i": grey → theme blue, grows a hair, no tilt (keeps the tiny
+     "i" sharp). data-tip = a short dark-blue tooltip that fades + rises in
+     above it; clicking still opens the full sticky note */
+  .info-btn { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, scale 0.2s ease; }
+  .info-btn:hover { scale: 1.08; color: var(--accent); border-color: var(--accent); }
+  .info-btn[aria-expanded="true"]:hover { color: var(--sb-cream); }
+  .info-btn[data-tip]::after {
+    content: attr(data-tip) "\A กดเพื่ออ่านเพิ่ม";
+    position: absolute; bottom: calc(100% + 9px); left: 50%; z-index: 60;
+    translate: -50% 4px; width: max-content; max-width: 210px;
+    padding: 7px 10px; border-radius: 6px;
+    background: var(--sb-blue-deep); color: #fff; box-shadow: 0 6px 14px rgba(15,36,97,0.25);
+    font-family: var(--font-thai); font-weight: 400; font-style: normal; font-size: 11.5px; line-height: 1.45;
+    letter-spacing: 0; text-transform: none; text-align: center; white-space: pre-line;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease, translate 0.2s ease;
+  }
+  .info-btn[data-tip]:hover::after { opacity: 1; translate: -50% 0; }
+
+  /* confirm pop-ups (Home "clear rejected", Shop "redeem") + every ✕:
+     calm on purpose — short plain easing, nothing bouncy or growing, so
+     the eye stays on the warning. Cancel (the safe choice) lifts 1px;
+     the confirm button only darkens, never moves */
+  .modal-close { transition: background-color 0.18s ease, rotate 0.2s ease; }
+  .modal-close:hover { background-color: #E3D8BE; rotate: 90deg; }
+  .redeem-confirm-actions button { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, translate 0.15s ease; }
+  .redeem-confirm-cancel:hover { background-color: var(--sb-cream2); translate: 0 -1px; }
+  .redeem-confirm-ok:not(:disabled):hover { background-color: var(--accent-deep); border-color: var(--accent-deep); }
+  .redeem-confirm-ok.is-danger:not(:disabled):hover { background-color: #9E3328; border-color: #9E3328; }
+  /* "ล้างทั้งหมด" (bell panel + rejected tab): it deletes — no bounce,
+     just a faint red wash and a deeper red */
+  .notif-clear { border-radius: 3px; transition: background-color 0.15s ease, color 0.15s ease; }
+  .notif-clear:hover { background-color: rgba(192,70,58,0.1); color: #9E3328; }
+
+  /* Home header: the button stays put, only the icon inside reacts —
+     pencil tilts like it's about to write, bell rings, report ladybug glows */
+  .nickname-edit-btn svg { transition: scale 0.22s ease, rotate 0.22s ease; }
+  .nickname-edit-btn:hover svg { scale: 1.15; rotate: -15deg; }
+  .icon-btn svg, .side-report svg { transition: scale 0.22s ease, filter 0.22s ease; }
+  #notif-btn svg { transform-origin: 50% 10%; } /* swing from the bell's top */
+  #notif-btn:hover svg { animation: bell-ring 0.7s ease-in-out; }
+  /* the sidebar's "แจ้งปัญหา" (computer) matches the phone header button */
+  .icon-btn:not(#notif-btn):hover svg, .side-report:hover svg { scale: 1.1; filter: drop-shadow(0 0 4px rgba(230,90,50,0.75)); }
+
+  /* Recent Activity tabs: the unselected tab turns blue and a faint
+     underline fades in; the selected tab keeps its line, text goes deeper */
+  .activity-tabs .activity-tab { transition: color 0.2s ease, border-color 0.2s ease, scale 0.12s ease; }
+  .activity-tab:not(.is-active):hover { color: var(--accent); border-bottom-color: rgba(30,58,138,0.3); }
+  .activity-tab.is-active:hover { color: var(--sb-blue-deep); }
+
+  /* wide buttons + Scan's category cards — same lift, less tilt */
+  .btn-primary, .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick), rotate var(--flick); }
+  .category-item { transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s, translate var(--flick), rotate var(--flick); }
+  .btn-primary:not(:disabled):hover,
+  .btn-secondary:not(:disabled):hover,
+  .category-item:hover { translate: 0 -3px; rotate: -1deg; }
+
+  /* Blue banners (Home's Scan & launch, Shop's cert): no lift/tilt, a blue
+     glow instead; the yellow arrow grows and the arrow inside nudges right */
+  .launch-btn .launch-body { transition: transform 0.1s ease, box-shadow 0.25s ease; }
+  .launch-btn:hover .launch-body {
+    box-shadow: 3px 4px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  .launch-btn:hover:active .launch-body {
+    box-shadow: 1px 1px 0 var(--accent-deep), 0 0 0 5px rgba(110,150,255,0.3), 0 0 34px 10px rgba(110,150,255,0.65);
+  }
+  /* Home: the whole banner is one link, so its hover drives the arrow + camera */
+  .app-shell--home .launch-arrow { transition: scale 0.22s ease; }
+  .app-shell--home .launch-arrow svg { transition: translate 0.22s ease; }
+  .app-shell--home .launch-btn:hover .launch-arrow { scale: 1.1; }
+  .app-shell--home .launch-btn:hover .launch-arrow svg { translate: 3px 0; }
+  .app-shell--home .camera-disc { transition: scale 0.25s cubic-bezier(0.34, 1.7, 0.5, 1), rotate 0.25s cubic-bezier(0.34, 1.7, 0.5, 1); }
+  .app-shell--home .launch-btn:hover .camera-disc { scale: 1.1; rotate: -8deg; }
+  /* Shop: the arrow is its own redeem button — it reacts to its own hover */
+  .page-shop .shop-cert .launch-arrow { transition: transform 0.12s ease, scale 0.25s ease; }
+  .page-shop .shop-cert .launch-arrow svg { transition: translate 0.25s ease; }
+  .page-shop .shop-cert .launch-arrow:not(:disabled):hover { translate: none; rotate: none; box-shadow: none; scale: 1.1; }
+  .page-shop .shop-cert .launch-arrow:not(:disabled):hover svg { translate: 3px 0; }
+
+  /* Shop product cards (Stationery + Limited): the card you're looking at
+     lifts 4px with a deeper soft shadow — no tilt */
+  .page-shop .stationery-item,
+  .page-shop .limited-item { transition: translate var(--flick), box-shadow 0.25s ease; }
+  .page-shop .stationery-item:hover {
+    translate: 0 -4px;
+    box-shadow: 0 1px 0 rgba(20,30,60,.06), 3px 6px 0 rgba(20,30,60,.08), 0 14px 20px -8px rgba(20,30,60,.32), 0 0 0 1px rgba(26,31,51,.06);
+  }
+  .page-shop .limited-item:hover { translate: 0 -4px; box-shadow: 3px 6px 0 rgba(20,30,60,.08), 0 14px 20px -8px rgba(20,30,60,.32); }
+  /* Stationery "แลกเลย": colour only — growing would bump the price chip */
+  .stationery-foot .redeem-btn { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.2s ease; }
+  .stationery-foot .redeem-btn:not(:disabled):hover { background-color: #2F55C4; }
+  /* Limited "แลกเลย": the loudest button on the page — grows + red glow */
+  .redeem-btn--limited { transition: transform 0.12s ease, opacity 0.12s ease, scale var(--flick), box-shadow 0.25s ease; }
+  .redeem-btn--limited:not(:disabled):hover { scale: 1.05; box-shadow: 0 0 0 3px rgba(240,110,60,.25), 0 0 18px 4px rgba(240,100,50,.6); }
+
+  /* Shop "Got an idea?" card: lifts 2px; its dashes run around the button,
+     the button warms to pastel yellow, the label lifts, ↗ shoots up-right */
+  .page-shop .idea-card { transition: translate 0.3s ease, box-shadow 0.3s ease; }
+  .page-shop .idea-card:hover {
+    translate: 0 -2px;
+    box-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 4px 0 rgba(20,30,60,.07), 0 12px 18px -10px rgba(20,30,60,.3);
+  }
+  .page-shop .idea-card .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
+  .page-shop .idea-card:hover .btn-secondary { translate: none; rotate: none; background-color: #F6E9B8; animation: idea-dash 0.5s linear infinite; }
+  .page-shop .idea-card .label,
+  .page-shop .idea-card .arrow { transition: translate 0.28s ease; }
+  .page-shop .idea-card:hover .label { translate: 0 -1px; }
+  .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
+
+  /* nav: pointing at a tab "hovers the pen" — a faint highlighter stroke
+     draws in left → right under it (same shape as .nav-ind, see 3). No
+     jump. The Scan FAB is a button, not a tab: it keeps a small lift. */
+  .bottom-nav .nav-item:not(.nav-item--fab)::before {
+    content: ''; position: absolute; z-index: -1; pointer-events: none;
+    background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
+    left: 0; right: 0; bottom: 6px; height: 13px;
+    opacity: 0; scale: 0 1; transform-origin: left center;
+    transition: scale 0.28s cubic-bezier(0.5, 0, 0.3, 1), opacity 0.2s ease;
+  }
+  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover::before { opacity: 0.45; scale: 1 1; }
+  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover { color: rgba(26,31,51,0.8); }
+  .nav-item--fab { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick); }
+  .nav-item--fab:hover { translate: 0 -3px; }
+  @variant md {
+    .bottom-nav .nav-item:not(.nav-item--fab)::before { inset: 0; height: auto; rotate: none; border-radius: 3px; }
+  }
+}
+
+/* 3. "you are here" highlighter (.nav-ind, made + moved by
+   initNavIndicator() in nav-common.js, which sets its box and the mark's
+   top/height/radius/tilt inline). Each tab is its own page, so it starts
+   where you came from and glides to the new spot when the page opens.
+   Phone bar: a stroke under the tab's label. Sidebar (md+): a swipe across
+   the row + a notebook-tab edge. On the Scan page: a yellow frame around
+   the Scan button (.on-fab). The Scan button sits above it, so the
+   highlighter passes under it when crossing the middle of the phone bar. */
+.bottom-nav .nav-item:not(.nav-item--fab) { position: relative; z-index: 1; transition: color 0.35s ease, transform 0.12s ease, opacity 0.12s ease; }
+.bottom-nav .nav-item--fab { z-index: 1; }
+.nav-ind { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+.nav-ind[hidden] { display: none; }
+.nav-ind i {
+  position: absolute; display: block;
+  left: 0; right: 0; top: calc(100% - 19px); height: 13px;
+  background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
+}
 @variant md {
-  .bottom-nav .nav-item.active {
+  .nav-ind i {
+    top: 0; height: 100%; rotate: none; border-radius: 3px;
     background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
 }
-
-/* 3b. phone bottom bar: the active tab's label gets a highlighter stripe */
+/* on the Scan button: a solid yellow frame (out-specifies the md swipe) */
+.nav-ind.on-fab i { background: var(--sb-yellow-soft); box-shadow: none; }
+/* fallback if the script didn't run: the old static highlighter */
+@variant md {
+  .bottom-nav:not(.has-ind) .nav-item.active {
+    background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+}
 @media (max-width: 767.98px) {
-  .bottom-nav .nav-item.active .label {
+  .bottom-nav:not(.has-ind) .nav-item.active .label {
     padding: 0 4px;
     background: linear-gradient(transparent 45%, var(--sb-yellow-soft) 45%, var(--sb-yellow-soft) 92%, transparent 92%);
   }

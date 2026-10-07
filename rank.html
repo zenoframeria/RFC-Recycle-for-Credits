@@ -37,7 +37,13 @@
     <div class="card">
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
         <span class="title">Top 10</span>
-        <span class="sub">· นับแต้มที่ได้จากการส่งขยะ แลกของแล้วอันดับไม่ลด</span>
+        <button type="button" class="info-btn" id="rank-info-btn" aria-label="อันดับนับยังไง" aria-expanded="false" aria-controls="rank-help" data-tip="อันดับนับจากแต้มที่ได้จากการส่งขยะ">i</button>
+      </div>
+      <div class="ticket-help" id="rank-help" hidden>
+        <div class="q">อันดับนับยังไง?</div>
+        <div class="a">นับจากแต้มทั้งหมดที่ได้จากการส่งขยะ (เฉพาะที่แอดมินอนุมัติแล้ว)</div>
+        <div class="q">แลกของแล้วอันดับจะลดไหม?</div>
+        <div class="a">ไม่ลด แต้มที่ใช้แลกของไม่ถูกหักจากอันดับ แลกได้เต็มที่</div>
       </div>
 
       <div class="rank-podium" id="rank-podium"></div>

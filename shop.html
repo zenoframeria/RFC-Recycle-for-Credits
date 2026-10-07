@@ -83,15 +83,16 @@
     </div>
   </div>
 
-  <!-- suggest a reward → Google Form, reward topic pre-ticked -->
+  <!-- suggest a reward → Google Form, reward topic pre-ticked. The whole
+       card opens it; the button's click bubbles up to the card (one open). -->
   <div class="section">
-    <div class="card">
+    <div class="card idea-card" data-open-feedback data-feedback-topic="reward">
       <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
         <span class="title">Got an idea?</span>
       </div>
       <div class="shop-section-note">อยากให้มีอะไรเพิ่มใน Shop ไหม? เสนอมาให้เราเลย! ไอเดียไหนที่เหมาะสมก็จะได้มาอยู่ใน Shop น้า</div>
-      <button type="button" class="btn-secondary" data-open-feedback data-feedback-topic="reward">
-        <span class="label">ส่งไอเดีย ↗</span>
+      <button type="button" class="btn-secondary">
+        <span class="label">ส่งไอเดีย <span class="arrow" aria-hidden="true">↗</span></span>
       </button>
     </div>
   </div>
@@ -150,7 +151,7 @@
     <button class="modal-close" id="tickets-close" aria-label="ปิด">×</button>
     <div class="tickets-head">
       <div class="tickets-title" id="tickets-title">My Rewards <span class="sub">· ของที่แลกแล้ว</span></div>
-      <button type="button" class="info-btn" id="tickets-info-btn" aria-label="ตั๋วรับของคืออะไร" aria-expanded="false" aria-controls="tickets-help">i</button>
+      <button type="button" class="info-btn" id="tickets-info-btn" aria-label="ตั๋วรับของคืออะไร" aria-expanded="false" aria-controls="tickets-help" data-tip="แลกของแล้วได้ตั๋ว เอาไว้โชว์ตอนไปรับของ">i</button>
     </div>
     <div class="ticket-help" id="tickets-help" hidden>
       <div class="q">ตั๋วรับของคืออะไร?</div>

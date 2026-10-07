@@ -29,7 +29,7 @@ The project owner is a beginner learning as we go: explain things simply (they w
 |---|---|---|
 | `index.html` | inline | redirects by session |
 | `login-student.html` / `login-admin.html` | `auth.js` | `body[data-role]` picks role + accent colour |
-| `dashboard.html` (Home) | `dashboard.js` | points ring (fills toward a display-only 50,000 cap), Launch Pad, Recent Activity (pending / rejected last 7 days), notification bell, nickname edit, "แจ้งปัญหา" button → Google Form |
+| `dashboard.html` (Home) | `dashboard.js` | points ring with a "pts" unit (fills toward a display-only 50,000 goal — no real cap; the "i" note says so), Launch Pad, Recent Activity (pending / rejected last 7 days, sliding tab line), notification bell, nickname edit, "แจ้งปัญหา" ladybug button → Google Form |
 | `scan.html` | `scan.js` | submit: category, weight, photo, suggested points |
 | `shop.html` | `shop.js` | catalog from `shop_items`; real redeem via `redeem_item()` after a confirm pop-up (final — no refund); "My Rewards" receipts (`R-0042` = `redemptions.id`); "Got an idea?" card → same Google Form with the reward topic pre-ticked |
 | `rank.html` | `rank.js` | Top 10 podium + list, `#rank-own` when you're outside the top 10. Ranks by points **earned** (sum of approved submissions), so redeeming never drops rank |
@@ -118,4 +118,4 @@ Deferred on purpose — don't build unless asked:
 
 Open questions (waiting on the student council president — don't guess): do points reset each round; what rewards and budget; is the price unit really THB/kg; how often a buyer collects. Undecided: does Rank #1 earn a real certificate; is "1 submission per category per day" still needed.
 
-Decided, not open: no battery-collection box; login stays student ID (not class + seat number); Home stays as it is — no "next reward" card, no approved-kg stat, no points-ring rework (dropped 2026-10-05).
+Decided, not open: no battery-collection box; login stays student ID (not class + seat number); Home — no "next reward" card, no approved-kg stat (dropped 2026-10-05); the owner later (2026-10-07) asked for a "pts" unit + an "i" note on the ring, nothing more. The "i" note must not promise a points cap or answer the open questions above.
