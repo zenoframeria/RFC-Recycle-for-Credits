@@ -26,8 +26,9 @@ create policy "reads need a real profile"
   to authenticated
   using (public.is_student() or public.is_admin());
 
--- 2) Leaderboard: same function as sql/phase6b-patch-leaderboard-nickname.sql,
---    plus a caller check in the WHERE clause (a ghost gets zero rows).
+-- 2) Leaderboard: same function as sql/shop-redemption.sql (ranks by points
+--    earned from approved submissions, so redeeming never drops rank), plus a
+--    caller check in the WHERE clause (a ghost gets zero rows).
 --    my_rank() needs no change — it already returns nothing without a profile.
 create or replace function public.leaderboard_top10()
 returns table (name text, nickname text, points_total integer, is_you boolean)
@@ -35,11 +36,17 @@ language sql
 security definer
 set search_path = public
 as $$
-  select p.name, p.nickname, p.points_total, (p.id = auth.uid()) as is_you
+  select p.name, p.nickname, e.earned::integer as points_total, (p.id = auth.uid()) as is_you
   from public.profiles p
-  where p.role = 'student' and p.points_total > 0
+  join (
+    select s.user_id, sum(s.points_awarded) as earned
+    from public.submissions s
+    where s.status = 'approved'
+    group by s.user_id
+  ) e on e.user_id = p.id
+  where p.role = 'student' and e.earned > 0
     and public.is_student()
-  order by p.points_total desc, p.name asc
+  order by e.earned desc, p.name asc
   limit 10;
 $$;
 
