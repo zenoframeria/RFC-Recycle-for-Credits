@@ -102,7 +102,7 @@ Storage:
 
 Security notes:
 - Ghost accounts (direct `auth.signUp` from devtools, no profile) can still be created; they can't upload, submit, or touch admin data.
-- `submissions.point_value_snapshot` is sent by the browser and trusted by `approve_submission()` — fix planned (set it on the server). Today only the admin's eyeball on suggested points catches an inflated price.
+- `submissions.point_value_snapshot` is set by the server (2026-10-07, PR #20): a BEFORE INSERT trigger (`sql/price-snapshot-server.sql`, run) copies the category's current price and blanks the review fields, ignoring what the browser sends. `scan.js` no longer sends it.
 - Anyone who knows a classmate's ID can sign up as them first; fix by deleting that auth user so the real student can sign up.
 - Ghost accounts can still be *created* with a valid CAPTCHA token (a human in a real browser), just not scripted in bulk.
 - Supabase auth rate limit (sign-ups + sign-ins, per IP per 5 min) raised 30 → **200** on 2026-10-07, so several classes can sign up together on one school Wi-Fi address. Safe because CAPTCHA blocks scripts first.
