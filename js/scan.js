@@ -166,7 +166,7 @@ function wireSubmit() {
           weight_kg: weight,
           photo_url: photoPath,
           status: 'pending',
-          point_value_snapshot: cat.point_value,
+          // point_value_snapshot is filled in by the server (sql/price-snapshot-server.sql).
         });
 
       if (insertError) {
