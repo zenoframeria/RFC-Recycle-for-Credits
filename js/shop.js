@@ -18,6 +18,15 @@ const shopState = {
 const ONE_PER_STUDENT_SECTIONS = ['cert', 'limited'];
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // show the saved points right away instead of a 0 while the session check
+  // runs; refreshShopPoints() swaps in the live value right after
+  try {
+    const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (cached && cached.role === 'student') {
+      document.getElementById('shop-points').textContent = (cached.pointsTotal ?? 0).toLocaleString();
+    }
+  } catch (err) { /* bad cache — the check below handles it */ }
+
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
