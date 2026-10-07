@@ -208,12 +208,26 @@
   .page-scan .btn-secondary { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.28s ease; }
   .page-scan .btn-secondary:not(:disabled):hover { translate: none; rotate: none; background-color: #F6E9B8; }
 
+  /* nav (student + admin): calm — a grey tab turns the theme colour (blue
+     student / red admin) with a faint wash behind it; the Scan ball/pill
+     brightens a touch. Nothing moves or grows; the active tab stays as is */
+  .nav-item, .admin-tab { transition: color 0.18s ease, background-color 0.18s ease, filter 0.18s ease; }
+  .nav-item:not(.active):not(.nav-item--fab):hover,
+  .admin-tab:not(.active):hover {
+    color: var(--accent);
+    background-color: rgba(30,58,138,0.07);
+    border-radius: 3px;
+  }
+  body[data-role="admin"] .admin-tab:not(.active):hover { background-color: rgba(192,70,58,0.07); }
+  .nav-item--fab:hover { filter: brightness(1.12); }
+
   .page-scan .field-box { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
   .page-scan .field-box:hover:not(:focus-within) { border-color: rgba(30,58,138,0.35); }
 }
 
-/* 3. nav (student bar/sidebar + admin tabs): no highlighter, hover or tap
-   animation — the active tab is a filled icon (dashboard.css / admin.css). */
+/* 3. nav (student bar/sidebar + admin tabs): no highlighter or tap
+   animation — the active tab is a filled icon (dashboard.css / admin.css);
+   the only hover is the calm colour + wash in section 2. */
 
 /* 4. press feedback for the buttons that didn't have any yet */
 /* (.btn-primary has its own "sink into the shadow" press in components.css) */
