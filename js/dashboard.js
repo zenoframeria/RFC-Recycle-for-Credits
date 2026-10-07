@@ -30,6 +30,13 @@ const PAGE_SIZE = 5;
 const REJECTED_VISIBLE_DAYS = 7;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // draw the name from the saved login right away, so it doesn't pop in
+  // late while the session check below talks to Supabase
+  try {
+    const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (cached && cached.role === 'student' && cached.name) renderHeader(cached);
+  } catch (err) { /* bad cache — the check below handles it */ }
+
   const currentUser = await requireStudentSession();
   if (!currentUser) return;
 
