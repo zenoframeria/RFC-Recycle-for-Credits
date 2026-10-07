@@ -183,3 +183,84 @@ function wireFeedbackButtons(user) {
     });
   });
 }
+
+// ── nav highlighter (.nav-ind, styled in motion.css §3) ─────────────
+// One highlighter stroke sits behind the active tab. Every tab is its own
+// page, so on a nav click we remember which tab we're leaving (session
+// storage, this browser tab only); the next page draws the stroke on that
+// old tab first, then stretches it over both tabs and shrinks it onto the
+// new one. Storage can be blocked (private mode) — then it just appears.
+const NAV_FROM_KEY = 'navFrom';
+const NAV_EASE = 'cubic-bezier(0.5, 0, 0.3, 1)';
+
+function initNavIndicator() {
+  const nav = document.querySelector('.bottom-nav');
+  if (!nav) return;
+  const tabs = [...nav.querySelectorAll('.nav-item:not(.nav-item--fab)')];
+  const target = tabs.find((t) => t.classList.contains('active'));
+
+  const ind = document.createElement('div');
+  ind.className = 'nav-ind';
+  ind.setAttribute('aria-hidden', 'true');
+  ind.innerHTML = '<i></i>';
+  nav.prepend(ind);
+  nav.classList.add('has-ind');
+
+  // leaving: remember the tab we're on (Scan's page has none active)
+  nav.querySelectorAll('a[href]').forEach((link) => {
+    link.addEventListener('click', () => {
+      try { sessionStorage.setItem(NAV_FROM_KEY, target ? target.dataset.tab : ''); } catch (e) { /* storage blocked */ }
+    });
+  });
+
+  if (!target) { ind.hidden = true; return; } // Scan page: no tab to mark
+
+  function setBox(left, top, width, height, ms) {
+    ind.style.transition = ms
+      ? `translate ${ms}ms ${NAV_EASE}, width ${ms}ms ${NAV_EASE}, height ${ms}ms ${NAV_EASE}`
+      : 'none';
+    ind.style.translate = `${left}px ${top}px`;
+    ind.style.width = `${width}px`;
+    ind.style.height = `${height}px`;
+  }
+  const placeOn = (el, ms = 0) => setBox(el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight, ms);
+
+  let fromTab = null;
+  try {
+    const from = sessionStorage.getItem(NAV_FROM_KEY);
+    sessionStorage.removeItem(NAV_FROM_KEY);
+    fromTab = tabs.find((t) => t.dataset.tab === from && t !== target) || null;
+  } catch (e) { /* storage blocked */ }
+
+  if (!fromTab) {
+    placeOn(target);
+  } else {
+    // start on the old tab (its colours too), then move once the page shows
+    placeOn(fromTab);
+    target.classList.remove('active');
+    fromTab.classList.add('active');
+    setTimeout(() => {
+      fromTab.classList.remove('active');
+      target.classList.add('active');
+      // 1) stretch over both tabs (row on the phone bar, column in the sidebar)
+      const left = Math.min(fromTab.offsetLeft, target.offsetLeft);
+      const top = Math.min(fromTab.offsetTop, target.offsetTop);
+      const right = Math.max(fromTab.offsetLeft + fromTab.offsetWidth, target.offsetLeft + target.offsetWidth);
+      const bottom = Math.max(fromTab.offsetTop + fromTab.offsetHeight, target.offsetTop + target.offsetHeight);
+      setBox(left, top, right - left, bottom - top, 180);
+      // 2) shrink onto the new tab
+      setTimeout(() => placeOn(target, 240), 180);
+    }, 120);
+  }
+
+  // keep it on the tab when the layout changes (rotate, resize across the
+  // phone/sidebar breakpoint, web fonts finishing loading)
+  let raf = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => placeOn(target));
+  });
+  if (document.fonts) document.fonts.ready.then(() => { if (!fromTab) placeOn(target); });
+}
+
+document.addEventListener('DOMContentLoaded', initNavIndicator);

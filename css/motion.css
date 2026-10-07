@@ -171,30 +171,56 @@
   .page-shop .idea-card:hover .label { translate: 0 -1px; }
   .page-shop .idea-card:hover .arrow { translate: 2px -2px; }
 
-  /* phone bottom bar: icon + label bounce up together, like a phone app;
-     sidebar (md+): just the icon; the Scan FAB lifts as one piece */
-  .nav-item { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick); }
-  .nav-item svg { transition: translate var(--flick); }
-  .nav-item:hover { translate: 0 -4px; }
+  /* nav: pointing at a tab "hovers the pen" — a faint highlighter stroke
+     draws in left → right under it (same shape as .nav-ind, see 3). No
+     jump. The Scan FAB is a button, not a tab: it keeps a small lift. */
+  .bottom-nav .nav-item:not(.nav-item--fab)::before {
+    content: ''; position: absolute; z-index: -1; pointer-events: none;
+    background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
+    left: 0; right: 0; bottom: 6px; height: 13px;
+    opacity: 0; scale: 0 1; transform-origin: left center;
+    transition: scale 0.28s cubic-bezier(0.5, 0, 0.3, 1), opacity 0.2s ease;
+  }
+  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover::before { opacity: 0.45; scale: 1 1; }
+  .bottom-nav .nav-item:not(.nav-item--fab):not(.active):hover { color: rgba(26,31,51,0.8); }
+  .nav-item--fab { transition: transform 0.12s ease, opacity 0.12s ease, translate var(--flick); }
+  .nav-item--fab:hover { translate: 0 -3px; }
   @variant md {
-    .bottom-nav .nav-item:not(.nav-item--fab):hover { translate: none; }
-    .bottom-nav .nav-item:not(.nav-item--fab):hover svg { translate: 0 -3px; }
+    .bottom-nav .nav-item:not(.nav-item--fab)::before { inset: 0; height: auto; rotate: none; border-radius: 3px; }
   }
 }
 
-/* 3. active sidebar item: a highlighter-pen swipe + a notebook-tab edge
-   (sidebar sizes only — the phone bar uses 3b below) */
+/* 3. the active tab's highlighter (.nav-ind, made by initNavIndicator()
+   in nav-common.js). One stroke that moves between tabs: it stretches over
+   both tabs, then shrinks onto the new one, like dragging a highlighter
+   pen. Each tab is its own page, so the stroke starts on the tab you came
+   from and moves when the new page opens. Phone bar: a stroke under the
+   label. Sidebar (md+): a swipe across the whole row + a notebook-tab edge. */
+.bottom-nav .nav-item:not(.nav-item--fab) { position: relative; z-index: 1; transition: color 0.35s ease, transform 0.12s ease, opacity 0.12s ease; }
+.nav-ind { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+.nav-ind[hidden] { display: none; }
+.nav-ind i {
+  position: absolute; display: block;
+  left: 0; right: 0; bottom: 6px; height: 13px;
+  background: var(--sb-yellow-soft); border-radius: 3px 6px 4px 7px; rotate: -1.5deg;
+}
 @variant md {
-  .bottom-nav .nav-item.active {
+  .nav-ind i {
+    inset: 0; height: auto; rotate: none; border-radius: 3px;
     background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .admin-side .admin-tab.active { box-shadow: inset 3px 0 0 var(--accent); }
 }
-
-/* 3b. phone bottom bar: the active tab's label gets a highlighter stripe */
+/* fallback if the script didn't run: the old static highlighter */
+@variant md {
+  .bottom-nav:not(.has-ind) .nav-item.active {
+    background: linear-gradient(100deg, transparent 2%, rgba(248,226,154,0.85) 6%, rgba(248,226,154,0.55) 94%, transparent 99%);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+}
 @media (max-width: 767.98px) {
-  .bottom-nav .nav-item.active .label {
+  .bottom-nav:not(.has-ind) .nav-item.active .label {
     padding: 0 4px;
     background: linear-gradient(transparent 45%, var(--sb-yellow-soft) 45%, var(--sb-yellow-soft) 92%, transparent 92%);
   }
