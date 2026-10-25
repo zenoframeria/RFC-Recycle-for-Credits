@@ -1,4 +1,4 @@
-# ♻️ ขยะแลกแต้ม — Recycle for Credits
+# ♻️ RFC: Recycle for Credits
 
 **🌐 Live site:** [recycle-for-credits.vercel.app](https://recycle-for-credits.vercel.app)
 
