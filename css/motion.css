@@ -281,6 +281,9 @@
   /* Home guide button: the blue deepens + a soft glow, nothing grows */
   .guide-btn { transition: max-width 0.25s ease, padding 0.25s ease, background-color 0.2s ease, box-shadow 0.25s ease; }
   .guide-btn:hover { background: var(--sb-blue-deep); box-shadow: 0 6px 16px rgba(30,58,138,0.3), 0 0 18px 4px rgba(110,150,255,0.45); }
+
+  .guide-arrow { transition: box-shadow 0.25s ease, background-color 0.2s ease; }
+  .guide-arrow:hover { background: rgba(30,58,138,0.06); box-shadow: 0 4px 14px rgba(26,31,51,0.2); }
 }
 
 /* 3. nav (student bar/sidebar + admin tabs): no highlighter or tap
