@@ -46,6 +46,10 @@ const GUIDE_SPRING_Z = 0.68;  // ζ → ~3% overshoot
 const GUIDE_FLICK = 0.3;      // px/ms — a faster release moves one card
 const GUIDE_DOT_R = 4, GUIDE_DOT_GAP = 10, GUIDE_DOT_PILL = 18;
 
+// per student, so two students sharing one phone each see it once
+const GUIDE_SEEN_PREFIX = 'homeGuideSeen:';
+const GUIDE_AUTO_OPEN_DELAY = 400; // ms — let Home draw first
+
 function initHomeGuide(studentId) {
   const btn = document.getElementById('guide-btn');
   const overlay = document.getElementById('guide-modal');
@@ -70,6 +74,7 @@ function initHomeGuide(studentId) {
     overlay.setAttribute('aria-hidden', 'true');
     btn.setAttribute('aria-expanded', 'false');
     carousel.stop();
+    try { localStorage.setItem(GUIDE_SEEN_PREFIX + studentId, '1'); } catch (err) { /* storage blocked — it just shows again next time */ }
     btn.focus();
   }
 
@@ -82,6 +87,10 @@ function initHomeGuide(studentId) {
     else if (e.key === 'ArrowLeft') carousel.prev();
     else if (e.key === 'ArrowRight') carousel.next();
   });
+
+  let seen = false;
+  try { seen = localStorage.getItem(GUIDE_SEEN_PREFIX + studentId) === '1'; } catch (err) { /* treat as not seen */ }
+  if (!seen && studentId) setTimeout(openGuide, GUIDE_AUTO_OPEN_DELAY);
 }
 
 // Full "📖 วิธีใช้" pill near the top; just the 📖 once scrolled > 40px.
