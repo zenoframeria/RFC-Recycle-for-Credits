@@ -1218,3 +1218,30 @@ html, body {
   .page-home, .page-shop, .page-scan { --content-max: 1130px; }
   .page-rank, .page-me { --content-max: 850px; }
 }
+
+/* ── Home guide ("วิธีใช้") — js/home-guide.js ──────────────────────
+   Floating pill, bottom-right: phones just above the nav pill (58px tall,
+   10px up), md+ in the corner. .is-mini (page scrolled) = icon only. */
+.guide-btn {
+  position: fixed; z-index: 40;
+  right: 16px; bottom: calc(82px + env(safe-area-inset-bottom));
+  height: 44px; max-width: 140px; padding: 0 15px;
+  display: flex; align-items: center; gap: 6px; overflow: hidden;
+  border: none; border-radius: 999px; cursor: pointer;
+  background: var(--accent); color: var(--sb-white);
+  font-family: var(--font-thai); font-size: 14px; font-weight: 600;
+  box-shadow: 0 6px 16px rgba(30,58,138,0.3);
+  transition: max-width 0.25s ease, padding 0.25s ease;
+}
+.guide-btn svg { flex-shrink: 0; }
+.guide-btn-text { white-space: nowrap; transition: opacity 0.2s ease; }
+.guide-btn.is-mini { max-width: 44px; padding: 0 13px; }
+.guide-btn.is-mini .guide-btn-text { opacity: 0; }
+
+/* room under the last Home card so it can scroll clear of the button */
+.page-home .dash-scroll { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
+
+@variant md {
+  .guide-btn { right: 24px; bottom: calc(24px + env(safe-area-inset-bottom)); }
+  .page-home .dash-scroll { padding-bottom: 88px; }
+}
