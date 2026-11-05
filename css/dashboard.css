@@ -1218,3 +1218,100 @@ html, body {
   .page-home, .page-shop, .page-scan { --content-max: 1130px; }
   .page-rank, .page-me { --content-max: 850px; }
 }
+
+/* ── Home guide ("วิธีใช้") — js/home-guide.js ──────────────────────
+   Floating pill, bottom-right: phones just above the nav pill (58px tall,
+   10px up), md+ in the corner. .is-mini (page scrolled) = icon only. */
+.guide-btn {
+  position: fixed; z-index: 40;
+  right: 16px; bottom: calc(82px + env(safe-area-inset-bottom));
+  height: 44px; max-width: 140px; padding: 0 15px;
+  display: flex; align-items: center; gap: 6px; overflow: hidden;
+  border: none; border-radius: 999px; cursor: pointer;
+  background: var(--accent); color: var(--sb-white);
+  font-family: var(--font-thai); font-size: 14px; font-weight: 600;
+  box-shadow: 0 6px 16px rgba(30,58,138,0.3);
+  transition: max-width 0.25s ease, padding 0.25s ease;
+}
+.guide-btn svg { flex-shrink: 0; }
+.guide-btn-text { white-space: nowrap; transition: opacity 0.2s ease; }
+.guide-btn.is-mini { max-width: 44px; padding: 0 13px; }
+.guide-btn.is-mini .guide-btn-text { opacity: 0; }
+
+/* room under the last Home card so it can scroll clear of the button */
+.page-home .dash-scroll { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
+
+@variant md {
+  .guide-btn { right: 24px; bottom: calc(24px + env(safe-area-inset-bottom)); }
+  .page-home .dash-scroll { padding-bottom: 88px; }
+}
+
+/* guide popup: paper sheet (3px corners, washi tape) on the shared
+   .modal-overlay; cards slide inside .guide-stage via JS transforms */
+.guide-sheet {
+  max-width: 470px; padding: 22px 0 18px;
+  border-radius: 3px; border: none;
+  box-shadow: 0 2px 0 rgba(26,31,51,0.08), 0 14px 34px rgba(40,34,20,0.25);
+}
+.guide-tape {
+  position: absolute; top: -10px; left: 50%;
+  width: 90px; height: 22px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: var(--sb-yellow-soft); opacity: 0.9;
+}
+.guide-head { display: flex; align-items: baseline; gap: 6px; padding: 0 52px 12px 20px; }
+.guide-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--accent); }
+.guide-sub { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); }
+
+.guide-stage-wrap { position: relative; }
+.guide-stage {
+  position: relative; height: 160px; overflow: hidden;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
+}
+.guide-stage.is-dragging { cursor: grabbing; }
+.guide-card {
+  position: absolute; top: 5px; left: 0; height: 150px;
+  display: grid; place-items: center;
+  border-radius: 3px; color: var(--sb-white);
+  box-shadow: 0 2px 0 rgba(26,31,51,0.08);
+  will-change: transform;
+}
+.guide-card-num {
+  position: absolute; top: 8px; right: 12px;
+  font-family: var(--font-display); font-size: 12px; font-weight: 700; opacity: 0.85;
+}
+.guide-card-cap {
+  position: absolute; left: 14px; bottom: 10px;
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.guide-card-cap small { margin-left: 6px; font-family: var(--font-thai); font-size: 12px; font-weight: 600; opacity: 0.9; }
+
+.guide-desc {
+  min-height: calc(3 * 1.55em); margin: 14px 24px 0;
+  font-family: var(--font-thai); font-size: 14px; line-height: 1.55;
+  text-align: center; color: var(--sb-ink);
+  transition: opacity 0.18s ease;
+}
+.guide-desc.is-fading { opacity: 0; }
+
+.guide-dots { position: relative; height: 8px; margin: 12px auto 0; }
+.guide-dot {
+  position: absolute; top: 0; height: 8px; padding: 0; border: none;
+  border-radius: 4px; background: #DCD3BA; overflow: hidden; cursor: pointer;
+}
+.guide-dot-fill { position: absolute; inset: 0; background: var(--accent); }
+
+/* ‹ › — mouse users can't swipe easily, so desktop only */
+.guide-arrow {
+  display: none; position: absolute; top: 50%; translate: 0 -50%; z-index: 2;
+  width: 34px; height: 34px; border: none; border-radius: 999px; cursor: pointer;
+  background: var(--sb-white); color: var(--accent);
+  box-shadow: 0 2px 8px rgba(26,31,51,0.15);
+}
+.guide-arrow--prev { left: 10px; }
+.guide-arrow--next { right: 10px; }
+@variant md {
+  .guide-arrow { display: grid; place-items: center; }
+  .guide-arrow[hidden] { display: none; }
+}

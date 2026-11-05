@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireClearRejected(currentUser.id);
   wireNicknameEdit(currentUser);
   wireProgressHelp();
+  initHomeGuide(currentUser.studentId);
 
   await Promise.all([
     loadPendingTab(currentUser.id),
