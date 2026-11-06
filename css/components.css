@@ -15,29 +15,6 @@
   background-size: 6px 6px;
 }
 
-/* postal-style stamp badge */
-.stamp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 8px;
-  border: 1.5px solid var(--stamp-color, var(--sb-red));
-  color: var(--stamp-color, var(--sb-red));
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  position: relative;
-  background: rgba(192,70,58,0.04);
-}
-.stamp::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border: 1px solid var(--stamp-color, var(--sb-red));
-  opacity: 0.4;
-}
-
 /* paper / glass card used for the login form and dashboard sections */
 .card {
   position: relative;
@@ -59,7 +36,7 @@
 .card-heading .label {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(26,31,51,0.55);
+  color: var(--sb-ink-dim);
   letter-spacing: 0.24em;
   font-weight: 600;
   white-space: nowrap;
@@ -86,7 +63,7 @@
 .field-label .sub {
   font-family: var(--font-thai);
   font-size: 11px;
-  color: rgba(26,31,51,0.55);
+  color: var(--sb-ink-dim);
   white-space: nowrap;
 }
 .field-box {
@@ -104,7 +81,7 @@
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(30,58,138,0.13), inset 0 1px 0 rgba(255,255,255,0.5);
 }
-.field-box svg { flex-shrink: 0; color: rgba(26,31,51,0.6); }
+.field-box svg { flex-shrink: 0; color: var(--sb-ink-dim); }
 .field-box:focus-within svg { color: var(--accent); }
 .field-box input {
   flex: 1;
@@ -123,7 +100,7 @@
   cursor: pointer;
   padding: 4px;
   display: flex;
-  color: rgba(26,31,51,0.55);
+  color: var(--sb-ink-dim);
 }
 .field-box .toggle-btn:active { opacity: 0.6; } /* tap feedback (already faint, so a bigger drop) */
 
@@ -217,27 +194,16 @@
   background: var(--sb-paper);
   border: 1px solid var(--accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--accent);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
 }
 .chip .dot {
   width: 5px; height: 5px;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 6px var(--accent);
 }
-
-/* footer signature line */
-.footer-note {
-  margin-top: 20px;
-  text-align: center;
-  font-family: var(--font-script);
-  font-size: 13px;
-  color: rgba(26,31,51,0.55);
-}
-.footer-note .heart { color: var(--sb-red); }
 
 /* icon-only circular button (bell, etc.) */
 .icon-btn {

@@ -54,7 +54,9 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :root { --flick: 0.3s cubic-bezier(0.34, 1.7, 0.5, 1); }
+  /* ease-out-quart: quick start, soft landing, no overshoot — the old
+     springy curve (0.34, 1.7, …) bounced past its spot, which isn't "calm" */
+  :root { --flick: 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
 
   /* small buttons — the full flick (Shop's .redeem-btn buttons have their
      own hover further down) */
@@ -133,7 +135,7 @@
   .app-shell--home .launch-arrow svg { transition: translate 0.22s ease; }
   .app-shell--home .launch-btn:hover .launch-arrow { scale: 1.1; }
   .app-shell--home .launch-btn:hover .launch-arrow svg { translate: 3px 0; }
-  .app-shell--home .camera-disc { transition: scale 0.25s cubic-bezier(0.34, 1.7, 0.5, 1), rotate 0.25s cubic-bezier(0.34, 1.7, 0.5, 1); }
+  .app-shell--home .camera-disc { transition: scale var(--flick), rotate var(--flick); }
   .app-shell--home .launch-btn:hover .camera-disc { scale: 1.1; rotate: -8deg; }
   /* Shop: the whole cert card opens the detail pop-up, so (like Home) the
      card's hover drives the arrow */
@@ -154,9 +156,10 @@
   /* Stationery "แลกเลย": colour only — growing would bump the price chip */
   .stationery-foot .redeem-btn { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.2s ease; }
   .stationery-foot .redeem-btn:not(:disabled):hover { background-color: #2F55C4; }
-  /* Limited "แลกเลย": the loudest button on the page — grows + red glow */
-  .redeem-btn--limited { transition: transform 0.12s ease, opacity 0.12s ease, scale var(--flick), box-shadow 0.25s ease; }
-  .redeem-btn--limited:not(:disabled):hover { scale: 1.05; box-shadow: 0 0 0 3px rgba(240,110,60,.25), 0 0 18px 4px rgba(240,100,50,.6); }
+  /* Limited "แลกเลย": same as Stationery's — colour only, a deeper red
+     (was grow + orange glow; the rule is nothing grows, red stays calm) */
+  .redeem-btn--limited { transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.2s ease; }
+  .redeem-btn--limited:not(:disabled):hover { background-color: #8C2E26; }
 
   /* Shop "Got an idea?" card: lifts 2px; its dashes run around the button,
      the button warms to pastel yellow, the label lifts, ↗ shoots up-right */

@@ -13,9 +13,15 @@
   --sb-yellow: #F2C84B;
   --sb-yellow-soft: #F8E29A;
   --sb-ink: #1A1F33;
+  /* every grey label / note / time uses this solid ink (6:1 on the paper,
+     5:1 on cream2). Faded rgba ink was 2.6–3.7:1 — too faint to read. */
   --sb-ink-dim: #5A5F76;
-  --sb-red: #C0463A;
+  /* deepened a touch from #C0463A so red text (and cream text on red)
+     passes 4.5:1 on every cream */
+  --sb-red: #B23F33;
   --sb-green: #6E8B5A;
+  --sb-green-ink: #4E6640; /* green as TEXT (stamps, "approved") — plain green is 3.7:1 */
+  --sb-amber-ink: #85600D; /* "pending" stamps as text */
   --sb-tape: #E8DDB8;
   --sb-page-bg: #EFE7D2;
 
@@ -61,6 +67,16 @@ body {
   font-family: var(--font-body);
   color: var(--sb-ink);
 }
+
+/* browser-drawn bits, themed so they belong to the paper look:
+   selected text = a yellow highlighter, the caret is the accent ink,
+   keyboard focus = an accent ring (mouse clicks don't show it),
+   thin ink scrollbars instead of the grey system ones */
+::selection { background: rgba(242,200,75,0.55); color: var(--sb-ink); }
+input, textarea, select { caret-color: var(--accent); }
+::placeholder { color: var(--sb-ink-dim); opacity: 1; } /* full ink-dim: still clearly lighter than typed ink, and readable */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+html { scrollbar-color: rgba(26,31,51,0.28) transparent; }
 
 /* respect the OS "reduce motion" setting: stop animations and make
    hover/tap transitions effectively instant */

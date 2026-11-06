@@ -1,0 +1,44 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "admin-review.html"
+        ],
+        "createdAt": "2026-11-06T09:45:35.267Z",
+        "reason": "imgs are photo slots inside closed lightbox/preview pop-ups; JS sets src before they are shown"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "dashboard.html"
+        ],
+        "createdAt": "2026-11-06T09:45:35.372Z",
+        "reason": "imgs are photo slots inside closed lightbox/preview pop-ups; JS sets src before they are shown"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "scan.html"
+        ],
+        "createdAt": "2026-11-06T09:45:35.472Z",
+        "reason": "imgs are photo slots inside closed lightbox/preview pop-ups; JS sets src before they are shown"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "shop.html"
+        ],
+        "createdAt": "2026-11-06T09:45:35.587Z",
+        "reason": "imgs are photo slots inside closed lightbox/preview pop-ups; JS sets src before they are shown"
+      }
+    ]
+  }
+}
