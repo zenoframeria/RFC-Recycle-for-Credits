@@ -41,6 +41,7 @@ const GUIDE_STEPS = [
 // carousel geometry + spring (from the owner's reference design)
 const GUIDE_PEEK_TOTAL = 140; // card width = stage width − this (≈50px peek + 20px gap each side)
 const GUIDE_GAP = 20;
+const GUIDE_MIN_CARD = 190;   // small phones: shrink the peek instead, so the card name never wraps
 const GUIDE_SPRING_W = 15;    // ω₀
 const GUIDE_SPRING_Z = 0.68;  // ζ → ~3% overshoot
 const GUIDE_FLICK = 0.3;      // px/ms — a faster release moves one card
@@ -141,11 +142,27 @@ function buildGuideCarousel(root) {
     return dot;
   });
 
+  // All 5 descriptions sit stacked in one grid cell (only the current one
+  // visible), so the box is always as tall as the longest — the popup
+  // doesn't grow/shrink while swiping.
+  const descLines = GUIDE_STEPS.map((step) => {
+    const line = document.createElement('span');
+    line.textContent = step.desc;
+    descEl.appendChild(line);
+    return line;
+  });
+
   let pos = 0, vel = 0, target = 0, drag = null, shown = -1, raf = 0, lastT = 0;
+
+  // normal phones: stage − 140 (≈50px peek each side); narrow phones keep
+  // the card at least GUIDE_MIN_CARD wide and let the peek get smaller
+  function cardWidth(W) {
+    return Math.max(W - GUIDE_PEEK_TOTAL, Math.min(W - 2 * GUIDE_GAP - 40, GUIDE_MIN_CARD));
+  }
 
   function render() {
     const W = stage.clientWidth;
-    const cardW = W - GUIDE_PEEK_TOTAL;
+    const cardW = cardWidth(W);
     const step = cardW + GUIDE_GAP;
     cards.forEach((card, i) => {
       const off = i - pos;
@@ -175,13 +192,14 @@ function buildGuideCarousel(root) {
 
   function showDesc(i) {
     shown = i;
-    if (reduceMotion.matches) { descEl.textContent = GUIDE_STEPS[i].desc; return; }
+    const swap = () => descLines.forEach((line, j) => line.classList.toggle('is-shown', j === i));
+    if (reduceMotion.matches) { swap(); return; }
     descEl.classList.add('is-fading');
     setTimeout(() => {
       if (shown !== i) return; // moved on again meanwhile
-      descEl.textContent = GUIDE_STEPS[i].desc;
+      swap();
       descEl.classList.remove('is-fading');
-    }, 120);
+    }, 180); // = the CSS fade, so the old text is fully gone before the new one shows
   }
 
   function tick(now) {
@@ -218,7 +236,7 @@ function buildGuideCarousel(root) {
 
   stage.addEventListener('pointermove', (e) => {
     if (!drag) return;
-    const step = stage.clientWidth - GUIDE_PEEK_TOTAL + GUIDE_GAP;
+    const step = cardWidth(stage.clientWidth) + GUIDE_GAP;
     let next = drag.startPos - (e.clientX - drag.startX) / step;
     if (next < 0) next *= 0.3;                               // resist past the first card
     if (next > N - 1) next = N - 1 + (next - (N - 1)) * 0.3; // … and the last
@@ -249,7 +267,7 @@ function buildGuideCarousel(root) {
   const onResize = () => render();
 
   return {
-    reset() { pos = 0; vel = 0; target = 0; drag = null; shown = -1; descEl.textContent = ''; },
+    reset() { pos = 0; vel = 0; target = 0; drag = null; shown = -1; descLines.forEach((line) => line.classList.remove('is-shown')); },
     start() { render(); window.addEventListener('resize', onResize); },
     stop() { cancelAnimationFrame(raf); raf = 0; window.removeEventListener('resize', onResize); },
     prev() { goTo(target - 1); },
