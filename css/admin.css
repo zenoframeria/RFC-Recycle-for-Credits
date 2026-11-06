@@ -17,10 +17,10 @@
 .admin-tab {
   flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   border: none; border-radius: 999px; background: none; padding: 4px 2px; cursor: pointer;
-  color: rgba(26,31,51,0.42);
+  color: var(--sb-ink-dim);
 }
 .admin-tab svg { width: 21px; height: 21px; }
-.admin-tab .label { font-family: var(--font-display); font-size: 10.5px; font-weight: 500; }
+.admin-tab .label { font-family: var(--font-display); font-size: 11px; font-weight: 500; }
 .admin-tab.active { color: var(--accent); }
 .admin-tab.active .label { font-weight: 700; }
 /* filled icon on the active tab; inner details drawn in the panel colour */
@@ -51,18 +51,20 @@
 .feed-card { position: relative; }
 .feed-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
 .feed-card-student { font-family: var(--font-thai-serif); font-weight: 600; font-size: 14px; color: var(--sb-ink); }
-.feed-card-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.5); text-align: right; }
+.feed-card-meta { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); text-align: right; }
 
 .feed-card-photo { width: 100%; border-radius: 12px; border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; cursor: zoom-in; background: var(--sb-cream2); min-height: 140px; object-fit: cover; }
 
 .feed-card-info { display: flex; flex-direction: column; margin-top: 10px; }
 .feed-card-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 2px; border-bottom: 1px dashed rgba(26,31,51,0.13); }
 .feed-card-row:last-child { border-bottom: none; }
-.feed-card-row .k { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.55); }
+.feed-card-row .k { font-family: var(--font-thai); font-size: 11px; color: var(--sb-ink-dim); }
 .feed-card-row .v { font-family: var(--font-thai-serif); font-size: 12.5px; font-weight: 600; text-align: right; }
 .feed-card-row .v.points { color: var(--accent); font-family: var(--font-mono); }
 
-.feed-card-comment { width: 100%; min-height: 54px; resize: vertical; margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12); font-family: var(--font-thai); font-size: 16px; color: var(--sb-ink); outline: none; }
+.feed-card-comment { width: 100%; min-height: 54px; resize: vertical; margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--sb-cream2); border: 1.5px solid rgba(26,31,51,0.12); font-family: var(--font-thai); font-size: 16px; color: var(--sb-ink); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+/* the reason box had no focus look at all (outline: none) — same ring as .field-box */
+.feed-card-comment:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,70,58,0.15); }
 
 .feed-card-actions { display: flex; gap: 8px; margin-top: 10px; }
 .feed-card-actions .btn-approve, .feed-card-actions .btn-reject {
@@ -96,7 +98,7 @@
 .shop-manage-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
 .shop-manage-section-label {
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
-  color: rgba(26,31,51,0.5); text-transform: uppercase; margin: 14px 0 2px;
+  color: var(--sb-ink-dim); text-transform: uppercase; margin: 14px 0 2px;
 }
 .shop-manage-section-label:first-child { margin-top: 0; }
 .shop-manage-group { display: flex; flex-direction: column; gap: 10px; }
@@ -105,11 +107,11 @@
 .shop-manage-thumb { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: var(--sb-cream); flex-shrink: 0; border: 1.5px solid rgba(26,31,51,0.1); }
 .shop-manage-thumb.is-empty {
   display: flex; align-items: center; justify-content: center; text-align: center;
-  font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.4);
+  font-family: var(--font-thai); font-size: 11px; color: var(--sb-ink-dim);
 }
 .shop-manage-info { flex: 1; min-width: 0; }
 .shop-manage-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); }
-.shop-manage-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(26,31,51,0.55); margin-top: 2px; }
+.shop-manage-meta { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); margin-top: 2px; }
 .shop-manage-actions { display: flex; gap: 6px; flex-shrink: 0; }
 .shop-manage-actions button { border: none; border-radius: 8px; padding: 6px 9px; font-family: var(--font-thai); font-size: 11px; font-weight: 600; cursor: pointer; background: var(--sb-cream); }
 .shop-manage-edit { color: var(--accent); border: 1.5px solid var(--accent) !important; }
@@ -125,13 +127,13 @@
 }
 .pickup-card { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--sb-cream2); border: 1.5px dashed rgba(26,31,51,0.18); }
 .pickup-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.pickup-code { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .06em; color: var(--accent); }
+.pickup-code { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .06em; color: var(--accent); font-variant-numeric: tabular-nums; }
 .pickup-status {
   padding: 2px 9px; border: 2px solid currentColor; border-radius: 2px; rotate: -6deg;
-  font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: #A2700F;
+  font-family: var(--font-thai); font-weight: 700; font-size: 13px; color: var(--sb-amber-ink);
 }
-.pickup-card.is-picked-up .pickup-status { color: var(--sb-green); }
-.pickup-hint { font-family: var(--font-thai); font-size: 11.5px; color: rgba(26,31,51,0.6); margin-top: 10px; }
+.pickup-card.is-picked-up .pickup-status { color: var(--sb-green-ink); }
+.pickup-hint { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink-dim); margin-top: 10px; }
 .pickup-confirm-btn {
   width: 100%; margin-top: 8px; border: none; border-radius: 12px; padding: 12px 10px; cursor: pointer;
   font-family: var(--font-thai); font-weight: 700; font-size: 14px;
@@ -159,7 +161,7 @@
    cap it to the viewport and let it scroll so the Save button stays reachable */
 #shop-item-modal .modal-card { max-height: calc(100dvh - 48px); overflow-y: auto; }
 /* required-field markers + inline validation (red, like a normal form) */
-.required-note { font-family: var(--font-thai); font-size: 11px; color: rgba(26,31,51,0.6); margin: -4px 0 10px 2px; }
+.required-note { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); margin: -4px 0 10px 2px; }
 .req { color: var(--sb-red); font-style: normal; font-weight: 700; }
 .field-label .sub.req-sub { color: var(--sb-red); }
 .field-box.is-invalid { border-color: var(--sb-red); background: rgba(192,70,58,0.06); }
@@ -213,7 +215,7 @@
   }
   .price-row .name { font-size: 14px; }
   .price-row input { width: 100%; }
-  .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: rgba(26,31,51,0.55); }
+  .price-row .unit { display: inline; font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); }
   .price-row .save-btn { padding: 9px 16px; font-size: 12px; }
 }
 

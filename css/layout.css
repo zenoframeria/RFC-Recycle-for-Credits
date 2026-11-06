@@ -39,7 +39,7 @@
 .side-report {
   flex-direction: column; align-items: center; gap: 2px; width: 100%;
   padding: 8px 4px; border: none; border-radius: 3px; background: transparent; cursor: pointer;
-  color: rgba(26,31,51,0.6); font-family: var(--font-thai); font-size: 12px; font-weight: 600;
+  color: var(--sb-ink-dim); font-family: var(--font-thai); font-size: 12px; font-weight: 600;
 }
 .side-report svg { color: var(--sb-red); flex-shrink: 0; }
 .side-report .label { display: none; }
