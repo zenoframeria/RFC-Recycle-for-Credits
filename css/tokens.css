@@ -19,6 +19,11 @@
   /* deepened a touch from #C0463A so red text (and cream text on red)
      passes 4.5:1 on every cream */
   --sb-red: #B23F33;
+  /* the "careful / error" family: deep red text + a faint red wash and a
+     dashed red edge (error boxes, warnings, delete/log-out hovers) */
+  --sb-red-deep: #8C2E26;
+  --red-wash: rgba(192,70,58,0.08);
+  --red-line: rgba(192,70,58,0.4);
   --sb-green: #6E8B5A;
   --sb-green-ink: #4E6640; /* green as TEXT (stamps, "approved") — plain green is 3.7:1 */
   --sb-amber-ink: #85600D; /* "pending" stamps as text */
@@ -37,16 +42,37 @@
   --font-thai-serif: 'Poppins', 'Prompt', system-ui, sans-serif;
   --font-mono: 'Poppins', 'Prompt', system-ui, sans-serif;
 
+  /* shapes — one rule for the whole site (2026-11-06):
+     paper   = anything stuck onto the page (cards, pop-ups, inputs, rows,
+               little boxes inside cards) → 3px corners
+     print   = the big "printed" buttons (Scan banner, .btn-primary) → 10px
+     floating controls (nav, Scan ball, toast, round icon buttons, badges)
+     stay fully round (999px / 50%) */
+  --radius-paper: 3px;
+  --radius-print: 10px;
+  --radius-print-inner: 6px; /* the dashed line inside a printed button */
+  /* flat "paper on a desk" shadow every card uses (and a lifted one) */
+  --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
+  --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
+
   /* role accent: blue by default, red on the admin login */
   --accent: var(--sb-blue);
   --accent-deep: var(--sb-blue-deep); /* hard "printed" shadow under accent buttons */
   --bg-tint2: var(--sb-blue-mist);
+  /* see-through accent tints — blue on student pages, red on admin, so no
+     admin-only override rules are needed */
+  --accent-wash: rgba(30,58,138,0.07);  /* hover wash behind tabs / soft boxes */
+  --accent-ring: rgba(30,58,138,0.13);  /* focus / selected ring */
+  --accent-edge: rgba(30,58,138,0.35);  /* hovered input / card edge */
 }
 
 body[data-role="admin"] {
   --accent: var(--sb-red);
-  --accent-deep: #8C2E26;
+  --accent-deep: var(--sb-red-deep);
   --bg-tint2: #E8C4BF;
+  --accent-wash: rgba(192,70,58,0.07);
+  --accent-ring: rgba(192,70,58,0.15);
+  --accent-edge: rgba(192,70,58,0.4);
 }
 
 * { box-sizing: border-box; }

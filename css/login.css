@@ -87,7 +87,7 @@ body[data-role="admin"] {
   gap: 4px;
   padding: 3px;
   margin-bottom: 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-paper);
   background: var(--sb-cream2);
   border: 1px solid rgba(26,31,51,0.1);
 }
@@ -95,7 +95,7 @@ body[data-role="admin"] {
   flex: 1;
   padding: 8px 6px;
   border: none;
-  border-radius: 9px;
+  border-radius: 2px;
   background: transparent;
   cursor: pointer;
   font-family: var(--font-thai);
@@ -126,17 +126,18 @@ body[data-role="admin"] {
 .admin-warning {
   margin-top: 14px;
   padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(192,70,58,0.08);
-  border: 1px dashed rgba(192,70,58,0.4);
+  border-radius: var(--radius-paper);
+  background: var(--red-wash);
+  border: 1px dashed var(--red-line);
   display: flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-thai);
   font-size: 12.5px;
-  color: #8C2E26;
+  color: var(--sb-red-deep);
   line-height: 1.4;
 }
+.admin-warning svg { flex-shrink: 0; }
 /* login tab: the banner sits under the password, where the student page has
    "ลืมรหัส?", sized so ENTER CONSOLE lines up with LET'S RECYCLE */
 #login-form .admin-warning { margin-top: 8px; padding: 8px 12px; font-size: 13px; }
@@ -166,12 +167,12 @@ body[data-role="admin"] {
 .login-error {
   margin-top: 12px;
   padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(192,70,58,0.08);
-  border: 1px dashed rgba(192,70,58,0.4);
+  border-radius: var(--radius-paper);
+  background: var(--red-wash);
+  border: 1px dashed var(--red-line);
   font-family: var(--font-thai);
   font-size: 12.5px;
-  color: #8C2E26;
+  color: var(--sb-red-deep);
   text-align: center;
 }
 
@@ -181,13 +182,15 @@ body[data-role="admin"] {
 
 .login-spacer { flex: 1; }
 
-/* ── paper restyle (2026-10-01): square-ish corners, card = access ticket ── */
+/* submit buttons; the admin login's sits closer, under its warning box */
+.login-submit { margin-top: 18px; }
+.login-submit--tight { margin-top: 6px; }
+/* the small note under the sign-up Student ID */
+.signup-note { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink-dim); margin-top: 6px; line-height: 1.4; }
+
+/* ── paper restyle (2026-10-01): card = access ticket. (Square-ish
+   corners now come from the shared base rules / tokens.css.) ── */
 .app-shell .tagline-script { transform: none; }
-.app-shell .auth-tabs { border-radius: 3px; }
-.app-shell .auth-tab { border-radius: 2px; }
-.app-shell .field-box { border-radius: 3px; }
-.app-shell .btn-primary .body { border-radius: 10px; }
-.app-shell .btn-primary .body::before { border-radius: 6px; }
 
 /* submit button: same depth as the logo; pressing still sinks into the hard shadow */
 .app-shell .btn-primary .body {
@@ -202,9 +205,6 @@ body[data-role="admin"] {
     1px 1px 0 var(--accent-deep), 0 4px 10px var(--accent-soft-shadow);
 }
 .app-shell .btn-primary .label { color: var(--sb-white); font-weight: 800; text-shadow: 1px 1.5px 0 var(--accent-deep); }
-.app-shell .chip { border-radius: 2px; }
-.app-shell .login-error,
-.app-shell .admin-warning { border-radius: 3px; }
 
 /* the card is a ticket: half-circle notches + a perforation line just under
    "MISSION ACCESS". A mask clips box-shadow, so the shadow lives on the

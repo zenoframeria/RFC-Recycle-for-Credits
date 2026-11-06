@@ -71,20 +71,16 @@
     </div>
   </div>
 
-  <!-- launch pad -->
+  <!-- launch pad (its name is the small yellow line inside the banner, so
+       every Home heading sits inside its own card/banner) -->
   <div class="section home-launch">
-    <div class="section-heading">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></svg>
-      <span class="title">The Launch Pad</span>
-      <span class="sub">· แตะเพื่อสแกนขยะ</span>
-    </div>
     <a class="launch-btn" href="scan.html">
       <div class="launch-body">
         <div class="camera-disc">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
         </div>
         <div class="launch-text">
-          <span class="lets-go">let's go ★</span>
+          <span class="lets-go">The Launch Pad ★</span>
           <div class="headline">Scan &amp; launch</div>
           <div class="sub">ถ่ายรูปขยะของคุณ · รับแต้มทันที</div>
         </div>
@@ -98,15 +94,13 @@
   <!-- personal progress -->
   <div class="section home-progress">
     <div class="card progress-card">
-      <div class="tape tape--stripe tape--corner-left"></div>
-      <div class="tape tape--stripe"></div>
       <div class="progress-card-head">
         <div>
-          <div class="section-heading lg" style="margin-bottom:0;padding-left:0;">
+          <div class="section-heading lg in-card">
             <span class="title">Personal Progress</span>
             <button type="button" class="info-btn" id="progress-info-btn" aria-label="แต้มคืออะไร" aria-expanded="false" aria-controls="progress-help" data-tip="คะแนนสะสมทั้งหมดที่คุณได้จากการส่งขยะ">i</button>
           </div>
-          <div class="sub" style="font-size:12px;color:var(--sb-ink-dim);margin-top:3px;">คะแนนสะสมส่วนตัว</div>
+          <div class="sub">คะแนนสะสมส่วนตัว</div>
         </div>
       </div>
       <div class="ticket-help" id="progress-help" hidden>
@@ -135,12 +129,11 @@
 
   <!-- recent activity -->
   <div class="section home-activity">
-    <div class="section-heading">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-      <span class="title">Recent Activity</span>
-      <span class="sub">· ประวัติการส่งล่าสุด</span>
-    </div>
     <div class="card history-card">
+      <div class="section-heading lg in-card">
+        <span class="title">Recent Activity</span>
+        <span class="sub">· ประวัติการส่งล่าสุด</span>
+      </div>
       <div class="activity-tabs">
         <button class="activity-tab is-active" id="tab-pending" data-tab="pending">รอตรวจสอบ</button>
         <button class="activity-tab" id="tab-rejected" data-tab="rejected">ถูกปฏิเสธ</button>

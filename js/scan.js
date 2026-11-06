@@ -52,7 +52,7 @@ async function loadCategories() {
   scanState.categories = data;
   list.innerHTML = data.map((cat) => `
     <button type="button" class="category-item" data-category="${cat.id}">
-      <div class="category-name">${cat.name}</div>
+      <div class="category-name">${escapeHtml(cat.name)}</div>
     </button>
   `).join('');
 

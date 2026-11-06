@@ -226,6 +226,17 @@ html, body {
 .section-heading .title { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--accent); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 .section-heading .sub { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink-dim); }
 .section-heading.lg .title { font-size: 18px; }
+/* a heading that is the first thing inside its card (the site-wide rule:
+   every section title sits inside its own card) — lines up with the card's
+   content edge instead of the section's 4px indent */
+.section-heading.in-card { padding-left: 0; margin-bottom: 2px; }
+/* a little more room when tabs (not a note line) come right after it */
+.history-card .section-heading.in-card { margin-bottom: 6px; }
+/* a pop-up's own title (admin item form) needs room before the first field */
+.modal-card > .section-heading.in-card { margin-bottom: 10px; }
+/* Personal Progress: the Thai line sits right under the title */
+.progress-card-head .section-heading.in-card { margin-bottom: 0; }
+.progress-card-head .sub { font-size: 12px; color: var(--sb-ink-dim); margin-top: 3px; }
 
 .launch-btn {
   display: block; width: 100%; border: none; background: transparent; cursor: pointer; padding: 0; position: relative;
@@ -237,13 +248,13 @@ html, body {
 .launch-body {
   position: relative;
   background: var(--accent);
-  border-radius: 18px; padding: 16px 18px;
+  border-radius: var(--radius-print); padding: 16px 18px;
   display: flex; align-items: center; gap: 14px;
   box-shadow: 3px 4px 0 var(--accent-deep);
   overflow: hidden;
 }
 .launch-body::before {
-  content: ''; position: absolute; inset: 6px; border-radius: 14px;
+  content: ''; position: absolute; inset: 6px; border-radius: var(--radius-print-inner);
   border: 1px dashed rgba(242,200,75,0.55); pointer-events: none;
 }
 .camera-disc {
@@ -267,29 +278,12 @@ html, body {
 }
 
 /* ── personal progress card ──────────────────────────────────── */
-/* "80% clean, 20% cute": same layout as every other card, just a warmer
-   fill + a lifted shadow + one washi-tape sticker at a single corner
-   (matching the avatar's tape elsewhere on the page) — nothing else changed */
+/* same layout as every other card, just a warmer fill + a lifted shadow
+   (its two corner washi tapes were removed 2026-11-06) */
 .progress-card {
   text-align: center;
   background: var(--sb-white);
   box-shadow: 0 16px 32px rgba(20,30,60,0.16), 0 1px 0 rgba(255,255,255,0.7) inset;
-}
-.progress-card .tape {
-  width: 50px; height: 15px;
-  background: var(--sb-yellow-soft);
-  transform: rotate(9deg);
-  right: -8px; top: -9px;
-}
-/* second tape at the opposite corner, mirroring the yellow one above */
-.progress-card .tape--corner-left {
-  width: 46px;
-  height: 15px;
-  background: var(--sb-blue);
-  transform: rotate(-8deg);
-  left: -8px;
-  right: auto;
-  top: -9px;
 }
 .progress-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 10px; text-align: left; }
 
@@ -436,7 +430,7 @@ html, body {
 .notif-panel {
   position: absolute; top: calc(100% + 10px); right: -6px; z-index: 40;
   width: 300px; max-width: calc(100vw - 32px);
-  background: var(--sb-paper); border-radius: 16px;
+  background: var(--sb-paper); border-radius: var(--radius-paper);
   border: 1px solid rgba(26,31,51,0.12);
   box-shadow: 0 14px 30px rgba(20,30,60,0.22), inset 0 1px 0 rgba(255,255,255,0.7);
   padding: 14px 12px 10px;
@@ -450,7 +444,7 @@ html, body {
 .notif-panel-heading .title { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 14px; color: var(--accent); }
 .notif-panel-heading .sub { font-family: var(--font-thai); font-size: 11px; color: var(--sb-ink-dim); white-space: nowrap; }
 .notif-list { display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; }
-.notif-item { display: flex; gap: 8px; padding: 8px; border-radius: 10px; background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.07); }
+.notif-item { display: flex; gap: 8px; padding: 8px; border-radius: var(--radius-paper); background: var(--sb-cream2); border: 1px solid rgba(26,31,51,0.07); }
 .notif-item .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); margin-top: 4px; flex-shrink: 0; }
 .notif-item .content { min-width: 0; }
 .notif-item .text { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink); line-height: 1.35; }
@@ -471,7 +465,7 @@ html, body {
 .modal-overlay.open { opacity: 1; pointer-events: auto; }
 .modal-card {
   position: relative; width: 100%; max-width: 340px;
-  background: var(--sb-paper); border-radius: 18px;
+  background: var(--sb-paper); border-radius: var(--radius-paper);
   border: 1px solid rgba(26,31,51,0.1);
   box-shadow: 0 20px 44px rgba(0,0,0,0.3);
   padding: 20px 18px 18px;
@@ -488,20 +482,36 @@ html, body {
 
 /* ── photo lightbox (rejected submission proof) ─────────────────── */
 .modal-card--photo { padding: 18px; max-width: 380px; }
-.lightbox-img { width: 100%; border-radius: 12px; display: block; }
+.lightbox-img { width: 100%; border-radius: var(--radius-paper); display: block; }
 
 /* ── shop page ─────────────────────────────────────────────────── */
-.balance-chip {
-  display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
-  background: var(--sb-paper); border: 1.5px dashed var(--accent); border-radius: 14px;
-  padding: 8px 12px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+/* "wallet" row under the page title: points ticket left, pickup-ticket
+   button right (the title itself sits where it does on every page) */
+.shop-wallet {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 12px;
 }
-.balance-chip .k { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); letter-spacing: 0.04em; }
-.balance-chip .v { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--accent); }
+/* balance = a ticket with half-circle notches, reading on one line
+   ("แต้มคงเหลือ 12,812 pts"). A mask clips box-shadow, so the shadow is a
+   drop-shadow on the .balance-ticket wrapper. */
+.balance-ticket { flex-shrink: 0; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
+.balance-chip {
+  position: relative; display: flex; align-items: baseline; gap: 8px;
+  background: var(--sb-paper); padding: 8px 20px; white-space: nowrap;
+  -webkit-mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.balance-chip::before { content: ''; position: absolute; inset: 4px 12px; border: 1px dashed rgba(26,31,51,.25); pointer-events: none; }
+.balance-chip .k { font-family: var(--font-thai); font-size: 11px; color: var(--sb-ink-dim); }
+.balance-chip .v { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; color: var(--accent); }
 .balance-chip .v .unit { font-size: 12px; font-family: var(--font-body); font-weight: 700; color: var(--sb-ink-dim); }
 
 .redeem-btn {
-  border: none; border-radius: 20px; padding: 8px 12px; white-space: nowrap; cursor: pointer;
+  border: none; border-radius: var(--radius-paper); padding: 8px 12px; white-space: nowrap; cursor: pointer;
   font-family: var(--font-thai); font-weight: 700; font-size: 11px;
   background: var(--accent); color: var(--sb-cream);
   flex-shrink: 0; transition: transform 0.12s ease, opacity 0.12s ease;
@@ -512,11 +522,11 @@ html, body {
 
 .shop-section-note { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); margin: 2px 0 10px; }
 
-/* icon-in-a-tinted-circle badge — same "medal" language rank.html uses,
-   replacing the old flat diagonal-stripe placeholder rectangles so each
-   item actually depicts something instead of an abstract swatch. */
+/* item photo: a small square print with a white border (a gift icon on
+   a tinted square when the admin hasn't added a photo yet) */
 .item-medallion {
-  border-radius: 50%;
+  position: relative;
+  border-radius: 2px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -524,12 +534,11 @@ html, body {
   background:
     radial-gradient(circle at 32% 28%, rgba(255,255,255,0.65) 0%, transparent 55%),
     var(--tint);
-  border: 2px solid var(--sb-white);
-  box-shadow: 0 3px 8px rgba(20,30,60,0.14), inset 0 1px 0 rgba(255,255,255,0.4);
+  border: 3px solid var(--sb-white);
+  box-shadow: 1px 2px 0 rgba(20,30,60,.15);
 }
 .item-medallion svg { color: var(--sb-ink); opacity: 0.72; }
-.item-medallion img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.item-medallion { position: relative; }
+.item-medallion img { width: 100%; height: 100%; object-fit: cover; }
 /* little magnifier on photo medallions — hints "tap me to see it bigger" */
 .item-zoom-hint {
   position: absolute; right: -4px; bottom: -4px;
@@ -541,7 +550,7 @@ html, body {
 
 /* tappable parts of a shop item (open the detail popup) */
 [data-open-item] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-[data-open-item]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+[data-open-item]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius-paper); }
 
 /* item detail popup — capped to the viewport and scrollable, same as the
    admin item-form fix, so a tall photo never pushes the text off a phone screen */
@@ -555,43 +564,47 @@ html, body {
   margin-top: 10px; padding-top: 10px; border-top: 1.5px dashed rgba(26,31,51,0.15);
   white-space: pre-line;
 }
-#item-detail-actions[hidden] { display: none; }
 
 /* minmax(0, …): with plain 1fr the columns grew past the card on a 360px phone */
 .stationery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.stationery-item { background: var(--sb-paper); border-radius: 14px; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; }
+.stationery-item { background: var(--sb-paper); border-radius: var(--radius-paper); padding: 10px; box-shadow: 1px 2px 0 rgba(20,30,60,.08), 0 0 0 1px rgba(26,31,51,.06); display: flex; flex-direction: column; gap: 10px; }
 .stationery-top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .stationery-top .item-medallion { width: 44px; height: 44px; }
 .stationery-top .item-medallion svg { width: 20px; height: 20px; }
 .stationery-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 12.5px; color: var(--sb-ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .stationery-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
 
-/* price pill — same shape language as .redeem-btn / .balance-chip, replacing
-   the old circular .price-badge (a 4-digit cost like "3,200 pts" wrapped
-   across two lines inside a 42px circle at 9px font — unreadable, and a
-   second circle competing with the item-medallion right above it). */
+/* price tag — an outlined paper label next to the redeem button */
 .price-chip {
   display: inline-flex; align-items: baseline; gap: 2px; flex-shrink: 0;
-  padding: 7px 10px; border-radius: 999px;
-  background: var(--sb-cream2); border: 1.5px solid var(--accent);
+  padding: 7px 10px; border-radius: 2px;
+  background: transparent; border: 1.5px solid var(--accent);
   font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--accent);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .price-chip .unit { font-size: 11px; font-weight: 600; color: var(--sb-ink-dim); }
 
+/* Limited Edition: a card framed with a red/cream gift-ribbon stripe */
 .limited-section {
-  position: relative; background: var(--sb-cream); border-radius: 16px;
-  padding: 18px 14px 6px; border: 1.5px dashed var(--sb-red); margin-top: 22px;
+  position: relative; margin-top: 22px; padding: 22px 14px 6px;
+  border: 5px solid transparent; border-radius: var(--radius-paper);
+  background:
+    linear-gradient(var(--sb-cream), var(--sb-cream)) padding-box,
+    repeating-linear-gradient(-45deg, var(--sb-red) 0 6px, var(--sb-paper) 6px 12px) border-box;
+  box-shadow: var(--paper-shadow);
 }
 .limited-badge {
-  position: absolute; top: -11px; left: 14px; background: var(--sb-red); color: var(--sb-paper);
+  position: absolute; top: -13px; left: 14px; background: var(--sb-red); color: var(--sb-paper);
   font-family: var(--font-thai); font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
-  padding: 4px 10px; border-radius: 10px; white-space: nowrap;
+  padding: 4px 10px; border-radius: 2px; white-space: nowrap;
 }
 .limited-item {
   position: relative; display: flex; gap: 12px; align-items: center; overflow: hidden;
-  background: var(--sb-paper); border-radius: 12px; padding: 10px; margin-bottom: 10px;
+  background: var(--sb-paper); border-radius: var(--radius-paper); padding: 10px; margin-bottom: 10px;
+  box-shadow: 1px 2px 0 rgba(20,30,60,.07);
 }
+/* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
+.limited-item.is-unavailable .redeem-btn { visibility: hidden; }
 .limited-item.is-unavailable { opacity: 0.68; }
 .limited-item .item-medallion { width: 52px; height: 52px; }
 .limited-item .item-medallion svg { width: 24px; height: 24px; }
@@ -615,9 +628,9 @@ html, body {
 
 .podium-block {
   width: 100%;
-  border-radius: 10px 10px 4px 4px;
+  border-radius: 2px 2px 0 0;
   position: relative;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 2px 3px 0 rgba(20,30,60,.10);
 }
 .podium-block::before {
   content: '';
@@ -643,20 +656,13 @@ html, body {
   font-family: var(--font-mono); font-weight: 700;
   box-shadow: 0 4px 10px rgba(26,31,51,0.18);
 }
-.rank-medal::after {
-  content: '';
-  position: absolute; top: 84%; left: 50%; transform: translateX(-50%);
-  width: 58%; height: 38%;
-  background: var(--medal-ribbon);
-  clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
-  z-index: -1;
-}
+/* (the ribbon under each medal was removed — it overlapped the name below) */
 .rank-podium-slot .rank-medal { width: 50px; height: 50px; font-size: 18px; }
 .rank-podium-slot.is-first .rank-medal { width: 64px; height: 64px; font-size: 25px; box-shadow: 0 6px 14px rgba(242,200,75,0.35); }
 
-.medal-gold   { background: linear-gradient(160deg, var(--sb-yellow) 0%, #D9A62A 100%); color: #6B4E10; --medal-ribbon: #C9962A; }
-.medal-silver { background: linear-gradient(160deg, #E7EAF0 0%, #AEB6C4 100%); color: #454C5C; --medal-ribbon: #9AA3B3; }
-.medal-bronze { background: linear-gradient(160deg, #DA9F6C 0%, #A9683A 100%); color: #55340F; --medal-ribbon: #96602F; }
+.medal-gold   { background: linear-gradient(160deg, var(--sb-yellow) 0%, #D9A62A 100%); color: #6B4E10; }
+.medal-silver { background: linear-gradient(160deg, #E7EAF0 0%, #AEB6C4 100%); color: #454C5C; }
+.medal-bronze { background: linear-gradient(160deg, #DA9F6C 0%, #A9683A 100%); color: #55340F; }
 
 /* long nicknames (up to 30 chars, maybe with no spaces) must not stretch the podium:
    break anywhere, max 2 lines, then … */
@@ -682,7 +688,7 @@ html, body {
 .rank-row .rank-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rank-row .rank-pts { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--sb-ink); }
 .rank-row.is-you {
-  background: rgba(248,226,154,0.4); border-radius: 12px; padding: 10px; margin: 0 -6px;
+  background: rgba(248,226,154,0.4); border-radius: var(--radius-paper); padding: 10px; margin: 0 -6px;
 }
 .rank-row.is-you .rank-pts { color: var(--sb-blue-deep); }
 .rank-row.is-you .rank-stamp { border: 1.5px solid var(--sb-yellow); background: var(--accent); color: var(--sb-yellow-soft); transform: rotate(-6deg); }
@@ -691,8 +697,8 @@ html, body {
 .rank-own {
   margin-top: 14px;
   padding: 9px 12px;
-  border-radius: 12px;
-  background: rgba(30,58,138,0.06);
+  border-radius: var(--radius-paper);
+  background: var(--accent-wash);
   border: 1px dashed rgba(26,31,51,0.25);
   font-family: var(--font-thai);
   font-size: 12.5px;
@@ -712,7 +718,7 @@ html, body {
 .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
 .category-item {
   border: 1.5px solid rgba(26,31,51,0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-paper);
   padding: 12px 10px;
   background: var(--sb-cream2);
   cursor: pointer;
@@ -723,14 +729,15 @@ html, body {
 .category-item.is-selected {
   border-color: var(--accent);
   background: var(--sb-paper);
-  box-shadow: 0 0 0 3px rgba(30,58,138,0.13);
+  box-shadow: 0 0 0 3px var(--accent-ring);
 }
 .category-name { font-family: var(--font-thai-serif); font-weight: 600; font-size: 13px; color: var(--sb-ink); }
 
+/* the 3 photo requirements read as a notebook checklist */
 .photo-checklist { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .photo-checklist-item {
   font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink);
-  background: var(--sb-cream2); border-radius: 10px; padding: 8px 10px;
+  padding: 8px 10px 8px 2px; border-bottom: 1px dashed rgba(26,31,51,.18);
 }
 /* small line icon in front of a line of text (replaces colour emoji) */
 .inline-icon { vertical-align: -3px; margin-right: 6px; flex-shrink: 0; }
@@ -738,7 +745,7 @@ html, body {
 .photo-note { font-family: var(--font-thai); font-size: 12.5px; color: var(--sb-ink-dim); margin: 8px 0 12px; }
 
 .photo-preview { margin-top: 12px; }
-.photo-preview img { width: 100%; border-radius: 12px; border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }
+.photo-preview img { width: 100%; border-radius: var(--radius-paper); border: 4px solid var(--sb-white); box-shadow: 0 4px 10px rgba(0,0,0,0.12); display: block; }
 .photo-size-note { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); text-align: center; margin-top: 6px; }
 
 .submit-note { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); margin-top: 4px; }
@@ -746,12 +753,12 @@ html, body {
 .field-error {
   margin-top: 8px;
   padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(192,70,58,0.08);
-  border: 1px dashed rgba(192,70,58,0.4);
+  border-radius: var(--radius-paper);
+  background: var(--red-wash);
+  border: 1px dashed var(--red-line);
   font-family: var(--font-thai);
   font-size: 12.5px;
-  color: #8C2E26;
+  color: var(--sb-red-deep);
 }
 
 /* ── recent activity (submission history) ────────────────────── */
@@ -789,17 +796,21 @@ html, body {
 .history-category { font-family: var(--font-thai-serif); font-weight: 600; font-size: 13px; color: var(--sb-ink); }
 .history-weight { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); white-space: nowrap; flex-shrink: 0; }
 .history-status-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
-.history-status { font-family: var(--font-thai); font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
-.history-status.is-approved { background: rgba(110,139,90,0.15); color: var(--sb-green-ink); }
-.history-status.is-pending { background: rgba(242,200,75,0.25); color: var(--sb-amber-ink); }
-.history-status.is-rejected { background: rgba(192,70,58,0.12); color: var(--sb-red); }
+/* status badges as rubber stamps (single ink border, no pill) */
+.history-status {
+  font-family: var(--font-thai); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  padding: 1px 7px; border: 1.5px solid currentColor; border-radius: 2px;
+}
+.history-status.is-approved { color: var(--sb-green-ink); }
+.history-status.is-pending { color: var(--sb-amber-ink); }
+.history-status.is-rejected { color: var(--sb-red); }
 .history-points { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--accent); }
 .history-comment { font-family: var(--font-thai); font-size: 13px; color: rgba(26,31,51,0.8); margin-top: 5px; line-height: 1.4; }
 .history-time { font-family: var(--font-mono); font-size: 11px; color: var(--sb-ink-dim); margin-top: 5px; letter-spacing: 0.06em; }
 .history-empty { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); text-align: center; padding: 20px 0; }
 
 .history-thumb {
-  width: 48px; height: 48px; flex-shrink: 0; border-radius: 8px; overflow: hidden;
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: var(--radius-paper); overflow: hidden;
   border: none; padding: 0; cursor: pointer; background: var(--sb-cream2);
   margin-top: 2px;
 }
@@ -818,30 +829,16 @@ html, body {
 
 /* ── Student pages: "real paper" look ──────────────────────────────────────
    Owner feedback: identical rounded boxes + soft floating shadows read as
-   "AI-made". Colors/gradients stay; only shapes change.
-   Shared paper base: .app-shell--home (= every student page);
-   Home-only pieces are scoped to .page-home. */
-.app-shell--home {
-  --paper-shadow: 0 1px 0 rgba(20,30,60,.06), 2px 3px 0 rgba(20,30,60,.08), 0 10px 14px -10px rgba(20,30,60,.35);
-  --paper-shadow-lift: 0 1px 0 rgba(20,30,60,.06), 3px 5px 0 rgba(20,30,60,.09), 0 14px 18px -10px rgba(20,30,60,.38);
-}
-.app-shell--home .card {
-  --paper-tilt: 0deg;
-  border-radius: 3px;
-  rotate: var(--paper-tilt);
-  box-shadow: var(--paper-shadow);
-}
-
-/* room between the launch button's hard shadow and the washi tape that
-   pokes up above the next card */
-.page-home .home-launch { margin-bottom: 10px; }
+   "AI-made". Colors/gradients stay; only shapes change. The shared paper
+   shape + shadow now live on the base rules (tokens.css --radius-paper /
+   --paper-shadow), so admin gets them too; Home-only pieces are scoped to
+   .page-home below. */
 
 /* Personal Progress: a straight sheet of handmade paper — soft, slightly
    uneven (deckle) edges on all four sides. The paper is the ::before layer
    clipped to that edge; the card itself is transparent so its corner tape
    isn't clipped too. The shadow is a drop-shadow on the section, so it
-   follows the edge. The polygon was generated once from a fixed seed. */
-.page-home .progress-card { background: transparent; box-shadow: none; border-color: transparent; }
+   follows the edge. The polygon was generated once from a fixed seed. */.page-home .progress-card { background: transparent; box-shadow: none; border-color: transparent; }
 .page-home .progress-card::before {
   content: ''; position: absolute; inset: 0; z-index: 0;
   background: var(--sb-white);
@@ -875,7 +872,6 @@ html, body {
       5px 10%, 5px 7.5%, 5px 5%, 4.9px 2.5%);
 }
 .page-home .progress-card > * { position: relative; z-index: 1; }
-.page-home .progress-card > .tape { position: absolute; z-index: 2; }
 .page-home .home-progress {
   filter: drop-shadow(2px 3px 0 rgba(20,30,60,.10)) drop-shadow(0 8px 10px rgba(20,30,60,.12));
 }
@@ -899,18 +895,6 @@ html, body {
 .page-home .home-activity {
   filter: drop-shadow(2px 3px 0 rgba(20,30,60,.08)) drop-shadow(0 1px 0 rgba(20,30,60,.06));
 }
-
-/* status badges as rubber stamps (single ink border, no pill) */
-.page-home .history-status {
-  background: transparent; border: 1.5px solid currentColor; border-radius: 2px;
-  padding: 1px 7px; font-weight: 700; letter-spacing: .04em;
-}
-.page-home .history-status.is-pending { color: var(--sb-amber-ink); }
-.page-home .history-status.is-rejected { color: var(--sb-red); }
-
-/* Scan & launch: less rounded, everything else unchanged */
-.app-shell--home .launch-body { border-radius: 10px; }
-.app-shell--home .launch-body::before { border-radius: 6px; }
 
 /* report + bell: straight cut-card squares with an ink edge */
 .page-home .dash-header .icon-btn {
@@ -965,31 +949,8 @@ html, body {
 }
 
 /* ── Shop ─────────────────────────────────────────────────────────── */
-/* balance = a ticket with half-circle notches (mask clips box-shadow, so
-   the shadow is a drop-shadow on the .balance-ticket wrapper) */
-.page-shop .balance-ticket { flex-shrink: 0; filter: drop-shadow(2px 3px 0 rgba(20,30,60,.12)); }
-.page-shop .balance-chip {
-  position: relative; border: none; border-radius: 0; background: var(--sb-paper);
-  padding: 9px 18px; align-items: center; margin-top: 0;
-  -webkit-mask:
-    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
-  mask:
-    radial-gradient(circle 7px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle 7px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
-}
-.page-shop .balance-chip::before { content: ''; position: absolute; inset: 4px 12px; border: 1px dashed rgba(26,31,51,.25); pointer-events: none; }
-.page-shop .balance-chip .k { font-family: var(--font-thai); letter-spacing: 0; }
-.page-shop .balance-chip .v { font-size: 24px; line-height: 1.1; }
-
-/* certificate = Home's launch button; the Thai name must not use Poppins
-   (no Thai glyphs → random system fallback) */
-.page-shop .shop-cert { margin-top: 14px; }
-.page-shop #shop-cert { margin-bottom: 10px; } /* same tape clearance as Home */
-/* Prompt is wide: shrink a little on small phones so "แลกเกียรติบัตร" stays one word */
-.page-shop .shop-cert .headline { font-family: var(--font-thai); font-weight: 700; font-size: clamp(18px, 5.6vw, 24px); white-space: nowrap; }
-/* the arrow is only a hint — the whole card opens the detail pop-up (redeem is in there) */
-.page-shop .shop-cert .launch-arrow.is-disabled { background: var(--sb-cream2); opacity: .6; }
+/* (wallet row, items and the Limited frame are styled in the "shop page"
+   block further up) */
 
 /* "Got an idea?" — the whole card opens the form. The button's dashes are
    drawn with gradients (not border-style: dashed) so motion.css can make
@@ -1007,31 +968,10 @@ html, body {
 .page-shop .idea-card .label,
 .page-shop .idea-card .arrow { display: inline-block; }
 
-.page-shop .redeem-btn:not(.launch-arrow) { border-radius: 3px; }
-.page-shop .price-chip { border-radius: 2px; background: transparent; }
-.page-shop .stationery-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.08), 0 0 0 1px rgba(26,31,51,.06); }
-/* item photos: square prints with a white border, not round medallions */
-.page-shop .item-medallion { border-radius: 2px; border-width: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.15); }
-.page-shop .item-medallion img { border-radius: 0; }
-
-/* Limited Edition: red/cream gift-ribbon stripe frame */
-.page-shop .limited-section {
-  border: 5px solid transparent; border-radius: 3px; padding-top: 22px;
-  background:
-    linear-gradient(var(--sb-cream), var(--sb-cream)) padding-box,
-    repeating-linear-gradient(-45deg, var(--sb-red) 0 6px, var(--sb-paper) 6px 12px) border-box;
-  box-shadow: var(--paper-shadow);
-}
-.page-shop .limited-badge { top: -13px; border-radius: 2px; }
-.page-shop .limited-item { border-radius: 3px; box-shadow: 1px 2px 0 rgba(20,30,60,.07); }
-/* the SOLD OUT / ปิดรับแลก stamp already says it — a disabled button under it overlapped */
-.page-shop .limited-item.is-unavailable .redeem-btn { visibility: hidden; }
-
-/* "ตั๋วรับของ" button under the balance ticket — a cut-card square with an
+/* "ตั๋วรับของ" button on the wallet row — a cut-card square with an
    ink edge, same as Home's report/bell buttons; red pill = tickets waiting */
-.page-shop .balance-ticket { display: flex; flex-direction: column; align-items: flex-end; }
 .tickets-btn {
-  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 11px;
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; padding: 7px 11px;
   border: 1.5px solid var(--sb-ink); border-radius: 2px; background: var(--sb-paper);
   box-shadow: 2px 2px 0 rgba(26,31,51,.3); cursor: pointer;
   font-family: var(--font-thai); font-weight: 700; font-size: 12px; color: var(--sb-ink);
@@ -1047,7 +987,7 @@ html, body {
 
 /* ticket pop-up: list scrolls inside the card so many tickets never push
    the close button off a phone screen */
-.tickets-card { border-radius: 3px; max-width: 400px; max-height: calc(100dvh - 48px); display: flex; flex-direction: column; }
+.tickets-card { max-width: 400px; max-height: calc(100dvh - 48px); display: flex; flex-direction: column; }
 .tickets-card .receipt-list { overflow-y: auto; padding: 4px 2px 6px; }
 .tickets-head { display: flex; align-items: center; gap: 6px; padding-right: 34px; }
 .tickets-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--accent); }
@@ -1103,7 +1043,6 @@ html, body {
 .receipt.is-picked-up .receipt-name { opacity: .55; }
 
 /* redeem confirm pop-up */
-.redeem-confirm-card { border-radius: 3px; }
 .redeem-confirm-kicker { font-family: var(--font-thai); font-size: 11.5px; font-weight: 600; color: var(--accent); }
 .redeem-confirm-name { font-family: var(--font-thai); font-weight: 700; font-size: 18px; color: var(--sb-ink); line-height: 1.3; margin-top: 2px; padding-right: 30px; }
 .redeem-confirm-points { margin-top: 12px; border-top: 1.5px dashed rgba(26,31,51,0.15); border-bottom: 1.5px dashed rgba(26,31,51,0.15); padding: 6px 0; }
@@ -1113,8 +1052,8 @@ html, body {
 .redeem-confirm-points .v b { color: var(--accent); }
 .redeem-confirm-warning {
   margin-top: 12px; padding: 8px 10px; border-radius: 2px;
-  background: rgba(192,70,58,0.08); border: 1px dashed rgba(192,70,58,0.45);
-  font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: #8C2E26;
+  background: var(--red-wash); border: 1px dashed var(--red-line);
+  font-family: var(--font-thai); font-size: 12px; font-weight: 600; color: var(--sb-red-deep);
 }
 .redeem-confirm-actions { display: flex; gap: 8px; margin-top: 14px; }
 .redeem-confirm-actions button {
@@ -1138,11 +1077,6 @@ html, body {
   .page-shop .stationery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* ── Rank ─────────────────────────────────────────────────────────── */
-.page-rank .podium-block { border-radius: 2px 2px 0 0; box-shadow: 2px 3px 0 rgba(20,30,60,.10); }
-/* the ribbon under each medal overlapped the name below medals #2/#3 */
-.page-rank .rank-medal::after { display: none; }
-
 /* ── Me: logout is a quiet secondary action, not the page's main button ── */
 .page-me #logout-btn {
   display: flex; width: auto; margin: 16px auto 0;
@@ -1162,17 +1096,6 @@ html, body {
 }
 
 /* ── Scan ─────────────────────────────────────────────────────────── */
-.page-scan .category-item,
-.page-scan .field-box,
-.page-scan .field-box input,
-.page-scan .btn-secondary { border-radius: 3px; }
-/* the 3 photo requirements read as a notebook checklist, not dark pills */
-.page-scan .photo-checklist-item {
-  border-radius: 0; background: transparent; padding-left: 2px;
-  border-bottom: 1px dashed rgba(26,31,51,.18);
-}
-.page-scan .btn-primary .body { border-radius: 10px; }
-.page-scan .btn-primary .body::before { border-radius: 6px; }
 
 @variant lg {
   .page-scan { --content-max: 960px; }

@@ -26,7 +26,7 @@
   <!-- header (dash-header--home: text floats on the gradient, same as
        Home/Shop, instead of sitting in its own white card) -->
   <div class="dash-header dash-header--home">
-    <div class="header-row" style="justify-content:flex-start;">
+    <div class="header-row">
       <div class="header-name-block">
         <div class="student-name hero-title">Scan &amp; Launch</div>
       </div>
@@ -40,7 +40,7 @@
     <!-- category -->
     <div class="section">
       <div class="card">
-        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <div class="section-heading lg in-card">
           <span class="title">1. Category</span>
           <span class="sub">· เลือกประเภทขยะ</span>
         </div>
@@ -53,7 +53,7 @@
     <!-- weight -->
     <div class="section">
       <div class="card">
-        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <div class="section-heading lg in-card">
           <span class="title">2. Weight</span>
           <span class="sub">· น้ำหนักที่ชั่งได้ (กก.)</span>
         </div>
@@ -61,7 +61,7 @@
           <div class="field-box">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3" /><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z" /></svg>
             <input type="number" id="weight-input" aria-label="น้ำหนักที่ชั่งได้ (กิโลกรัม)" aria-describedby="weight-error" inputmode="decimal" step="0.01" min="0" max="10" placeholder="0.00">
-            <span style="font-family:var(--font-mono);font-size:12px;color:var(--sb-ink-dim);">kg</span>
+            <span class="field-unit">kg</span>
           </div>
         </div>
         <div class="field-error" id="weight-error" hidden></div>
@@ -75,7 +75,7 @@
     <!-- photo -->
     <div class="section">
       <div class="card">
-        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <div class="section-heading lg in-card">
           <span class="title">3. Photo</span>
           <span class="sub">· ถ่ายรูปยืนยัน</span>
         </div>
@@ -101,13 +101,13 @@
     <!-- confirm -->
     <div class="section">
       <div class="card">
-        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <div class="section-heading lg in-card">
           <span class="title">Submit</span>
           <span class="sub">· ส่งให้แอดมินตรวจ</span>
         </div>
         <div class="submit-note">แต้มจะได้รับหลังแอดมินตรวจและอนุมัติ</div>
 
-        <button class="btn-primary" id="confirm-btn" style="margin-top:14px;" disabled>
+        <button class="btn-primary card-action" id="confirm-btn" disabled>
           <div class="body"><span class="label">ส่งข้อมูล</span></div>
         </button>
       </div>
@@ -118,14 +118,14 @@
   <!-- success -->
   <div id="scan-success" class="section" hidden>
     <div class="card">
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+      <div class="section-heading lg in-card">
         <span class="title">ส่งแล้ว ✓</span>
         <span class="sub">· รอแอดมินตรวจสอบ</span>
       </div>
       <div class="me-info">
         <div class="me-info-row"><span class="k">หมวด</span><span class="v" id="success-category">-</span></div>
         <div class="me-info-row"><span class="k">น้ำหนัก</span><span class="v" id="success-weight">-</span></div>      </div>
-      <button class="btn-primary" id="submit-another-btn" style="margin-top:14px;">
+      <button class="btn-primary card-action" id="submit-another-btn">
         <div class="body"><span class="label">ส่งอีกหมวด</span></div>
       </button>
     </div>

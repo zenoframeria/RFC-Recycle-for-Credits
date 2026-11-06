@@ -48,7 +48,7 @@
   </aside>
 
   <div class="section admin-panel active" id="feed-panel">
-    <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+    <div class="section-heading lg in-card">
       <span class="title">Pending Submissions</span>
       <span class="sub">· รอตรวจ <span id="feed-count">-</span> รายการ</span>
     </div>
@@ -59,7 +59,7 @@
 
   <div class="section admin-panel" id="price-panel">
     <div class="card">
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+      <div class="section-heading lg in-card">
         <span class="title">Category Prices</span>
         <span class="sub">· แก้ไขราคาต่อกิโลกรัม</span>
       </div>
@@ -72,7 +72,7 @@
   <div class="section admin-panel" id="shop-panel">
     <div class="card">
       <div class="shop-head">
-        <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+        <div class="section-heading lg in-card">
           <span class="title">Shop Catalog</span>
           <span class="sub">· จัดการสินค้าและรูปภาพ</span>
         </div>
@@ -88,7 +88,7 @@
 
   <div class="section admin-panel" id="pickup-panel">
     <div class="card">
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+      <div class="section-heading lg in-card">
         <span class="title">Pickups</span>
         <span class="sub">· ตรวจตั๋วก่อนมอบของ</span>
       </div>
@@ -118,7 +118,7 @@
 <div class="modal-overlay" id="shop-item-modal">
   <div class="modal-card">
     <button class="modal-close" id="shop-item-modal-close">&times;</button>
-    <div class="section-heading lg" style="padding-left:0;margin-bottom:10px;">
+    <div class="section-heading lg in-card">
       <span class="title" id="shop-item-modal-title">เพิ่มสินค้า</span>
     </div>
     <div class="required-note">ช่องที่มี <span class="req">*</span> ต้องกรอก</div>
@@ -134,8 +134,11 @@
       <div class="field-box">
         <select id="shop-item-section" class="field-select">
           <option value="stationery">เครื่องเขียน (Stationery)</option>
-          <option value="cert">เกียรติบัตร (Cert)</option>
           <option value="limited">Limited Edition</option>
+          <!-- certificate section removed from the student Shop (2026-11-06):
+               not pickable any more; kept hidden only so editing an old cert
+               row doesn't silently turn it into stationery -->
+          <option value="cert" hidden>เกียรติบัตร (ปิดแล้ว)</option>
         </select>
       </div>
     </div>
@@ -176,7 +179,7 @@
       </div>
     </div>
 
-    <div class="field" style="margin-top:14px;">
+    <div class="field card-action">
       <button type="button" class="btn-primary" id="shop-item-save-btn">
         <span class="body"><span class="label" id="shop-item-save-label">บันทึก</span></span>
       </button>

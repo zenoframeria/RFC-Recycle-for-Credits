@@ -23,36 +23,28 @@
 </div>
 <div class="dash-scroll">
 
-  <!-- header (dash-header--home: text floats on the gradient, same as
-       Home's header, instead of sitting in its own white card) -->
+  <!-- header: page title in the same spot as every other page, then one
+       "wallet" row under it — points ticket left, pickup-ticket button right -->
   <div class="dash-header dash-header--home">
-    <div class="header-row" style="justify-content:space-between;">
+    <div class="header-row">
       <div class="header-name-block">
         <div class="student-name hero-title">แลกของรางวัล</div>
       </div>
+    </div>
+    <div class="shop-wallet">
       <div class="balance-ticket">
         <div class="balance-chip">
           <span class="k">แต้มคงเหลือ</span>
           <span class="v"><span id="shop-points">0</span> <span class="unit">pts</span></span>
         </div>
-        <!-- opens the pickup-ticket pop-up; hidden until the student has redeemed something -->
-        <button type="button" class="tickets-btn" id="tickets-btn" hidden>
-          <svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /><path d="M13 5v2" /><path d="M13 17v2" /><path d="M13 11v2" /></svg>
-          ตั๋วรับของ
-          <span class="count" id="tickets-count" hidden></span>
-        </button>
       </div>
+      <!-- opens the pickup-ticket pop-up; hidden until the student has redeemed something -->
+      <button type="button" class="tickets-btn" id="tickets-btn" hidden>
+        <svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /><path d="M13 5v2" /><path d="M13 17v2" /><path d="M13 11v2" /></svg>
+        ตั๋วรับของ
+        <span class="count" id="tickets-count" hidden></span>
+      </button>
     </div>
-  </div>
-
-  <!-- certificate CTA -->
-  <div class="section">
-    <div class="section-heading">
-      <span class="icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></svg></span>
-      <span class="title">Featured</span>
-      <span class="sub">· ของรางวัลแนะนำ</span>
-    </div>
-    <div id="shop-cert"></div>
   </div>
 
   <!-- stationery -->
@@ -60,8 +52,7 @@
     <div class="card">
       <div class="tape tape--stripe" style="width:66px;height:16px;background:var(--accent);transform:rotate(-7deg);left:-14px;top:-8px;opacity:0.9;"></div>
       <div class="tape tape--dots" style="width:42px;height:14px;background:var(--sb-yellow-soft);transform:rotate(12deg);right:-8px;top:-6px;"></div>
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
-        <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg></span>
+      <div class="section-heading lg in-card">
         <span class="title">Stationery</span>
         <span class="sub">· เครื่องเขียนสะสม</span>
       </div>
@@ -73,9 +64,8 @@
   <!-- limited edition -->
   <div class="section">
     <div class="limited-section">
-      <div class="limited-badge">เปิดแลกเฉพาะช่วง · 1–15 ก.ย.</div>
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
-        <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sb-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg></span>
+      <div class="limited-badge">เปิดแลกเฉพาะช่วง</div>
+      <div class="section-heading lg in-card">
         <span class="title">Limited Edition</span>
       </div>
       <div class="shop-section-note">ของรางวัลจำกัดจำนวน · คนละ 1 ชิ้น · หมดแล้วรอรอบถัดไป</div>
@@ -87,7 +77,7 @@
        card opens it; the button's click bubbles up to the card (one open). -->
   <div class="section">
     <div class="card idea-card" data-open-feedback data-feedback-topic="reward">
-      <div class="section-heading lg" style="padding-left:0;margin-bottom:2px;">
+      <div class="section-heading lg in-card">
         <span class="title">Got an idea?</span>
       </div>
       <div class="shop-section-note">อยากให้มีอะไรเพิ่มใน Shop ไหม? เสนอมาให้เราเลย! ไอเดียไหนที่เหมาะสมก็จะได้มาอยู่ใน Shop น้า</div>
@@ -143,9 +133,6 @@
     <div class="item-detail-name" id="item-detail-name"></div>
     <div class="item-detail-cost" id="item-detail-cost"></div>
     <div class="item-detail-desc" id="item-detail-desc" hidden></div>
-    <div class="redeem-confirm-actions" id="item-detail-actions" hidden>
-      <button type="button" class="redeem-confirm-ok" id="item-detail-redeem">แลกเลย</button>
-    </div>
   </div>
 </div>
 

@@ -1,5 +1,8 @@
 docs/superpowers/
+.superpowers/
 .claude/
 node_modules/
 css/build/
 Screenshot/
+.agents/
+skills-lock.json
