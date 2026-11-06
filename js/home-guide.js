@@ -142,16 +142,6 @@ function buildGuideCarousel(root) {
     return dot;
   });
 
-  // All 5 descriptions sit stacked in one grid cell (only the current one
-  // visible), so the box is always as tall as the longest — the popup
-  // doesn't grow/shrink while swiping.
-  const descLines = GUIDE_STEPS.map((step) => {
-    const line = document.createElement('span');
-    line.textContent = step.desc;
-    descEl.appendChild(line);
-    return line;
-  });
-
   let pos = 0, vel = 0, target = 0, drag = null, shown = -1, raf = 0, lastT = 0;
 
   // normal phones: stage − 140 (≈50px peek each side); narrow phones keep
@@ -192,14 +182,34 @@ function buildGuideCarousel(root) {
 
   function showDesc(i) {
     shown = i;
-    const swap = () => descLines.forEach((line, j) => line.classList.toggle('is-shown', j === i));
-    if (reduceMotion.matches) { swap(); return; }
-    descEl.classList.add('is-fading');
-    setTimeout(() => {
-      if (shown !== i) return; // moved on again meanwhile
-      swap();
-      descEl.classList.remove('is-fading');
-    }, 180); // = the CSS fade, so the old text is fully gone before the new one shows
+    // Always a brand-new element, the old one removed. iPhone Safari left
+    // old text painted on screen (several descriptions on top of each
+    // other) when we changed / hid text inside an element that was mid-fade;
+    // removing the node makes it clear that spot. The fade-in is a CSS
+    // animation on the new span only.
+    const line = document.createElement('span');
+    line.className = 'guide-desc-line';
+    line.textContent = GUIDE_STEPS[i].desc;
+    descEl.replaceChildren(line);
+  }
+
+  // Box height = the longest description at the current width, so the
+  // popup doesn't grow/shrink while swiping. Measured in one go (no paint
+  // in between), then the current text is put back.
+  function sizeDesc() {
+    const current = [...descEl.childNodes];
+    const probe = document.createElement('span');
+    probe.className = 'guide-desc-line';
+    probe.style.animation = 'none';
+    descEl.style.minHeight = '';
+    let max = 0;
+    GUIDE_STEPS.forEach((step) => {
+      probe.textContent = step.desc;
+      descEl.replaceChildren(probe);
+      max = Math.max(max, descEl.offsetHeight);
+    });
+    descEl.replaceChildren(...current);
+    descEl.style.minHeight = max + 'px';
   }
 
   function tick(now) {
@@ -264,11 +274,17 @@ function buildGuideCarousel(root) {
   prevBtn.addEventListener('click', () => goTo(target - 1));
   nextBtn.addEventListener('click', () => goTo(target + 1));
 
-  const onResize = () => render();
+  const onResize = () => { sizeDesc(); render(); };
 
   return {
-    reset() { pos = 0; vel = 0; target = 0; drag = null; shown = -1; descLines.forEach((line) => line.classList.remove('is-shown')); },
-    start() { render(); window.addEventListener('resize', onResize); },
+    reset() { pos = 0; vel = 0; target = 0; drag = null; shown = -1; descEl.replaceChildren(); },
+    start() {
+      sizeDesc();
+      render();
+      window.addEventListener('resize', onResize);
+      // the Thai font may still be loading on the first auto-open → re-measure
+      if (document.fonts) document.fonts.ready.then(sizeDesc);
+    },
     stop() { cancelAnimationFrame(raf); raf = 0; window.removeEventListener('resize', onResize); },
     prev() { goTo(target - 1); },
     next() { goTo(target + 1); },
