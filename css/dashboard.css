@@ -1253,13 +1253,10 @@ html, body {
   border-radius: 3px; border: none;
   box-shadow: 0 2px 0 rgba(26,31,51,0.08), 0 14px 34px rgba(40,34,20,0.25);
 }
-.guide-tape {
-  position: absolute; top: -10px; left: 50%;
-  width: 90px; height: 22px;
-  transform: translateX(-50%) rotate(-3deg);
-  background: var(--sb-yellow-soft); opacity: 0.9;
-}
-.guide-head { display: flex; align-items: baseline; gap: 6px; padding: 0 52px 12px 20px; }
+
+/* narrow phones: the Thai subtitle drops under the title as a whole line */
+.guide-head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; padding: 0 52px 12px 20px; }
+.guide-title, .guide-sub { white-space: nowrap; }
 .guide-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--accent); }
 .guide-sub { font-family: var(--font-thai); font-size: 12px; color: var(--sb-ink-dim); }
 
@@ -1281,18 +1278,22 @@ html, body {
   font-family: var(--font-display); font-size: 12px; font-weight: 700; opacity: 0.85;
 }
 .guide-card-cap {
-  position: absolute; left: 14px; bottom: 10px;
+  position: absolute; left: 14px; right: 14px; bottom: 10px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* one line — never climbs into the icon */
   font-family: var(--font-display); font-size: 18px; font-weight: 800;
   text-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 .guide-card-cap small { margin-left: 6px; font-family: var(--font-thai); font-size: 12px; font-weight: 600; opacity: 0.9; }
 
+/* all 5 texts stacked in one cell → height = the longest, only one visible */
 .guide-desc {
-  min-height: calc(3 * 1.55em); margin: 14px 24px 0;
+  display: grid; margin: 14px 24px 0;
   font-family: var(--font-thai); font-size: 14px; line-height: 1.55;
   text-align: center; color: var(--sb-ink);
   transition: opacity 0.18s ease;
 }
+.guide-desc > span { grid-area: 1 / 1; visibility: hidden; }
+.guide-desc > span.is-shown { visibility: visible; }
 .guide-desc.is-fading { opacity: 0; }
 
 .guide-dots { position: relative; height: 8px; margin: 12px auto 0; }
