@@ -1246,7 +1246,7 @@ html, body {
   .page-home .dash-scroll { padding-bottom: 88px; }
 }
 
-/* guide popup: paper sheet (3px corners, washi tape) on the shared
+/* guide popup: paper sheet (3px corners) on the shared
    .modal-overlay; cards slide inside .guide-stage via JS transforms */
 .guide-sheet {
   max-width: 470px; padding: 22px 0 18px;
