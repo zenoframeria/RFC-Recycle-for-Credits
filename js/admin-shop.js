@@ -18,7 +18,9 @@ const shopManageState = {
   photoPreviewUrl: null,
 };
 
-const SHOP_SECTION_LABELS = { cert: 'เกียรติบัตร', stationery: 'เครื่องเขียน', limited: 'Limited Edition' };
+// cert is no longer shown to students (removed 2026-11-06); old cert rows
+// still list here, last, so they can be deleted
+const SHOP_SECTION_LABELS = { stationery: 'เครื่องเขียน', limited: 'Limited Edition', cert: 'เกียรติบัตร (ไม่แสดงในร้านแล้ว)' };
 
 async function initShopTab() {
   wireShopModal();
@@ -67,7 +69,7 @@ function renderShopManageList() {
     return;
   }
 
-  const sections = ['cert', 'stationery', 'limited'];
+  const sections = ['stationery', 'limited', 'cert'];
   list.innerHTML = sections.map((section) => {
     const items = shopManageState.items.filter((i) => i.section === section);
     if (!items.length) return '';

@@ -14,7 +14,9 @@ const shopState = {
   pendingItem: null, // item waiting in the confirm pop-up
 };
 
-// cert + limited: one per student (enforced again in redeem_item())
+// limited (and old cert rows): one per student (enforced again in
+// redeem_item()). The certificate section itself was removed from the Shop
+// (2026-11-06) — cert rows in shop_items are simply not shown any more.
 const ONE_PER_STUDENT_SECTIONS = ['cert', 'limited'];
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -76,12 +78,11 @@ async function loadShopItems() {
 
   if (error) {
     console.error('loadShopItems failed', error);
-    document.getElementById('shop-cert').innerHTML = '<div class="coming-soon">โหลดร้านค้าไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
+    document.getElementById('shop-stationery').innerHTML = '<div class="coming-soon">โหลดร้านค้าไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>';
     return;
   }
 
   shopState.items = data || [];
-  renderCert();
   renderStationery();
   renderLimited();
 }
@@ -127,30 +128,6 @@ function itemStatus(item) {
   if (item.stock !== null && item.stock !== undefined && item.stock <= 0) return { disabled: true, label: 'ของหมด' };
   if (shopState.points < item.cost) return { disabled: true, label: 'แต้มไม่พอ' };
   return { disabled: false, label: 'แลกเลย' };
-}
-
-function renderCert() {
-  const items = shopState.items.filter((i) => i.section === 'cert');
-  // Same markup/classes as Home's "Scan & launch" button (owner asked for an
-  // exact match), star instead of camera. The whole card opens the detail
-  // pop-up, which has the redeem button (the arrow is just a hint now).
-  document.getElementById('shop-cert').innerHTML = items.map((item) => `
-    <div class="launch-btn shop-cert" ${openItemAttrs(item)}>
-      <div class="launch-body">
-        <div class="camera-disc" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></svg>
-        </div>
-        <div class="launch-text">
-          <span class="lets-go">honor &amp; recognition ★</span>
-          <div class="headline">${escapeHtml(item.name)}</div>
-          <div class="sub">${item.cost.toLocaleString()} pts${item.description ? ` · ${escapeHtml(item.description)}` : ''}<span data-cert-status></span></div>
-        </div>
-        <span class="launch-arrow" data-cert-arrow aria-hidden="true">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sb-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-        </span>
-      </div>
-    </div>
-  `).join('');
 }
 
 function renderStationery() {
@@ -229,17 +206,6 @@ function openItemDetail(item) {
   desc.textContent = item.description || '';
   desc.hidden = !item.description;
 
-  // only the certificate redeems from here — the other cards keep their own button
-  const actions = document.getElementById('item-detail-actions');
-  actions.hidden = item.section !== 'cert';
-  if (!actions.hidden) {
-    const redeem = document.getElementById('item-detail-redeem');
-    const { disabled, label } = itemStatus(item);
-    redeem.disabled = disabled;
-    redeem.textContent = label;
-    redeem.dataset.item = item.id;
-  }
-
   document.getElementById('item-detail').classList.add('open');
 }
 
@@ -248,12 +214,6 @@ function wireItemDetail() {
   const close = () => overlay.classList.remove('open');
 
   document.getElementById('item-detail-close').addEventListener('click', close);
-  document.getElementById('item-detail-redeem').addEventListener('click', (e) => {
-    const item = shopState.items.find((i) => String(i.id) === e.currentTarget.dataset.item);
-    if (!item || e.currentTarget.disabled) return;
-    close();
-    openRedeemConfirm(item);
-  });
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 
   const openFrom = (target) => {
@@ -278,15 +238,6 @@ function refreshButtons() {
 
   shopState.items.forEach((item) => {
     const { disabled, label } = itemStatus(item);
-    if (item.section === 'cert') {
-      // the cert card has no button of its own (it redeems from the detail
-      // pop-up) — show why it can't be redeemed on the sub line + dim the arrow
-      const card = document.querySelector(`.shop-cert[data-open-item="${item.id}"]`);
-      if (!card) return;
-      card.querySelector('[data-cert-status]').textContent = disabled ? ` · ${label}` : '';
-      card.querySelector('[data-cert-arrow]').classList.toggle('is-disabled', disabled);
-      return;
-    }
     const btn = document.querySelector(`.redeem-btn[data-item="${item.id}"]`);
     if (!btn) return;
     btn.disabled = disabled;

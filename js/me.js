@@ -14,7 +14,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderMeInfo(currentUser);
   wireLogout();
+  refreshMePoints(currentUser.id);
 });
+
+// The cached pointsTotal is set at login and goes stale after approvals or
+// redeems — read the live value (same pattern as Home's refreshPoints()) and
+// save it back so the other pages' instant paint is fresh too.
+async function refreshMePoints(userId) {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('points_total')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('refreshMePoints failed', error);
+    return; // keep showing the cached value
+  }
+
+  const pointsTotal = data.points_total ?? 0;
+  document.getElementById('me-points').textContent = pointsTotal.toLocaleString();
+  renderSidebarPoints(pointsTotal);
+
+  try {
+    const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (cached) {
+      cached.pointsTotal = pointsTotal;
+      localStorage.setItem('currentUser', JSON.stringify(cached));
+    }
+  } catch (err) { /* bad cache — nothing to update */ }
+}
 
 function renderMeInfo(user) {
   document.getElementById('me-name').textContent = user.name || '-';
